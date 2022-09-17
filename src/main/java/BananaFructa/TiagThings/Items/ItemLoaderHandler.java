@@ -2,11 +2,14 @@ package BananaFructa.TiagThings.Items;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class ItemLoaderHandler {
 
     public static List<Item> BasicItems = new ArrayList<Item>();
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
         /*BasicContainerItem mnsci = new BasicContainerItem("magnetized_nickel_sheet");
         mnsci.setContainerItem(mnsci);*/
@@ -59,6 +62,11 @@ public class ItemLoaderHandler {
         BasicItems.add(new BasicItem("clean_granite"));
         BasicItems.add(new BasicItem("clean_sandstone"));
         BasicItems.add(new BasicItem("clean_schist"));
+        BasicItems.add(new BasicItem("cooled_lava_amalgam"));
+        BasicItems.add(new BasicItem("titania_powder"));
+        BasicItems.add(new BasicItem("industrial_diamond"));
+        BasicItems.add(new BasicItem("industrial_diamond_grit"));
+        BasicItems.add(new BasicItem("industrial_diamond_mix"));
 
         loadMolds();
 
@@ -93,7 +101,8 @@ public class ItemLoaderHandler {
             "saw",
             "scythe",
             "shovel",
-            "sword"
+            "sword",
+            "mallet"
         };
 
         for (String s : molds) {

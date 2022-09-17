@@ -1,6 +1,7 @@
 package BananaFructa.TiagThings.MainMenu;
 
 import BananaFructa.TiagThings.TTMain;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,22 +10,27 @@ import net.minecraft.util.ResourceLocation;
 
 public class TTMainMenuGui extends GuiMainMenu {
 
+
+    Animation mainLogo = new Animation(1,"gui/frame-sequence",98);
+
     @Override
     public void initGui() {
         super.initGui();
         this.buttonList.clear();
-        this.buttonList.add(new TTMainMenuButton(1,5,60,100,17, I18n.format("menu.singleplayer")));
-        this.buttonList.add(new TTMainMenuButton(2,5,77,100,17, I18n.format("menu.multiplayer")));
-        this.buttonList.add(new TTMainMenuButton(0,5,94,100,17, I18n.format("menu.options")));
-        GuiButton mod = new TTMainMenuButton(6,5,111,100,17, I18n.format("fml.menu.mods"));
+        this.buttonList.add(new TTMainMenuButton(1,5,60 + 10,100,17, I18n.format("menu.singleplayer")));
+        this.buttonList.add(new TTMainMenuButton(2,5,77 + 10,100,17, I18n.format("menu.multiplayer")));
+        this.buttonList.add(new TTMainMenuButton(0,5,94 + 10,100,17, I18n.format("menu.options")));
+        GuiButton mod = new TTMainMenuButton(6,5,111 + 10,100,17, I18n.format("fml.menu.mods"));
         //Utils.WriteDeclaredField(GuiMainMenu.class,this,"modButton",mod);
         this.buttonList.add(mod);
-        GuiButton realms = new TTMainMenuButton(14,5,128,100,17,I18n.format("menu.online").replace("Minecraft", "").trim());
+        GuiButton realms = new TTMainMenuButton(14,5,128 + 10,100,17,I18n.format("menu.online").replace("Minecraft", "").trim());
         //Utils.WriteDeclaredField(GuiMainMenu.class,this,"realmsButton",realms);
         this.buttonList.add(realms);
-        this.buttonList.add(new TTMainMenuButton(5,5,145,100,17,I18n.format("options.language")));
-        this.buttonList.add(new TTMainMenuButton(4,5,162,100,17,I18n.format("menu.quit")));
+        this.buttonList.add(new TTMainMenuButton(5,5,145 + 10,100,17,I18n.format("options.language")));
+        this.buttonList.add(new TTMainMenuButton(4,5,162 + 10,100,17,I18n.format("menu.quit")));
     }
+
+    double deltaTime = 0;
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -33,11 +39,14 @@ public class TTMainMenuGui extends GuiMainMenu {
         GlStateManager.enableAlpha();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        mc.renderEngine.bindTexture(new ResourceLocation(TTMain.modId,"gui/tiag-main-menu-atlas.png"));
-        this.drawTexturedModalRect(5,5,0,0,80,43);
-
-        //mc.renderEngine.bindTexture(new ResourceLocation(TTMain.modId,"gui/tiag_mm_bkg.png"));
-        //this.drawTexturedModalRect(100,100,0,0,256,192);
+        /*mc.renderEngine.bindTexture(new ResourceLocation(TTMain.modId,"gui/tiag-main-menu-atlas.png"));
+        this.drawTexturedModalRect(5,5,0,0,80,43);*/
+        if (Minecraft.getDebugFPS() > 20) {
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(0.6,0.6,1);
+            mainLogo.draw(mc,this,-40,5,256,256/2);
+            GlStateManager.popMatrix();
+        }
 
         DrawMinecraftBrandingsAndCopyRight();
 

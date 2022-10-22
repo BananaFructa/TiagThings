@@ -18,7 +18,7 @@ public class TTMain {
 
     public static final String modId = "tiagthings";
     public static final String name = "Tiag Things";
-    public static final String version = "1.2.3";
+    public static final String version = "1.2.4";
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

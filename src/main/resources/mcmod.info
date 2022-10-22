@@ -3,7 +3,7 @@
   "modid": "tiagthings",
   "name": "Tiag Things",
   "description": "A mod made specifically for Tiag to add some items",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",

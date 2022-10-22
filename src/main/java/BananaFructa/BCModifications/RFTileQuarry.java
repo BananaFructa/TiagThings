@@ -49,8 +49,6 @@ public class RFTileQuarry extends TileQuarry implements IEnergyStorage {
 
         long current = battery.getStored();
 
-        System.out.println(current);
-
         if (battery.isFull()) return 0;
         else if (current + mj <= battery.getCapacity()) {
             if (!simulate) battery.addPower(mj,false);

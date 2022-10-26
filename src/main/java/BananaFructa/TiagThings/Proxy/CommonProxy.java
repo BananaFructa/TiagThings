@@ -90,7 +90,7 @@ public class CommonProxy {
         BCBuildersBlocks.quarry = (BlockQuarry) HELPER.addBlockAndItem(new RFBlockQuarry(Material.IRON,"block.quarry"),true);
     }
 
-    public void fixCropItemSupplierTFCFlorae(Class<?> objType, Object obj,ItemFoodTFCF food) {
+    /*public void fixCropItemSupplierTFCFlorae(Class<?> objType, Object obj,ItemFoodTFCF food) {
         Supplier<ItemStack> foodDrop = () -> {
           return new ItemStack(food);
         };
@@ -102,7 +102,7 @@ public class CommonProxy {
             return new ItemStack(food);
         };
         Utils.writeDeclaredField(objType,obj,"foodDropEarly",foodDrop,true);
-    }
+    }*/
 
     public void init() {
 
@@ -114,7 +114,7 @@ public class CommonProxy {
 
         // Creates an identity provider for the crop drop TFC Florae
         // Idk if this is due to me not wanting to add pam's harvestcraft but i really do not want it
-        fixCropItemSupplierTFCFlorae(CropTFCF.AMARANTH.getClass(),CropTFCF.AMARANTH,ItemsTFCF.AMARANTH);
+        /*fixCropItemSupplierTFCFlorae(CropTFCF.AMARANTH.getClass(),CropTFCF.AMARANTH,ItemsTFCF.AMARANTH);
         fixCropItemSupplierTFCFlorae(CropTFCF.BUCKWHEAT.getClass(),CropTFCF.BUCKWHEAT,ItemsTFCF.BUCKWHEAT);
         fixCropItemSupplierTFCFlorae(CropTFCF.FONIO.getClass(),CropTFCF.FONIO,ItemsTFCF.FONIO);
         fixCropItemSupplierTFCFlorae(CropTFCF.MILLET.getClass(),CropTFCF.MILLET,ItemsTFCF.MILLET);
@@ -132,10 +132,10 @@ public class CommonProxy {
         fixCropItemSupplierTFCFlorae(CropTFCF.SUGAR_BEET.getClass(),CropTFCF.SUGAR_BEET,ItemsTFCF.SUGAR_BEET);
         fixCropItemSupplierTFCFlorae(CropTFCF.PURPLE_GRAPE.getClass(),CropTFCF.PURPLE_GRAPE,ItemsTFCF.PURPLE_GRAPE);
         fixCropItemSupplierTFCFlorae(CropTFCF.GREEN_GRAPE.getClass(),CropTFCF.GREEN_GRAPE,ItemsTFCF.GREEN_GRAPE);
-        fixCropItemSupplierTFCFlorae(CropTFCF.LIQUORICE_ROOT.getClass(),CropTFCF.LIQUORICE_ROOT,ItemsTFCF.LIQUORICE_ROOT);
+        fixCropItemSupplierTFCFlorae(CropTFCF.LIQUORICE_ROOT.getClass(),CropTFCF.LIQUORICE_ROOT,ItemsTFCF.LIQUORICE_ROOT);*/
     }
 
-    @SubscribeEvent(priority = LOW)
+    /*@SubscribeEvent(priority = LOW)
     public void onRecipeRegister(RegistryEvent.Register<IRecipe> event) {
         String[] sandwiches = {
                 "food/sandwich_slice/amaranth",
@@ -154,6 +154,6 @@ public class CommonProxy {
                 registry.remove(recipe.getRegistryName());
             }
         }
-    }
+    }*/
 
 }

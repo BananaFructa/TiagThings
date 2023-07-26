@@ -17,10 +17,13 @@ import mods.railcraft.common.plugins.forge.WorldPlugin;
 import mods.railcraft.common.util.entity.EntitySearcher;
 import mods.railcraft.common.util.entity.RCEntitySelectors;
 import mods.railcraft.common.util.entity.RailcraftDamageSource;
+import mods.railcraft.common.util.inventory.InvOp;
 import mods.railcraft.common.util.misc.Game;
+import net.dries007.tfc.objects.container.CapabilityContainerListener;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -29,7 +32,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -40,7 +46,7 @@ import java.util.function.Predicate;
 // implemented RF
 // decreased consumption by 5 times
 
-public class RFTileBlockCrusher extends TileCrafter implements IEnergyStorage {
+public class RFTileBlockCrusher extends TileCrafter implements IEnergyStorage, IItemHandler {
 
     private static final List<MultiBlockPattern> patterns = new ArrayList();
 
@@ -215,12 +221,14 @@ public class RFTileBlockCrusher extends TileCrafter implements IEnergyStorage {
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY && facing != EnumFacing.UP) return true;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return this.getLogic(RFRockCrusherLogic.class).isPresent();
         return false;
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY && facing != EnumFacing.UP) return (T)this;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
         return super.getCapability(capability, facing);
     }
 
@@ -268,5 +276,41 @@ public class RFTileBlockCrusher extends TileCrafter implements IEnergyStorage {
     @Override
     public boolean canReceive() {
         return true;
+    }
+
+    @Override
+    public int getSlots() {
+        return 9;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return this.getLogic(RFRockCrusherLogic.class).get().invOutput.func_70301_a(slot);
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        Predicate<ItemStack> predicate = new Predicate<ItemStack>() {
+            @Override
+            public boolean test(ItemStack itemStack) {
+                return itemStack == getLogic(RFRockCrusherLogic.class).get().invOutput.func_70301_a(slot);
+            }
+        };
+        List<ItemStack> list = this.getLogic(RFRockCrusherLogic.class).get().invOutput.extractItems(amount,predicate, (simulate ? InvOp.SIMULATE : InvOp.EXECUTE));
+        if (!list.isEmpty()) return list.get(0);
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 0;
     }
 }

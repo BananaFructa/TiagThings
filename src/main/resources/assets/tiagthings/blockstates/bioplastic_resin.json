@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "bioplastic_resin"
+        }
+      }
+    ]
+  }
+}

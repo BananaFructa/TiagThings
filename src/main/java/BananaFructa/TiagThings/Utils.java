@@ -1,6 +1,7 @@
 package BananaFructa.TiagThings;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public class Utils {
@@ -44,6 +45,17 @@ public class Utils {
 
         } catch (Exception err) {
             err.printStackTrace();
+        }
+    }
+
+    public static Method getDeclaredMethod(Class<?> targetClass, String name, Class<?>... parameters) {
+        try {
+            Method m = targetClass.getDeclaredMethod(name, parameters);
+            m.setAccessible(true);
+            return m;
+        } catch (Exception var4) {
+            var4.printStackTrace();
+            return null;
         }
     }
 }

@@ -37,3 +37,182 @@ item.mold/mallet.name=Metal Press Mold: Mallet
 item.industrial_diamond.name=Industrial Diamond
 item.industrial_diamond_grit.name=Industrial Diamond Grit
 item.industrial_diamond_mix.name=Industrial Diamond Mix
+item.plastic.name=Plastic
+item.dust_plastic.name=Plastic Dust
+item.fiberglass.name=Fiberglass
+item.vacuum_tube_body.name=Vacuum Tube Glass Body
+item.ptype.name=P Type Silicon
+item.ntype.name=N Type Silicon
+item.arsenic_powder.name=Arsenic Powder
+item.fluorite_powder.name=Fluorite Powder
+fluid.water_tungsten_mixture=Water-Tungsten Mixture
+tile.water_tungsten_mixture.name=Water-Tungsten Mixture
+fluid.butane=Butane
+tile.butane.name=Butane
+fluid.ethane=Ethane
+tile.ethane.name=Ethane
+fluid.ethene=Ethylene
+tile.ethene.name=Ethylene
+item.wolframite_powder.name=Wolframite Powder
+item.zeolite.name=Zeolite
+item.zeolite_powder.name=Zeolite Powder
+item.zeolite_catalyst.name=Zeolite Catalyst
+item.dust_dry_plastic.name=Dry Plastic Dust
+item.controller_circuit_board.name=Controller Circuit Board
+item.controller_circuit_board_etched.name=Etched Controller Circuit Board
+item.controller_circuit_board_raw.name=Raw Controller Circuit Board
+item.microcontroller.name=Microcontroller
+fluid.ammonium_hydroxide=Ammonium Hydroxide
+tile.ammonium_hydroxide.name=Ammonium Hydroxide
+item.beryl_powder.name=Beryl Powder
+fluid.beryllium_sulfide_solution=Beryllium Sulfide Solution
+tile.beryllium_sulfide_solution.name=Beryllium Sulfide Solution
+fluid.beryllium_hydroxide_solution=Beryllium Hydroxide Solution
+tile.beryllium_hydroxide_solution.name=Beryllium Hydroxide Solution
+item.beryllium_hydroxide_powder.name=Beryllium Hydroxide Powder
+fluid.tt_air=Air
+tile.tt_air.name=Air
+fluid.tt_liquid_air=Liquid Air
+tile.tt_liquid_air.name=Liquid Air
+fluid.ammonium_sulfate_solution=Ammonium Sulfate Solution
+tile.ammonium_sulfate_solution.name=Ammonium Sulfate Solution
+item.ammonium_sulfate_powder.name=Ammonium Sulfate Powder
+fluid.diammonium_phosphate_solution=Diammonium Phosphate Solution
+tile.diammonium_phosphate_solution.name=Diammonium Phosphate Solution
+fluid.phosphoric_acid=Phosphoric Acid
+tile.phosphoric_acid.name=Phosphoric Acid
+item.diammonium_phosphate_powder.name=Diammonium Phosphate Powder
+fluid.potassium_nitride_solution=Potassium Nitride Solution
+tile.potassium_nitride_solution.name=Potassium Nitride Solution
+item.clean_mudstone.name=Clean Mudstone
+item.clean_chert.name=Clean Chert
+item.clean_claystone.name=Clean Claystone
+item.clean_shale.name=Clean Shale
+fluid.uranium_sulfate=Uranium Sulfate
+tile.uranium_sulfate.name=Uranium Sulfate
+fluid.uranyl_triammine=Uranyl Triammine
+tile.uranyl_triammine.name=Uranyl Triammine
+fluid.uranium_precipitate_mix=Uranium Precipitate Mix
+tile.uranium_precipitate_mix.name=Uranium Precipitate Mix
+item.pitchblende_powder.name=Pitchblende Powder
+item.carbon_filament_bulb.name=Carbon Filament Bulb
+item.carbon_filament.name=Carbon Filament
+fluid.tt_chlorine=Chlorine
+tile.tt_chlorine.name=Chlorine
+fluid.vinyl_acetate=Vinyl Acetate
+tile.vinyl_acetate.name=Vinyl Acetate
+fluid.acetylene=Acetylene
+tile.acetylene.name=Acetylene
+fluid.hot_distilled_water=Hot Distilled Water
+tile.hot_distilled_water.name=Hot Distilled Water
+fluid.hot_fluoromethane=Hot Fluoromethane
+tile.hot_fluoromethane.name=Hot Fluoromethane
+fluid.cold_fluoromethane=Cold Fluoromethane
+tile.cold_fluoromethane.name=Cold Fluoromethane
+fluid.nitrogen_nutrient_solution=Nitrogen Nutrient Solution
+tile.nitrogen_nutrient_solution.name=Nitrogen Nutrient Solution
+
+fluid.glycerol=Glycerol
+tile.glycerol.name=Glycerol
+
+fluid.acetic_acid=Acetic Acid
+tile.acetic_acid.name=Acetic Acid
+
+fluid.maize_slurry=Maize Slurry
+tile.maize_slurry.name=Maize Slurry
+
+fluid.starch_water_suspension=Starch Water Suspension
+tile.starch_water_suspension=Starch Water Suspension
+
+fluid.bioplastic_resin=Bioplastic Resin
+tile.bioplastic_resin.name=Bioplastic Resin
+
+fluid.potassium_nutrient_solution=Potassium Nutrient Solution
+tile.potassium_nutrient_solution.name=Potassium Nutrient Solution
+
+fluid.phosphorus_nutrient_solution=Phosphorus Nutrient Solution
+tile.phosphorus_nutrient_solution.name=Phosphorus Nutrient Solution
+
+fluid.glycerol_starch_mix=Glycerol & Starch Mix
+tile.glycerol_starch_mix.name=Glycerol & Starch Mix
+
+fluid.liquid_helium3=Liquid Helium-3
+tile.liquid_helium3.name=Liquid Helium-3
+
+fluid.venusian_atmospheric_gas=Venusian Atmospheric Gas
+tile.venusian_atmospheric_gas.name=Venusian Atmospheric Gas
+
+fluid.liquid_venusian_atmospheric_gas=Liquid Venusian Atmospheric Gas
+tile.liquid_venusian_atmospheric_gas.name=Liquid Venusian Atmospheric Gas
+
+item.tritium_canister.name=Filled Tritium Canister
+item.tritium_canister_partial.name=Tritium Canister
+
+item.lithium_6_canister.name=Lithium-6 Canister
+item.lithium_7_tritium_canister.name=Lithium-7 & Tritium Canister
+
+info.immersiveintelligence.exoskeleton.0=Exoskeleton: §4Off§r
+info.immersiveintelligence.exoskeleton.1=Exoskeleton: §aMotion Assist§r
+info.immersiveintelligence.exoskeleton.2=Exoskeleton: §2Overdrive§r
+
+item.processing_module.name=Processing Module
+
+vein.sulfur.name=Sulfur
+
+item.pyrolusite_powder.name=Pyrolusite Powder
+item.magnesite_powder.name=Magnesite Powder
+
+item.unf_controller_circuit_board.name=Unformatted Controller Circuit Board
+item.launch_software_memory_card.name=Launch Software Memory Card
+
+tile.tiagthings.computer_cluster.name=Computer Cluster Controller
+computer_cluster.name=Computer Cluster
+multiblocked.recipe_map.74f0621e-efb0-4bb9-ba2f-e94cc9fcf9c7=Computer Cluster Recipe
+
+tile.tiagthings.rocket_assembly.name=Rocket Assembly Controller
+rocket_assembly.name=Rocket Assembly
+multiblocked.recipe_map.2662aa48-4808-4d1a-b4de-f92867237c56=Rocket Assembly Recipe
+
+tile.tiagthings.growth_chamber.name=Crystal Growth Chamber Controller
+growth_chamber.name=Crystal Growth Chamber
+multiblocked.recipe_map.173135e5-b156-462c-a917-5f0e31efc863=Crystal Growth Chamber Recipe
+
+tile.tiagthings.steam_radiator.name=Steam Radiator
+steam_radiator.name=Steam Radiator
+multiblocked.recipe_map.b243eb1e-f56b-4771-8eb8-4f1031781938=SteamRadiator
+
+tile.tiagthings.electric_heater.name=Electric Heater
+electric_heater.name=Electric Heater
+multiblocked.recipe_map.0e02de74-6526-4e81-a9f5-fa1df96eb5fd=Electric Heater
+
+tile.tiagthings.ac_indoor_unit.name=AC Indoor Unit
+ac_indoor_unit.name=AC Indoor Unit
+multiblocked.recipe_map.9686946e-5d1d-41c4-9fb0-0389272e68b9=AC Indoor Unit
+
+tile.tiagthings.ac_outdoor_unit.name=AC Outdoor Unit
+ac_outdoor_unit.name=AC Outdoor Unit
+multiblocked.recipe_map.2e8af3ac-7741-4f67-84a9-57d3c8588241=AC Outdoor Unit
+
+tile.tiagthings.electric_oven.name=Electric Oven
+electric_oven.name=Electric Oven
+multiblocked.recipe_map.1ba0c270-13b3-4c35-bc49-b98dd67d2eb1=Electric Oven Recipe
+
+tile.tiagthings.thresher.name=Thresher
+thresher.name=Thresher
+multiblocked.recipe_map.90935dc9-917c-4a4d-93fc-e78e8f24b895=Thresher Recipe
+
+tile.tiagthings.asteroid_mining_station.name=Asteroid Mining Station
+asteroid_mining_station.name=Asteroid Mining Station
+multiblocked.recipe_map.263e60e9-1bc8-4f5c-a6a1-a04750b121a5=Asteroid Mining Station
+
+tile.immersiveengineering.conveyor..name=Any Conveyor Belts
+
+item.starch.name=Starch
+item.bioplastic.name=Bioplastic
+item.wet_bioplastic_resin_sheet.name=Wet Bioplastic Sheet
+item.bioplastic_sheet.name=Bioplastic Sheet
+item.dust_bioplastic.name=Bioplastic Dust
+item.clean_peridotite.name=Clean Peridotite
+item.clean_porphyry.name=Clean Porphyry
+item.chalcopyrite_powder.name=Chalcopyrite Powder
+item.pentlandite_powder.name=Pentlandite Powder

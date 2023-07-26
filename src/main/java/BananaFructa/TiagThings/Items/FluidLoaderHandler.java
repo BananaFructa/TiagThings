@@ -31,12 +31,25 @@ public class FluidLoaderHandler {
     private static ArrayList<Item> blockItems = new ArrayList<>();
 
 
-    public static void addLiquid(String name, String still, String flowing, Material material) {
+    public static Fluid addLiquid(String name, String still, String flowing, Material material,boolean gas,boolean floating) {
         Fluid f = new Fluid(name,new ResourceLocation(TTMain.modId,still),new ResourceLocation(TTMain.modId,flowing));
+        f.setGaseous(gas);
+        if (floating) f.setDensity(-100);
         FluidRegistry.registerFluid(f);
         FluidRegistry.addBucketForFluid(f);
         fluids.add(f);
         fluidBlocks.add(new BlockFluidClassic(f,material).setRegistryName(name).setUnlocalizedName(name));
+        return f;
+    }
+
+    public static Fluid addLiquidNoBucket(String name, String still, String flowing, Material material,boolean gas) {
+        Fluid f = new Fluid(name,new ResourceLocation(TTMain.modId,still),new ResourceLocation(TTMain.modId,flowing));
+        f.setGaseous(gas);
+        FluidRegistry.registerFluid(f);
+        //FluidRegistry.addBucketForFluid(f);
+        fluids.add(f);
+        fluidBlocks.add(new BlockFluidClassic(f,material).setRegistryName(name).setUnlocalizedName(name));
+        return f;
     }
 
     @SubscribeEvent

@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "glycerol"
+        }
+      }
+    ]
+  }
+}

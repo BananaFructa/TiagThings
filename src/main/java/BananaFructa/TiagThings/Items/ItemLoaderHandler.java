@@ -1,5 +1,10 @@
 package BananaFructa.TiagThings.Items;
 
+import BananaFructa.Galacticraft.ItemTritiumCanister;
+import BananaFructa.TiagThings.TTMain;
+import micdoodle8.mods.galacticraft.core.GCItems;
+import micdoodle8.mods.galacticraft.core.GalacticraftCore;
+import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -19,6 +24,12 @@ import java.util.List;
 public class ItemLoaderHandler {
 
     public static List<Item> BasicItems = new ArrayList<Item>();
+    public static ItemTritiumCanister tritiumCanister;
+
+    public static void preInit() {
+       tritiumCanister = new ItemTritiumCanister("tritium_canister_partial");
+       GalacticraftCore.proxy.registerCanister(new PartialCanister(tritiumCanister, TTMain.modId,"tritium_canister_partial",7));
+    }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
@@ -67,12 +78,69 @@ public class ItemLoaderHandler {
         BasicItems.add(new BasicItem("industrial_diamond"));
         BasicItems.add(new BasicItem("industrial_diamond_grit"));
         BasicItems.add(new BasicItem("industrial_diamond_mix"));
+        BasicItems.add(new BasicItem("plastic"));
+        BasicItems.add(new BasicItem("dust_plastic"));
+        BasicItems.add(new BasicItem("fiberglass"));
+        BasicItems.add(new BasicItem("vacuum_tube_body"));
+        BasicItems.add(new BasicItem("ptype"));
+        BasicItems.add(new BasicItem("ntype"));
+        BasicItems.add(new BasicItem("arsenic_powder"));
+        BasicItems.add(new BasicItem("fluorite_powder"));
+        BasicItems.add(new BasicItem("wolframite_powder"));
+        BasicItems.add(new BasicItem("zeolite"));
+        BasicItems.add(new BasicItem("zeolite_powder"));
+        BasicItems.add(new BasicItem("zeolite_catalyst"));
+        BasicItems.add(new BasicItem("dust_dry_plastic"));
+
+        BasicItems.add(new BasicItem("controller_circuit_board"));
+        BasicItems.add(new BasicItem("controller_circuit_board_etched"));
+        BasicItems.add(new BasicItem("controller_circuit_board_raw"));
+        BasicItems.add(new BasicItem("microcontroller"));
+
+        BasicItems.add(new BasicItem("beryl_powder"));
+        BasicItems.add(new BasicItem("beryllium_hydroxide_powder"));
+        BasicItems.add(new BasicItem("ammonium_sulfate_powder"));
+        BasicItems.add(new BasicItem("diammonium_phosphate_powder"));
+
+        // mudstone , chert , claystone , shale
+
+        BasicItems.add(new BasicItem("clean_mudstone"));
+        BasicItems.add(new BasicItem("clean_chert"));
+        BasicItems.add(new BasicItem("clean_claystone"));
+        BasicItems.add(new BasicItem("clean_shale"));
+        BasicItems.add(new BasicItem("pitchblende_powder"));
+        BasicItems.add(new BasicItem("carbon_filament_bulb"));
+        BasicItems.add(new BasicItem("carbon_filament"));
+        BasicItems.add(new BasicItem("lithium_6_canister"));
+        BasicItems.add(new BasicItem("lithium_7_tritium_canister"));
+        BasicItems.add(new BasicItem("processing_module"));
+
+        BasicItems.add(new BasicItem("pyrolusite_powder"));
+        BasicItems.add(new BasicItem("magnesite_powder"));
+        BasicItems.add(new BasicItem("unf_controller_circuit_board"));
+        BasicItems.add(new BasicItem("launch_software_memory_card"));
+
+        BasicItems.add(new BasicItem("starch"));
+        BasicItems.add(new BasicItem("wet_bioplastic_resin_sheet"));
+        BasicItems.add(new BasicItem("bioplastic_sheet"));
+        BasicItems.add(new BasicItem("bioplastic"));
+        BasicItems.add(new BasicItem("dust_bioplastic"));
+
+        BasicItems.add(new BasicItem("clean_peridotite"));
+        BasicItems.add(new BasicItem("clean_porphyry"));
+        BasicItems.add(new BasicItem("chalcopyrite_powder"));
+        BasicItems.add(new BasicItem("pentlandite_powder"));
 
         loadMolds();
 
         for (Item i : BasicItems) {
             event.getRegistry().register(i);
         }
+
+        event.getRegistry().register(tritiumCanister.setRegistryName(tritiumCanister.getUnlocalizedName().substring(5)));
+
+        GCItems.canisterTypes.add(tritiumCanister);
+
         OreDictionary.registerOre("dustMagnetite", magnetite);
         OreDictionary.registerOre("dyeBlack", magnetite);
         OreDictionary.registerOre("string",jute_string);

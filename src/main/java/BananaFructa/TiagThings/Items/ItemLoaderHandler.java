@@ -7,6 +7,7 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -25,6 +26,13 @@ public class ItemLoaderHandler {
 
     public static List<Item> BasicItems = new ArrayList<Item>();
     public static ItemTritiumCanister tritiumCanister;
+    public static BasicItem siliconWafer;
+    public static BasicItem printedSiliconWafer1;
+    public static BasicItem printedSiliconWafer2;
+    public static BasicItem printedSiliconWafer3;
+    public static BasicItem icChip1;
+    public static BasicItem icChip2;
+    public static BasicItem icChip3;
 
     public static void preInit() {
        tritiumCanister = new ItemTritiumCanister("tritium_canister_partial");
@@ -130,6 +138,14 @@ public class ItemLoaderHandler {
         BasicItems.add(new BasicItem("clean_porphyry"));
         BasicItems.add(new BasicItem("chalcopyrite_powder"));
         BasicItems.add(new BasicItem("pentlandite_powder"));
+        BasicItems.add(siliconWafer = new BasicItem("raw_silicon_wafer"));
+        BasicItems.add(printedSiliconWafer1 = new BasicItem("printed_silicon_wafer_1"));
+        BasicItems.add(printedSiliconWafer2 = new BasicItem("printed_silicon_wafer_2"));
+        BasicItems.add(printedSiliconWafer3 = new BasicItem("printed_silicon_wafer_3"));
+        BasicItems.add(icChip1 = new BasicItem("ic_chip_1"));
+        BasicItems.add(icChip2 = new BasicItem("ic_chip_2"));
+        BasicItems.add(icChip3 = new BasicItem("ic_chip_3"));
+        BasicItems.add(new BasicItem("advanced_processor"));
 
         loadMolds();
 

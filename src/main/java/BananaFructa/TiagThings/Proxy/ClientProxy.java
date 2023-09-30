@@ -2,6 +2,7 @@ package BananaFructa.TiagThings.Proxy;
 
 import BananaFructa.EmergingTechnologies.HarvesterTileEntityModified;
 import BananaFructa.THAHModifications.TTChooseClimateGUi;
+import BananaFructa.TTIEMultiblocks.TTIEContent;
 import BananaFructa.TiagThings.MainMenu.TTMainMenuGui;
 import BananaFructa.thah.gui.ChooseClimateGui;
 import blusunrize.immersiveengineering.common.IEContent;
@@ -88,6 +89,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         super.postInit();
+        TTIEContent.clientInit();
     }
 
     @SubscribeEvent

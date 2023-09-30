@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "btreated_water"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "treated_water"
+        }
+      }
+    ]
+  }
+}

@@ -94,6 +94,10 @@ fluid.uranyl_triammine=Uranyl Triammine
 tile.uranyl_triammine.name=Uranyl Triammine
 fluid.uranium_precipitate_mix=Uranium Precipitate Mix
 tile.uranium_precipitate_mix.name=Uranium Precipitate Mix
+fluid.uranium_precipitate_mix_1=Uranium Precipitate Mix (U238)
+tile.uranium_precipitate_mix_1.name=Uranium Precipitate Mix (U238)
+fluid.uranium_precipitate_mix_2=Uranium Precipitate Mix (U235)
+tile.uranium_precipitate_mix_2.name=Uranium Precipitate Mix (U235)
 item.pitchblende_powder.name=Pitchblende Powder
 item.carbon_filament_bulb.name=Carbon Filament Bulb
 item.carbon_filament.name=Carbon Filament
@@ -122,7 +126,7 @@ fluid.maize_slurry=Maize Slurry
 tile.maize_slurry.name=Maize Slurry
 
 fluid.starch_water_suspension=Starch Water Suspension
-tile.starch_water_suspension=Starch Water Suspension
+tile.starch_water_suspension.name=Starch Water Suspension
 
 fluid.bioplastic_resin=Bioplastic Resin
 tile.bioplastic_resin.name=Bioplastic Resin
@@ -138,6 +142,18 @@ tile.glycerol_starch_mix.name=Glycerol & Starch Mix
 
 fluid.liquid_helium3=Liquid Helium-3
 tile.liquid_helium3.name=Liquid Helium-3
+
+fluid.clarified_water=Clarified Water
+tile.clarified_water.name=Clarified Water
+
+fluid.clarified_sea_water=Clarified Salt Water
+tile.clarified_sea_water.name=Clarified Salt Water
+
+fluid.treated_water_nn=Filtered Water
+tile.treated_water_nn.name=Filtered Water
+
+fluid.treated_water=Treated Water
+tile.treated_water.name=Treated Water
 
 fluid.venusian_atmospheric_gas=Venusian Atmospheric Gas
 tile.venusian_atmospheric_gas.name=Venusian Atmospheric Gas
@@ -216,3 +232,86 @@ item.clean_peridotite.name=Clean Peridotite
 item.clean_porphyry.name=Clean Porphyry
 item.chalcopyrite_powder.name=Chalcopyrite Powder
 item.pentlandite_powder.name=Pentlandite Powder
+
+tile.tiagthings.tt_metal_multiblock.flare_stack.name=Flare Stack
+tile.tiagthings.tt_metal_multiblock.coal_boiler.name=Coal Boiler
+tile.tiagthings.tt_metal_multiblock.electric_heater.name=Electric Heater
+tile.tiagthings.tt_metal_multiblock.clarifier.name=Clarifier
+tile.tiagthings.tt_metal_multiblock.water_filter.name=Water Filter
+tile.tiagthings.tt_metal_multiblock.oil_boiler.name=Oil Boiler
+tile.tiagthings.tt_metal_multiblock.um_photolithography_machine.name=um Lithography Machine
+tile.tiagthings.tt_metal_multiblock_1.nmplm.name=nm Lithography Machine
+tile.tiagthings.tt_metal_multiblock_1.euvplm.name=EUV Lithography Machine
+tile.tiagthings.tt_metal_multiblock_1.gas_centrifuge.name=Gas Centrifuge
+tile.tiagthings.tt_metal_multiblock_1.steam_radiator.name=Steam Radiator
+tile.tiagthings.tt_metal_multiblock_1.indoor_ac_unit.name=Indoor AC Unit
+tile.tiagthings.tt_metal_multiblock_1.outdoor_ac_unit.name=Outdoor AC Unit
+tile.tiagthings.tt_metal_multiblock_1.tresher.name=Thresher
+tile.tiagthings.tt_metal_multiblock_1.electric_oven.name=Electric Oven
+
+item.raw_silicon_wafer.name=Raw Silicon Wafer
+item.printed_silicon_wafer_1.name=Printed Silicon Wafer (um Process)
+item.printed_silicon_wafer_2.name=Printed Silicon Wafer (nm Process)
+item.printed_silicon_wafer_3.name=Printed Silicon Wafer (EUV Process)
+item.ic_chip_1.name=IC chip (um Process)
+item.ic_chip_2.name=IC chip (nm Process)
+item.ic_chip_3.name=IC chip (EUV Process)
+item.advanced_processor.name=Advanced Processor
+
+fluid.uhexf=Uranium Hexafluoride (99.9% U-238 0.01% U-235)
+tile.uhexf.name=Uranium Hexafluoride (99.9% U-238 0.01% U-235)
+
+fluid.uhexf_1=Uranium Hexafluoride (99.7% U-238 0.03% U-235)
+tile.uhexf_1.name=Uranium Hexafluoride (99.7% U-238 0.03% U-235)
+
+fluid.uhexf_2=Uranium Hexafluoride (99.3% U-238 0.07% U-235)
+tile.uhexf_2.name=Uranium Hexafluoride (99.3% U-238 0.07% U-235)
+
+fluid.uhexf_3=Uranium Hexafluoride (97.9% U-238 2.1% U-235)
+tile.uhexf_3.name=Uranium Hexafluoride (97.9% U-238 2.1% U-235)
+
+fluid.uhexf_4=Uranium Hexafluoride (94.0% U-238 6.0% U-235)
+tile.uhexf_4.name=Uranium Hexafluoride (94.0% U-238 6.0% U-235)
+
+fluid.uhexf_5=Uranium Hexafluoride (84.1% U-238 15.9% U-235)
+tile.uhexf_5.name=Uranium Hexafluoride (84.1% U-238 15.9% U-235)
+
+fluid.uhexf_6=Uranium Hexafluoride (63.8% U-238 36.2% U-235)
+tile.uhexf_6.name=Uranium Hexafluoride (63.8% U-238 36.2% U-235)
+
+fluid.uhexf_7=Uranium Hexafluoride (37.0% U-238 63.0% U-235)
+tile.uhexf_7.name=Uranium Hexafluoride (37.0% U-238 63.0% U-235)
+
+fluid.uhexf_8=Uranium Hexafluoride (16.3% U-238 83.7% U-235)
+tile.uhexf_8.name=Uranium Hexafluoride (16.3% U-238 83.7% U-235)
+
+fluid.uhexf_9=Uranium Hexafluoride (6.1% U-238 93.9% U-235)
+tile.uhexf_9.name=Uranium Hexafluoride (6.1% U-238 93.9% U-235)
+
+fluid.uhexf_10=Uranium Hexafluoride (2.1% U-238 97.9% U-235)
+tile.uhexf_10.name=Uranium Hexafluoride (2.1% U-238 97.9% U-235)
+
+fluid.uhexf_11=Uranium Hexafluoride (0.7% U-238 99.3% U-235)
+tile.uhexf_11.name=Uranium Hexafluoride (0.7% U-238 99.3% U-235)
+
+fluid.uhexf_12=Uranium Hexafluoride (0.2% U-238 99.8% U-235)
+tile.uhexf_12.name=Uranium Hexafluoride (0.2% U-238 99.8% U-235)
+
+fluid.uhexf_13=Uranium Hexafluoride (0.1% U-238 99.9% U-235)
+tile.uhexf_13.name=Uranium Hexafluoride (0.1% U-238 99.9% U-235)
+
+fluid.uranyl_fluoride=Uranyl Fluoride Solution (U238)
+tile.uranyl_fluoride.name=Uranyl Fluoride Solution (U238)
+
+fluid.uranyl_fluoride_1=Uranyl Fluoride Solution (U235)
+tile.uranyl_fluoride_1.name=Uranyl Fluoride Solution (U235)
+
+fluid.utetf=Uranium Tetrafluoride
+tile.utetf.name=Uranium Tetrafluoride
+
+ie.manual.category.temperatureControl.name=Temperature Control
+ie.manual.category.utility.name=Utility Machines
+ie.manual.category.industrialBoilers.name=Industrial Boilers
+ie.manual.category.waterTreatment.name=Water Treatment
+ie.manual.category.plms.name=Photolithography Machines
+ie.manual.category.uraniumProcessing.name=Uranium Processing

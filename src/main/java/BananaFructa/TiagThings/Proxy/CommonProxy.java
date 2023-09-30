@@ -17,6 +17,8 @@ import BananaFructa.RailcraftModifications.TileRollingMachineManualChanged;
 import BananaFructa.RailcraftModifications.TileRollingMachinePoweredChanged;
 import BananaFructa.TFCTech.BlockInductionCrucibleCAP;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
+import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityEUVPLM;
+import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityNMPLM;
 import BananaFructa.TerraFirmaCraft.TECropBaseHydroponic;
 import BananaFructa.TiagThings.ChunkPos;
 import BananaFructa.TiagThings.TTMain;
@@ -431,6 +433,22 @@ public class CommonProxy {
                         event.setCanceled(true);
                         return;
                     }
+                }
+            }
+            if (tileEntity instanceof TileEntityNMPLM) {
+                TileEntityNMPLM te = (TileEntityNMPLM) tileEntity;
+                if (te.offset.length == 3 && te.master() != null) {
+                    te = te.master();
+                    te.changeProcess(event.getEntityPlayer());
+                    event.getWorld().notifyBlockUpdate(te.getPos(),event.getWorld().getBlockState(te.getPos()),event.getWorld().getBlockState(te.getPos()),2);
+                }
+            }
+            if (tileEntity instanceof TileEntityEUVPLM) {
+                TileEntityEUVPLM te = (TileEntityEUVPLM) tileEntity;
+                if (te.offset.length == 3 && te.master() != null) {
+                    te = te.master();
+                    te.changeProcess(event.getEntityPlayer());
+                    event.getWorld().notifyBlockUpdate(te.getPos(),event.getWorld().getBlockState(te.getPos()),event.getWorld().getBlockState(te.getPos()),2);
                 }
             }
             //if (tileEntity)

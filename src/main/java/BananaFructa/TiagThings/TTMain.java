@@ -5,6 +5,12 @@ import BananaFructa.ImmersiveIntelligence.*;
 import BananaFructa.NCCraft.SelectiveArrayListNC;
 import BananaFructa.RailcraftModifications.RFTileBlockCrusher;
 import BananaFructa.TFCTech.TEInductionCrucibleCAP;
+import BananaFructa.TTIEMultiblocks.Commands.GetTEPos;
+import BananaFructa.TTIEMultiblocks.Commands.StructureGeneratorCommand;
+import BananaFructa.TTIEMultiblocks.Renderers.ClarifierRenderer;
+import BananaFructa.TTIEMultiblocks.TileEntities.*;
+import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
+import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TiagThings.Commands.Wikis;
 import BananaFructa.TiagThings.Items.FluidLoaderHandler;
 import BananaFructa.TiagThings.Items.ItemLoaderHandler;
@@ -25,9 +31,12 @@ import mctmods.immersivetechnology.common.blocks.BlockITFluid;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.venus.VenusBlocks;
+import mods.railcraft.common.blocks.BlockMeta;
 import mods.railcraft.common.carts.EntityLocomotive;
 import nc.init.NCFluids;
 import nc.integration.crafttweaker.CTRemoveRecipe;
+import net.dries007.tfc.api.capability.food.FoodData;
+import net.dries007.tfc.api.capability.food.IFoodStatsTFC;
 import net.dries007.tfc.objects.fluids.FluidsTFC;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.climate.ClimateTFC;
@@ -94,7 +103,8 @@ public class TTMain {
 
     public TiagThingWorldStorage worldStorage;
 
-    public static Fluid ttAir,nitrogenSolution,potassiumSolution,phosphorusSolution,liquidHelium3,venusGas,ttChlorine;
+    public static Fluid ttAir,nitrogenSolution,potassiumSolution,phosphorusSolution,liquidHelium3,venusGas,ttChlorine,butane,hotF,coldF,clarifiedWater,clarifiedSeaWater,treatedWaterNN,treatedWater;
+    public static Fluid uhexf,uhexf1,uhexf2,uhexf3,uhexf4,uhexf5,uhexf6,uhexf7,uhexf8,uhexf9,uhexf10,uhexf11,uhexf12,uhexf13;
 
     public static List<Item> items = new ArrayList<Item>() {{
         add(Items.LEATHER_HELMET);
@@ -105,10 +115,10 @@ public class TTMain {
 
     static {
         BananaFructa.TiagThings.Utils.writeDeclaredField(MaterialType.CERTUS_QUARTZ_CRYSTAL_CHARGED.getClass(), MaterialType.CERTUS_QUARTZ_CRYSTAL_CHARGED, "droppedEntity", EntityChargedQuartzModified.class, false);
-        TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(state, pos, player, "steam_radiator", 21, 0.06f)));
-        TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(state, pos, player, "electric_heater", 21, 0.06f)));
-        TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(state, pos, player, "ac_indoor_unit", -10, 0.06f)));
-        TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(state, pos, player, "ac_outdoor_unit", 21, 0.06f)));
+        TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(TileEntitySteamRadiator.class,state, pos, player, "steam_radiator", 21, 0.06f)));
+        TemperatureRegistry.BLOCKS.register((state, pos, player) -> tempHeater(TileEntityElectricHeater.class, state, pos, player, "electric_heater", 21, 0.06f));
+        TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(TileEntityIndoorACUnit.class,state, pos, player, "ac_indoor_unit", -10, 0.06f)));
+        TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(TileEntityOutdoorACUnit.class,state, pos, player, "ac_outdoor_unit", 21, 0.06f)));
         TemperatureRegistry.ENVIRONMENT.register((player) -> {
             List<Entity> entities = player.getEntityWorld().getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(player.posX - 0.5, 0, player.posZ - 0.5, player.posX + 0.5, 2, player.posZ + 0.5));
             return new EnvironmentalModifier("player", 1.0F * entities.size(), 0.3F);
@@ -157,45 +167,12 @@ public class TTMain {
         BananaFructa.TiagThings.Utils.writeDeclaredField(CTRemoveRecipe.class, null, "errored", true, false); // annoying ass error
     }
 
-    static {
-        /*
-        try {
-            String options = "resourcePacks:[\"Tiag.zip\"]";
-            File f = new File(Minecraft.getMinecraft().mcDataDir, "options.txt");
-            String text = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
-            if (!text.contains("Tiag.zip")) {
-                if (!text.contains("resourcePacks")) {
-                    FileWriter w = new FileWriter(f,true);
-                    w.write(options);
-                    w.close();
-                } else {
-                    if (text.split("resourcePacks:")[1].toCharArray()[1] != ']') {
-                        text.replace("resourcePacks:[","resourcePacks:[\"Tiag.zip\",");
-                    } else {
-                        text.replace("resourcePacks:[","resourcePacks:[\"Tiag.zip\"");
-                    }
-                    f.delete();
-                    f.createNewFile();
-                    FileWriter w = new FileWriter(f);
-                    w.write(text);
-                    w.close();
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        */
-    }
-
-    static public TileEntityModifier tempHeater(IBlockState state, BlockPos pos, EntityPlayer player,String registryName,float temp,float potency) {
-        //if (!OxygenUtil.checkTorchHasOxygen(player.world,pos)) return null;
-        if (state.getBlock().getRegistryName() != null && state.getBlock().getRegistryName().getResourcePath().equals(registryName)) {
-            TileEntity te = player.getEntityWorld().getTileEntity(pos);
-            if (te instanceof ControllerTileEntity) {
-                ControllerTileEntity controllerTileEntity = (ControllerTileEntity) te;
-                if (controllerTileEntity.recipeLogic() != null && controllerTileEntity.recipeLogic().getStatus() == RecipeLogic.Status.WORKING) {
-                    return new TileEntityModifier(registryName,temp,potency);
-                }
+    static public TileEntityModifier tempHeater(Class<?extends SimplifiedTileEntityMultiblockMetal> teClass, IBlockState state, BlockPos pos, EntityPlayer player,String registryName,float temp,float potency) {
+        TileEntity te = player.getEntityWorld().getTileEntity(pos);
+        if (teClass.isInstance(te)) {
+            SimplifiedTileEntityMultiblockMetal ste = (SimplifiedTileEntityMultiblockMetal) te;
+            if (!ste.isDummy() && ste.isWorking()) {
+                return new TileEntityModifier(registryName, temp, potency);
             }
         }
         return null;
@@ -215,12 +192,12 @@ public class TTMain {
         IIPacketHandler.registerPackets();
         FluidLoaderHandler.addLiquid("cooled_lava_mixture","blocks/cooled_lava_mixture_still","blocks/cooled_lava_mixture_flow", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("water_tungsten_mixture","blocks/water_tungsten_mixture_still","blocks/water_tungsten_mixture_flow", Material.WATER,false,false);
-        FluidLoaderHandler.addLiquid("butane","blocks/butane_still","blocks/butane_flow", Material.WATER,true,false);
         FluidLoaderHandler.addLiquid("ethane","blocks/ethane_still","blocks/ethane_flow", Material.WATER,true,false);
         FluidLoaderHandler.addLiquid("ethene","blocks/ethene_still","blocks/ethene_flow", Material.WATER,true,false);
         FluidLoaderHandler.addLiquid("ammonium_hydroxide","blocks/ammonium_hydroxide_still","blocks/ammonium_hydroxide_flow", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("beryllium_sulfide_solution","blocks/beryllium_sulfide_solution","blocks/beryllium_sulfide_solution", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("beryllium_hydroxide_solution","blocks/beryllium_hydroxide_solution","blocks/beryllium_hydroxide_solution", Material.WATER,false,false);
+        butane = FluidLoaderHandler.addLiquid("butane","blocks/butane_still","blocks/butane_flow", Material.WATER,true,false);
         ttAir = FluidLoaderHandler.addLiquidNoBucket("tt_air","blocks/tt_air","blocks/tt_air", Material.WATER,true);
         FluidLoaderHandler.addLiquid("tt_liquid_air","blocks/tt_liquid_air","blocks/tt_liquid_air", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("ammonium_sulfate_solution","blocks/ammonium_sulfate_solution","blocks/ammonium_sulfate_solution", Material.WATER,false,false);
@@ -234,8 +211,8 @@ public class TTMain {
         FluidLoaderHandler.addLiquid("acetylene","blocks/acetylene","blocks/acetylene", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("vinyl_acetate","blocks/vinyl_acetate","blocks/vinyl_acetate", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("hot_distilled_water","blocks/hot_distilled_water","blocks/hot_distilled_water", Material.WATER,false,false);
-        FluidLoaderHandler.addLiquid("hot_fluoromethane","blocks/hot_fluoromethane","blocks/hot_fluoromethane", Material.AIR,true,true);
-        FluidLoaderHandler.addLiquid("cold_fluoromethane","blocks/cold_fluoromethane","blocks/hot_fluoromethane", Material.AIR,true,true);
+        hotF = FluidLoaderHandler.addLiquid("hot_fluoromethane","blocks/hot_fluoromethane","blocks/hot_fluoromethane", Material.AIR,true,true);
+        coldF = FluidLoaderHandler.addLiquid("cold_fluoromethane","blocks/cold_fluoromethane","blocks/hot_fluoromethane", Material.AIR,true,true);
         nitrogenSolution = FluidLoaderHandler.addLiquid("nitrogen_nutrient_solution","blocks/nitrogen_nutrient_solution","blocks/nitrogen_nutrient_solution", Material.WATER,false,false);
         potassiumSolution = FluidLoaderHandler.addLiquid("potassium_nutrient_solution","blocks/potassium_nutrient_solution","blocks/potassium_nutrient_solution", Material.WATER,false,false);
         phosphorusSolution = FluidLoaderHandler.addLiquid("phosphorus_nutrient_solution","blocks/phosphorus_nutrient_solution","blocks/phosphorus_nutrient_solution", Material.WATER,false,false);
@@ -253,6 +230,36 @@ public class TTMain {
 
         FluidLoaderHandler.addLiquid("acetic_acid","blocks/acetic_acid","blocks/acetic_acid", Material.WATER,false,false);
 
+        clarifiedWater = FluidLoaderHandler.addLiquid("clarified_water","blocks/clarified_water","blocks/clarified_water", Material.WATER,false,false);
+        clarifiedSeaWater = FluidLoaderHandler.addLiquid("clarified_sea_water","blocks/clarified_sea_water","blocks/clarified_sea_water", Material.WATER,false,false);
+        treatedWaterNN = FluidLoaderHandler.addLiquid("treated_water_nn","blocks/treated_water","blocks/treated_water", Material.WATER,false,false);
+        uhexf = FluidLoaderHandler.addLiquid("uhexf","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf1 = FluidLoaderHandler.addLiquid("uhexf_1","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf2 = FluidLoaderHandler.addLiquid("uhexf_2","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf3 = FluidLoaderHandler.addLiquid("uhexf_3","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf4 = FluidLoaderHandler.addLiquid("uhexf_4","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf5 = FluidLoaderHandler.addLiquid("uhexf_5","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf6 = FluidLoaderHandler.addLiquid("uhexf_6","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf7 = FluidLoaderHandler.addLiquid("uhexf_7","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf8 = FluidLoaderHandler.addLiquid("uhexf_8","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf9 = FluidLoaderHandler.addLiquid("uhexf_9","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf10 = FluidLoaderHandler.addLiquid("uhexf_10","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf11 = FluidLoaderHandler.addLiquid("uhexf_11","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf12 = FluidLoaderHandler.addLiquid("uhexf_12","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        uhexf13 = FluidLoaderHandler.addLiquid("uhexf_13","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        treatedWater = FluidLoaderHandler.addLiquidDrinkable("treated_water","blocks/treated_water","blocks/treated_water", Material.WATER,false,false,(player) -> {
+            if (player.getFoodStats() instanceof IFoodStatsTFC) {
+                IFoodStatsTFC foodStats = (IFoodStatsTFC)player.getFoodStats();
+                foodStats.addThirst(40.0F);
+                foodStats.getNutrition().addBuff(FoodData.MILK);
+            }
+
+        });
+        FluidLoaderHandler.addLiquid("uranyl_fluoride","blocks/uranyl_fluoride","blocks/uranyl_fluoride", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("uranyl_fluoride_1","blocks/uranyl_fluoride","blocks/uranyl_fluoride", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("utetf","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("uranium_precipitate_mix_1","blocks/uranium_precipitate_mix","blocks/uranium_precipitate_mix", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("uranium_precipitate_mix_2","blocks/uranium_precipitate_mix","blocks/uranium_precipitate_mix", Material.WATER,false,false);
         NCFluids.fluidPairList = new SelectiveArrayListNC(); // This crime was the only way
         //for (Block i : ITContent.registeredITBlocks) {
         //    if (i instanceof BlockITFluid) {
@@ -269,12 +276,14 @@ public class TTMain {
     public void init(FMLInitializationEvent event){
         Coke.registerFuel();
         proxy.init();
+        FMLInterModComms.sendMessage("waila", "register", "BananaFructa.TTIEMultiblocks.Compat.Waila.TTWailaProvider.callbackRegister");
         GameRegistry.registerTileEntity(RFTileBlockCrusher.class,new ResourceLocation(modId, RFTileBlockCrusher.class.getSimpleName()));
         GameRegistry.registerTileEntity(TEInductionCrucibleCAP.class,new ResourceLocation(modId,TEInductionCrucibleCAP.class.getSimpleName()));
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityClarifier.class, new ClarifierRenderer());
         VenusBlocks.crashedProbe = Blocks.AIR;
         IIPotions.infrared_vision = Potion.getPotionById(16);
         BottlingMachineRecipe.removeRecipes(Utils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood"));
@@ -290,6 +299,8 @@ public class TTMain {
     public void serverStaring(FMLServerStartingEvent event) {
         worldStorage = TiagThingWorldStorage.get(event.getServer().getWorld(0));
         event.registerServerCommand(new Wikis());
+        event.registerServerCommand(new StructureGeneratorCommand());
+        event.registerServerCommand(new GetTEPos());
     }
 
 }

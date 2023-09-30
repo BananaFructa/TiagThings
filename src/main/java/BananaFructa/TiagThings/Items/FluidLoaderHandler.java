@@ -1,6 +1,8 @@
 package BananaFructa.TiagThings.Items;
 
 import BananaFructa.TiagThings.TTMain;
+import net.dries007.tfc.objects.fluids.FluidsTFC;
+import net.dries007.tfc.objects.fluids.properties.DrinkableProperty;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -37,6 +39,18 @@ public class FluidLoaderHandler {
         if (floating) f.setDensity(-100);
         FluidRegistry.registerFluid(f);
         FluidRegistry.addBucketForFluid(f);
+        fluids.add(f);
+        fluidBlocks.add(new BlockFluidClassic(f,material).setRegistryName(name).setUnlocalizedName(name));
+        return f;
+    }
+
+    public static Fluid addLiquidDrinkable(String name, String still, String flowing, Material material, boolean gas, boolean floating, DrinkableProperty property) {
+        Fluid f = new Fluid(name,new ResourceLocation(TTMain.modId,still),new ResourceLocation(TTMain.modId,flowing));
+        f.setGaseous(gas);
+        if (floating) f.setDensity(-100);
+        FluidRegistry.registerFluid(f);
+        FluidRegistry.addBucketForFluid(f);
+        FluidsTFC.getWrapper(f).with(DrinkableProperty.DRINKABLE,property);
         fluids.add(f);
         fluidBlocks.add(new BlockFluidClassic(f,material).setRegistryName(name).setUnlocalizedName(name));
         return f;

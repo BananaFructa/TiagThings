@@ -1,5 +1,7 @@
 package BananaFructa.TiagThings;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -52,10 +54,11 @@ public class TiagThingWorldStorage extends WorldSavedData {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(nbt.getByteArray("hotWaterReservers"));
+
+        Gson gson = new Gson();
+
         try {
-            ObjectInputStream in = new ObjectInputStream(arrayInputStream);
-            reserverHotWaterChunk = (HashMap<ChunkPos,SRBlockPos>) in.readObject();
+            reserverHotWaterChunk = gson.fromJson(nbt.getString("hotWaterReservers"),new TypeToken<HashMap<ChunkPos,SRBlockPos>>(){}.getType());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,14 +66,10 @@ public class TiagThingWorldStorage extends WorldSavedData {
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        Gson gson = new Gson();
 
         try {
-
-            ObjectOutputStream out = new ObjectOutputStream(arrayOutputStream);
-
-            out.writeObject(reserverHotWaterChunk);
-            compound.setByteArray("hotWaterReservers", arrayOutputStream.toByteArray());
+            compound.setString("hotWaterReservers", gson.toJson(reserverHotWaterChunk));
         } catch (Exception e) {
             e.printStackTrace();
         }

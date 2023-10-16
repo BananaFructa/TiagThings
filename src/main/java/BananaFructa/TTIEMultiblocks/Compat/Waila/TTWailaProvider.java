@@ -1,7 +1,10 @@
 package BananaFructa.TTIEMultiblocks.Compat.Waila;
 
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
+import BananaFructa.TTIEMultiblocks.Utils.STEMM_ClusterClient;
+import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -17,6 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TTWailaProvider implements IWailaDataProvider {
 
@@ -100,6 +104,65 @@ public class TTWailaProvider implements IWailaDataProvider {
                 FluidTank outputTank = te.tanks.get(2);
                 if (outputTank == null || outputTank.getFluid() == null) tooltip.add("Secondary Output: Empty");
                 else tooltip.add("Secondary Output: " + outputTank.getFluid().getLocalizedName() + " " + outputTank.getFluidAmount() + " mb");
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof TileEntityComputerClusterController) {
+            TileEntityComputerClusterController te = ((TileEntityComputerClusterController) accessor.getTileEntity());
+            if (te.offset.length == 3 && te.master() != null) {
+                te = te.master();
+                tooltip.add("Cluster Units Paired: " + te.activeClusterUnits);
+                tooltip.add("Processes running: " + te.lastUsedRequests + "/" + te.maxRequests);
+                tooltip.add("Resource utilization: " + te.lastUsedProcessingPower + "/" + te.totalProcessingPower);
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof TileEntityComputerClusterUnit) {
+            TileEntityComputerClusterUnit te = (TileEntityComputerClusterUnit) accessor.getTileEntity();
+            if (te.offset.length == 3 && te.master() != null) {
+                te = te.master();
+                tooltip.add("Pair status: " + (te.paired ? "PAIRED" : "UNPAIRED"));
+                tooltip.add("Total processing resources: 4");
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof STEMM_ClusterClient) {
+            STEMM_ClusterClient<?,?> te = (STEMM_ClusterClient<?,?>) accessor.getTileEntity();
+            if (te.offset.length == 3 && te.master() != null) {
+                te = (STEMM_ClusterClient<?,?>)te.master();
+                tooltip.add("Cluster connection status: " + te.connected.getName());
+                int usedPower = 0;
+                if (te.processQueue.size() > 0) {
+                    usedPower = te.getUsedPower();
+                }
+                tooltip.add("Using " + usedPower + " processing power");
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof TileEntityMemoryFormatter) {
+            TileEntityMemoryFormatter te = (TileEntityMemoryFormatter) accessor.getTileEntity();
+            if (te.offset.length == 3 && te.master() != null) {
+                te = te.master();
+                if (te.isWorking()) {
+                    float prog = (float)te.processQueue.get(0).processTick/(float)te.processQueue.get(0).maxTicks;
+                    int hashes = (int)(20*prog);
+                    int dots = 20 - hashes;
+                    String hs = "";
+                    String ds = "";
+                    for (int i = 0;i < hashes;i++) hs +="#";
+                    for (int i = 0;i < dots;i++) ds +="-";
+                    tooltip.add("Progress " + String.format("%.2f",prog*100) + "% ["+hs+ds+"]");
+                }
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof TileEntityClayOven) {
+            TileEntityClayOven te = (TileEntityClayOven) accessor.getTileEntity();
+            if (te.offset.length == 3 && te.master() != null) {
+                te = te.master();
+                for (TileEntityMultiblockMetal.MultiblockProcess<SimplifiedMultiblockRecipe> process : te.processQueue) {
+                    tooltip.add(process.recipe.getItemInputs().get(0).stack.getDisplayName() + ": " + (int)((process.maxTicks - process.processTick)/(60*20)) + " hour(s) remaining");
+                }
             }
         }
         return tooltip;

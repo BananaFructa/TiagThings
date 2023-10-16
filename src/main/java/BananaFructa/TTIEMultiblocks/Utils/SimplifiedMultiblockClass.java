@@ -1,5 +1,6 @@
 package BananaFructa.TTIEMultiblocks.Utils;
 
+import BananaFructa.TTIEMultiblocks.IECopy.BlockTTMultiblock;
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock;
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_1;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
@@ -14,6 +15,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecor
 import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalMultiblock;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.sun.org.apache.xalan.internal.res.XSLTErrorResources_zh_TW;
+import net.mcft.copy.backpacks.client.RendererBackpack;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,6 +25,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -34,6 +37,7 @@ import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraft.item.*;
 
 import java.io.*;
+import java.util.HashMap;
 
 public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock {
 
@@ -44,8 +48,9 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
     public IBlockState state;
     public IBlockState stateChild;
     public int[] size;
+    public Class<? extends TileEntity>[] teOverload;
 
-    public SimplifiedMultiblockClass(String name, ItemStack[][][] structure, int hSource, int lSource, int wSource, IBlockState state, IBlockState stateChild) {
+    public SimplifiedMultiblockClass(String name, ItemStack[][][] structure, int hSource, int lSource, int wSource, IBlockState state, IBlockState stateChild, Class<? extends TileEntity>... teOverload) {
         this.name = name;
         this.structure = structure;
         this.hSource = hSource;
@@ -55,9 +60,10 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         this.stateChild = stateChild;
         this.materials = IEUtils.getMaterialsForStructure(structure,hSource,lSource,wSource);
         this.size = new int[]{this.structure.length,this.structure[0].length,this.structure[0][0].length};
+        this.teOverload = teOverload;
     }
 
-    public SimplifiedMultiblockClass(String name, String structureFileName, IBlockState state, IBlockState stateChild) {
+    public SimplifiedMultiblockClass(String name, String structureFileName, IBlockState state, IBlockState stateChild,Class<? extends TileEntity>... teOverload) {
         InputStream stream =  getClass().getClassLoader().getResourceAsStream("assets/"+ TTMain.modId+"/structure_files/"+structureFileName);
         try {
             NBTTagCompound nbt = CompressedStreamTools.readCompressed(stream);
@@ -87,6 +93,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         this.state = state;
         this.stateChild = stateChild;
         this.materials = IEUtils.getMaterialsForStructure(structure,hSource,lSource,wSource);
+        this.teOverload = teOverload;
     }
 
     @Override
@@ -102,6 +109,9 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
 
     @Override
     public boolean createStructure(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
+        if (enumFacing == EnumFacing.UP || enumFacing == EnumFacing.DOWN) {
+            enumFacing = entityPlayer.getHorizontalFacing().getOpposite();
+        }
         Tuple<Boolean, Boolean> result = IEUtils.checkStructure(
                 world,
                 blockPos,
@@ -124,12 +134,13 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
                 hSource,
                 lSource,
                 wSource,
-                state.withProperty(IEProperties.FACING_HORIZONTAL,enumFacing),
-                stateChild.withProperty(IEProperties.FACING_HORIZONTAL,enumFacing),
-                mirrored
+                state.getBlock() instanceof BlockTTMultiblock ? state.withProperty(IEProperties.FACING_HORIZONTAL,enumFacing) : state,
+                stateChild.getBlock() instanceof BlockTTMultiblock ? stateChild.withProperty(IEProperties.FACING_HORIZONTAL,enumFacing) : stateChild,
+                mirrored,
+                teOverload
         );
 
-        return false;
+        return true;
     }
 
     @Override

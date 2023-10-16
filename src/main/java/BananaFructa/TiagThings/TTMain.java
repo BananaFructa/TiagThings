@@ -8,12 +8,14 @@ import BananaFructa.TFCTech.TEInductionCrucibleCAP;
 import BananaFructa.TTIEMultiblocks.Commands.GetTEPos;
 import BananaFructa.TTIEMultiblocks.Commands.StructureGeneratorCommand;
 import BananaFructa.TTIEMultiblocks.Renderers.ClarifierRenderer;
+import BananaFructa.TTIEMultiblocks.Renderers.ScaffoldRenderer;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TiagThings.Commands.Wikis;
 import BananaFructa.TiagThings.Items.FluidLoaderHandler;
 import BananaFructa.TiagThings.Items.ItemLoaderHandler;
+import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.Proxy.CommonProxy;
 import appeng.core.localization.GuiText;
 import appeng.items.materials.MaterialType;
@@ -37,7 +39,10 @@ import nc.init.NCFluids;
 import nc.integration.crafttweaker.CTRemoveRecipe;
 import net.dries007.tfc.api.capability.food.FoodData;
 import net.dries007.tfc.api.capability.food.IFoodStatsTFC;
+import net.dries007.tfc.objects.blocks.devices.BlockFirePit;
+import net.dries007.tfc.objects.blocks.property.ILightableBlock;
 import net.dries007.tfc.objects.fluids.FluidsTFC;
+import net.dries007.tfc.objects.te.TEFirePit;
 import net.dries007.tfc.util.calendar.CalendarTFC;
 import net.dries007.tfc.util.climate.ClimateTFC;
 import net.minecraft.block.Block;
@@ -56,6 +61,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -119,6 +125,20 @@ public class TTMain {
         TemperatureRegistry.BLOCKS.register((state, pos, player) -> tempHeater(TileEntityElectricHeater.class, state, pos, player, "electric_heater", 21, 0.06f));
         TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(TileEntityIndoorACUnit.class,state, pos, player, "ac_indoor_unit", -10, 0.06f)));
         TemperatureRegistry.BLOCKS.register(((state, pos, player) -> tempHeater(TileEntityOutdoorACUnit.class,state, pos, player, "ac_outdoor_unit", 21, 0.06f)));
+
+        TemperatureRegistry.BLOCKS.register((state,pos,player)->{
+            if (state.getBlock() instanceof BlockFirePit) {
+                TEFirePit teFirePit = (TEFirePit) player.getEntityWorld().getTileEntity(pos);
+                TileEntity below = player.getEntityWorld().getTileEntity(pos.offset(EnumFacing.DOWN));
+                if (below instanceof TileEntityMasonryHeater) {
+                    if (((TileEntityMasonryHeater) below).field_174879_c == 4) {
+                        return new TileEntityModifier("masonry_heater", (teFirePit.getField(0) * 3 / 100.f), 0.06f);
+                    }
+                }
+            }
+            return null;
+        });
+
         TemperatureRegistry.ENVIRONMENT.register((player) -> {
             List<Entity> entities = player.getEntityWorld().getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(player.posX - 0.5, 0, player.posZ - 0.5, player.posX + 0.5, 2, player.posZ + 0.5));
             return new EnvironmentalModifier("player", 1.0F * entities.size(), 0.3F);
@@ -190,6 +210,7 @@ public class TTMain {
         IIContent.itemLightEngineerChestplate = new ModifiedItemLightChestplate();
         IIContent.itemLightEngineerBoots = new ModifiedItemLightBoots();
         IIPacketHandler.registerPackets();
+        TTPacketHandler.registerPackets();
         FluidLoaderHandler.addLiquid("cooled_lava_mixture","blocks/cooled_lava_mixture_still","blocks/cooled_lava_mixture_flow", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("water_tungsten_mixture","blocks/water_tungsten_mixture_still","blocks/water_tungsten_mixture_flow", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("ethane","blocks/ethane_still","blocks/ethane_flow", Material.WATER,true,false);
@@ -284,6 +305,7 @@ public class TTMain {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityClarifier.class, new ClarifierRenderer());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRocketScaffold.class, new ScaffoldRenderer());
         VenusBlocks.crashedProbe = Blocks.AIR;
         IIPotions.infrared_vision = Potion.getPotionById(16);
         BottlingMachineRecipe.removeRecipes(Utils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood"));

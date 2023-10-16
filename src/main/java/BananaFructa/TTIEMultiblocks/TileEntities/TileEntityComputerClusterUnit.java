@@ -1,10 +1,12 @@
 package BananaFructa.TTIEMultiblocks.TileEntities;
 
 import BananaFructa.TTIEMultiblocks.TTIEContent;
+import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.PortType;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TiagThings.TTMain;
+import BananaFructa.TiagThings.Utils;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGridNode;
@@ -23,6 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -44,17 +47,49 @@ import java.util.Random;
 
 public class TileEntityComputerClusterUnit extends SimplifiedTileEntityMultiblockMetal<TileEntityComputerClusterUnit, SimplifiedMultiblockRecipe> {
 
+    public boolean paired = false;
+    public boolean tempPaired = false;
+
+    private static final List<SimplifiedMultiblockRecipe> recipes = new ArrayList<SimplifiedMultiblockRecipe>() {{
+       add (new SimplifiedMultiblockRecipe(new ItemStack[0],new FluidStack[0],new ItemStack[0],new FluidStack[0],4096,60*20));
+    }};
+
     public TileEntityComputerClusterUnit() {
-        super(TTIEContent.computerClusterUnit, 16000, false,new ArrayList<>());
+        super(TTIEContent.computerClusterUnit, 16000, false,recipes);
     }
 
     @Override
     public void update() {
         if (this.field_174879_c == 0) this.world.setTileEntity(pos,new TileEntityComputerClusterUnit_AE2(this)); // AE port
         super.update();
+        if (world.isRemote) return;
+        if (isDummy()) return;
+
+        if (!IEUtils.ae2PostTick(world)) return;
+        if (paired ^ tempPaired) world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
+        paired = tempPaired;
+        tempPaired = false;
+    }
+
+    @Override
+    public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket) {
+        super.writeCustomNBT(nbt, descPacket);
+        nbt.setBoolean("paired",paired);
+    }
+
+    @Override
+    public void readCustomNBT(NBTTagCompound nbt, boolean descPacket) {
+        super.readCustomNBT(nbt, descPacket);
+        paired = nbt.getBoolean("paired");
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
     }
 
     @Override
     public void initPorts() {
+        addEnergyPort(6);
     }
 }

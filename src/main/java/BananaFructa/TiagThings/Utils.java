@@ -1,9 +1,13 @@
 package BananaFructa.TiagThings;
 
-import BananaFructa.tfcfarming.Config;
+import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityRocketScaffold;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -77,5 +81,37 @@ public class Utils {
             item = Item.REGISTRY.getObject(new ResourceLocation(id));
         }
         return new ItemStack(item,1,type);
+    }
+
+    public static boolean placedInNonWorkingScaffold(World world, BlockPos pos) {
+        TileEntityRocketScaffold teScaffold = null;
+        for (int i = 0;i < 10;i++) {
+            TileEntity te = world.getTileEntity(pos.offset(EnumFacing.EAST,i));
+            if (te instanceof TileEntityRocketScaffold) {
+                teScaffold = (TileEntityRocketScaffold) te;
+                break;
+            }
+        }
+        if (teScaffold == null || (teScaffold = teScaffold.master()) == null) return false;
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        int yLower = teScaffold.getBlockPosForPos(0).getY();
+        int yUpper = teScaffold.getBlockPosForPos(11661).getY();
+        if (y < yLower || y > yUpper) return false;
+        BlockPos[] corners = new BlockPos[]{
+                teScaffold.getBlockPosForPos(144),
+                teScaffold.getBlockPosForPos(14),
+                teScaffold.getBlockPosForPos(24),
+                teScaffold.getBlockPosForPos(154)
+        };
+        
+        for (BlockPos bp : corners) {
+            int bx = bp.getX();
+            int bz = bp.getZ();
+            if (Math.abs(bx - x) > 9 || Math.abs(bz - z) > 9) return false;
+        }
+
+        return !teScaffold.isWorking();
     }
 }

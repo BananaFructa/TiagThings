@@ -49,23 +49,19 @@ import micdoodle8.mods.galacticraft.planets.mars.world.gen.ChunkProviderMars;
 import micdoodle8.mods.galacticraft.planets.venus.world.gen.ChunkProviderVenus;
 import micdoodle8.mods.galacticraft.planets.venus.world.gen.dungeon.MapGenDungeonVenus;
 import mods.railcraft.common.blocks.ItemBlockEntityDelegate;
-import mods.railcraft.common.blocks.ItemBlockRailcraft;
 import mods.railcraft.common.blocks.RailcraftBlocks;
 import mods.railcraft.common.blocks.machine.IEnumMachine;
 import mods.railcraft.common.blocks.machine.equipment.EquipmentVariant;
-import mods.railcraft.common.blocks.machine.equipment.TileRollingMachinePowered;
 import mods.railcraft.common.blocks.multi.MultiBlockPattern;
 import mods.railcraft.common.blocks.multi.TileFluxTransformer;
-import mods.railcraft.common.carts.EntityLocomotive;
 import mods.railcraft.common.fluids.Fluids;
-import mods.railcraft.common.util.misc.Game;
 import net.dries007.tfc.api.types.ICrop;
 import net.dries007.tfc.objects.CreativeTabsTFC;
 import net.dries007.tfc.objects.blocks.agriculture.BlockCropTFC;
+import net.dries007.tfc.objects.blocks.devices.BlockFirePit;
 import net.dries007.tfc.objects.fluids.FluidsTFC;
 import net.dries007.tfc.objects.items.ItemSeedsTFC;
 import net.dries007.tfc.objects.items.metal.ItemMetalBucket;
-import net.dries007.tfc.util.json.JsonConfigRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.MapColor;
@@ -80,12 +76,10 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkProviderServer;
@@ -105,15 +99,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.apache.commons.io.FileUtils;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.blocks.metal.TileEntityCO2Filter;
 import tfctech.TFCTech;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -288,6 +278,11 @@ public class CommonProxy {
 
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent event) {
+        if (Utils.placedInNonWorkingScaffold(event.getWorld(),event.getPos())) {
+            event.setCanceled(true);
+            return;
+        }
+
         if (event.getWorld().isRemote) return;
 
         if (event.getPlacedBlock().getBlock().getRegistryName().getResourcePath().equals("asteroid_mining_station") && event.getWorld().provider.getDimension() != -30) {
@@ -469,6 +464,14 @@ public class CommonProxy {
             },new AtomicInteger(1)));
         }
 
+        if (event.getEntityPlayer().isSneaking() && blockState.getBlock() instanceof BlockFirePit) {
+            BlockPos behind = targetPos.offset(event.getFace().getOpposite());
+            if(!TTIEContent.clayOven.createStructure(event.getWorld(),behind,event.getFace(),event.getEntityPlayer())){
+                TTIEContent.masonryHeater.createStructure(event.getWorld(),behind,event.getFace(),event.getEntityPlayer());
+            }
+
+        }
+
         synchronized (scheduled) {
             Item i = event.getItemStack().getItem();
 
@@ -634,6 +637,9 @@ public class CommonProxy {
         add("IE:BlastFurnace");
         add("IE:BlastFurnaceAdvanced");
         add("II:Electrolyzer");
+        add("TT:ClayOven");
+        add("TT:MasonryHeater");
+        //add("TT:RocketScaffold");
     }};
 
     @SubscribeEvent

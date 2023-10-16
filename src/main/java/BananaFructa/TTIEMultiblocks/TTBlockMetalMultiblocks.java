@@ -5,7 +5,6 @@ import BananaFructa.TTIEMultiblocks.IECopy.ItemBlockTTBase;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalMultiblock;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -17,6 +16,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.Properties;
 
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 public class TTBlockMetalMultiblocks extends BlockTTMultiblock<TTBlockTypes_MetalMultiblock> {
     public TTBlockMetalMultiblocks() {
         super("tt_metal_multiblock", Material.IRON, PropertyEnum.create("type", TTBlockTypes_MetalMultiblock.class), ItemBlockTTBase.class, new Object[]{IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0], Properties.AnimationProperty, IEProperties.OBJ_TEXTURE_REMAP});
-        this.setAllNotNormalBlock();
+        //this.setAllNotNormalBlock();
         this.setHardness(3.0F);
         this.setResistance(15.0F);
         this.lightOpacity = 0;
@@ -93,7 +93,12 @@ public class TTBlockMetalMultiblocks extends BlockTTMultiblock<TTBlockTypes_Meta
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return false;
+    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return super.isSideSolid(base_state, world, pos, side);
+    }
+
+    @Override
+    public boolean isTopSolid(IBlockState state) {
+        return true;
     }
 }

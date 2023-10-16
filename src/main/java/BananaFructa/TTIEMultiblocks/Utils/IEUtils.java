@@ -1,15 +1,13 @@
 package BananaFructa.TTIEMultiblocks.Utils;
 
-import BananaFructa.TTIEMultiblocks.TTBlockMetalMultiblocks;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityAE2CompatMultiblock;
-import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.dries007.tfc.objects.blocks.devices.BlockFirePit;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -32,14 +29,12 @@ public class IEUtils {
 
     private static final Queue<Tuple<BlockPos,Integer>> updateQueue = new LinkedList<>();
 
-    public static void populateMultiblock(World world, BlockPos sourcePos, EnumFacing sideHit, ItemStack[][][] structure, int structurePositionTriggerHeight, int structurePositionTriggerLength, int structurePositionTriggerWidth, IBlockState state, IBlockState stateChild, boolean mirror) {
+    public static void populateMultiblock(World world, BlockPos sourcePos, EnumFacing sideHit, ItemStack[][][] structure, int structurePositionTriggerHeight, int structurePositionTriggerLength, int structurePositionTriggerWidth, IBlockState state, IBlockState stateChild, boolean mirror, Class<? extends TileEntity>... teOverload) {
 
         //if (world.isRemote) return;
 
         // Indexing shenanigans ahead
         // Still not fully understand some indexing rules, but that does not matter as this code is here to never be looked at again
-
-        Class<? extends TileEntity> teClass = state.getBlock().createTileEntity(world, state).getClass();
 
         int structureHeight = structure.length;
         int structureLength = structure[0].length;
@@ -58,32 +53,48 @@ public class IEUtils {
 
                     BlockPos pos = sourcePos.offset(sideHit, l).offset(sideHit.rotateY(), ww).add(0, h, 0);
 
-                    if (dummy) world.setBlockState(pos, stateChild);
-                    else world.setBlockState(pos,state);
+                    int posVal = (h + structurePositionTriggerHeight) * structureLength * structureWidth + (l + structurePositionTriggerLength) * structureWidth + (w + structurePositionTriggerWidth);
 
-                    TileEntity te = world.getTileEntity(pos);
-
-                    if (teClass.isInstance(te)) {
-                        TileEntityMultiblockPart<?> teMP = (TileEntityMultiblockPart<?>) te;
-                        teMP.formed = true;
-                        teMP.field_174879_c = (h + structurePositionTriggerHeight) * structureLength * structureWidth + (l + structurePositionTriggerLength) * structureWidth + (w + structurePositionTriggerWidth);
-                        teMP.offset = new int[]{(sideHit == EnumFacing.WEST ? -l : sideHit == EnumFacing.EAST ? l : sideHit == EnumFacing.NORTH ? ww : -ww), h, (sideHit == EnumFacing.NORTH ? -l : sideHit == EnumFacing.SOUTH ? l : sideHit == EnumFacing.EAST ? ww : -ww)};
-                        teMP.mirrored = mirror;
-                        teMP.facing = sideHit;
-                        if (teMP instanceof SimplifiedTileEntityMultiblockMetal) {
-                            if (!dummy) {
-                                ((SimplifiedTileEntityMultiblockMetal) teMP).initPorts();
-                                ((SimplifiedTileEntityMultiblockMetal) teMP).setFace(sideHit);
+                    if (dummy) {
+                        world.setBlockState(pos, stateChild);
+                        if (teOverload.length > 0) {
+                            try {
+                                world.setTileEntity(pos, teOverload[0].newInstance());
+                            } catch (Exception err) {
+                                err.printStackTrace();
                             }
                         }
-                        if (!world.isRemote)teMP.markDirty();
-                    } else if (te instanceof TileEntityAE2CompatMultiblock) { // a bit jank
-                        TileEntityAE2CompatMultiblock<?> teMP = (TileEntityAE2CompatMultiblock<?>) te;
-                        teMP.formed = true;
-                        teMP.pos = (h + structurePositionTriggerHeight) * structureLength * structureWidth + (l + structurePositionTriggerLength) * structureWidth + (w + structurePositionTriggerWidth);
-                        teMP.offset = new int[]{(sideHit == EnumFacing.WEST ? -l : sideHit == EnumFacing.EAST ? l : sideHit == EnumFacing.NORTH ? ww : -ww), h, (sideHit == EnumFacing.NORTH ? -l : sideHit == EnumFacing.SOUTH ? l : sideHit == EnumFacing.EAST ? ww : -ww)};
-                        teMP.mirrored = mirror;
-                        teMP.facing = sideHit;
+                    }
+                    else {
+                        world.setBlockState(pos,state);
+                        if (teOverload.length > 0) {
+                            try {
+                                world.setTileEntity(pos, teOverload[1].newInstance());
+                            } catch (Exception err) {
+                                err.printStackTrace();
+                            }
+                        }
+                    }
+
+                    if (state.getBlock().hasTileEntity(state) || teOverload.length > 0) {
+                        TileEntity te = world.getTileEntity(pos);
+
+                        Class<? extends TileEntity> teClass = state.getBlock().createTileEntity(world, state).getClass();
+                        if (teClass.isInstance(te)) {
+                            TileEntityMultiblockPart<?> teMP = (TileEntityMultiblockPart<?>) te;
+                            teMP.formed = true;
+                            teMP.field_174879_c = posVal;
+                            teMP.offset = new int[]{(sideHit == EnumFacing.WEST ? -l : sideHit == EnumFacing.EAST ? l : sideHit == EnumFacing.NORTH ? ww : -ww), h, (sideHit == EnumFacing.NORTH ? -l : sideHit == EnumFacing.SOUTH ? l : sideHit == EnumFacing.EAST ? ww : -ww)};
+                            teMP.mirrored = mirror;
+                            teMP.facing = sideHit;
+                            if (teMP instanceof SimplifiedTileEntityMultiblockMetal) {
+                                if (!dummy) {
+                                    ((SimplifiedTileEntityMultiblockMetal) teMP).initPorts();
+                                    ((SimplifiedTileEntityMultiblockMetal) teMP).setFace(sideHit);
+                                }
+                            }
+                            if (!world.isRemote) teMP.markDirty();
+                        }
                     }
 
                     world.addBlockEvent(pos, TTIEContent.ttBlockMetalMultiblock, 255, 0);
@@ -159,7 +170,9 @@ public class IEUtils {
                     ItemStack expected = structure[h + structurePositionTriggerHeight][l + structurePositionTriggerLength][w + structurePositionTriggerWidth];
                     Block expectedBlock = Block.getBlockFromItem(expected.getItem());
                     int expectedMeta = expected.getMetadata();
-                    if (!Utils.isBlockAt(world,current,expectedBlock,expectedMeta)) return false;
+                    if (expectedBlock != Blocks.AIR) {
+                        if (!Utils.isBlockAt(world, current, expectedBlock, expectedMeta)) return false;
+                    }
                 }
             }
         }
@@ -267,6 +280,18 @@ public class IEUtils {
         boolean[] bools = new boolean[arr.length];
         for (int i = 0;i < arr.length;i++) bools[i] = arr[i] == 1;
         return bools;
+    }
+
+    public static boolean ae2PreTick(World world) {
+        return world.getTotalWorldTime() % 20 == 0;
+    }
+
+    public static boolean ae2PostTick(World world) {
+        return world.getTotalWorldTime() % 20 == 1;
+    }
+
+    public static void notifyClientUpdate(World world,BlockPos pos) {
+        world.notifyBlockUpdate(pos,world.getBlockState(pos),world.getBlockState(pos),2);
     }
 
 

@@ -55,7 +55,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
 
     int slotCounter = 0;
 
-    EnumFacing face = EnumFacing.NORTH;//
+    //EnumFacing face = EnumFacing.NORTH;//
 
     public SimplifiedTileEntityMultiblockMetal(SimplifiedMultiblockClass instance, int energyStorage, boolean redstoneControl, List<R> recipes) {
         super(instance,instance.size,energyStorage,redstoneControl);
@@ -95,8 +95,14 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         this.recipes = recipes;
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        setFace(this.facing);
+    }
+
     public void setFace(EnumFacing face) {
-        this.face = face;
+       // this.face = face;
         if (!isDummy()) {
             for (Integer port : itemPorts.keySet()) {
                 for (int i = 0;i < itemPorts.get(port).size();i++) {
@@ -156,7 +162,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     }
 
     EnumFacing shiftRelativeToNorth(EnumFacing face) {
-        switch (this.face) {
+        switch (this.facing) {
             case NORTH:
                 if (!mirrored && (face == EnumFacing.WEST || face == EnumFacing.EAST)) return face.getOpposite();
                 return face;
@@ -288,7 +294,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             for (ItemStack stack : outputs) {
                 PortInfo info = getNextItemPort(PortType.OUTPUT);
                 if (info == null) return false;
-                if (info.index == -1) return false; // no internal inventory associated
+                if (info.index == -1) return true; // no internal inventory associated
                 OffsetExposedIEInventoryHandler handler = inventoryHandlers.get(info.index);
                 boolean foundSlot = false;
                 for (int s = 0; s < handler.getSlots(); s++) {
@@ -473,7 +479,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             }
         }
         if (!rest.isEmpty()) {
-            Utils.dropStackAtPos(world,pos,rest,facing);
+            Utils.dropStackAtPos(world,getBlockPosForPos(info.pos),rest,info.face);
         }
     }
 
@@ -564,11 +570,11 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     public void writeCustomNBT(NBTTagCompound nbt,boolean descPacket) {
         super.writeCustomNBT(nbt,descPacket);
 
-        if (isDummy()) return;
+        if (this.offset.length !=3 || isDummy()) return;
 
         int index = 0;
 
-        nbt.setInteger("face", face.ordinal());
+        //nbt.setInteger("face", face.ordinal());
 
         nbt.setInteger("tanksCount", tanks.size());
         for (int i = 0; i < tanks.size(); i++) {
@@ -612,7 +618,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         for (int i = 0;i < inventoryHandlers.size();i++) {
             NBTTagCompound handlerNBT = new NBTTagCompound();
             handlerNBT.setInteger("slots",inventoryHandlers.get(i).getSlots());
-            handlerNBT.setInteger("offset",inventoryHandlers.get(i).getOffset());
+            handlerNBT.setInteger("offsetih",inventoryHandlers.get(i).getOffset());
             handlerNBT.setIntArray("canInsert",IEUtils.booleanToInt(inventoryHandlers.get(i).getCanInsert()));
             handlerNBT.setIntArray("canExtract",IEUtils.booleanToInt(inventoryHandlers.get(i).getCanExtract()));
             nbt.setTag("ih-"+i,handlerNBT);
@@ -624,7 +630,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     public void readCustomNBT(NBTTagCompound nbt, boolean descPacket) {
         super.readCustomNBT(nbt,descPacket);
 
-        if (isDummy()) return;
+        if (this.offset.length !=3 || isDummy()) return;
 
         energyPorts.clear();
         redstonePorts.clear();
@@ -668,23 +674,21 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         for (int i = 0;i < ihCount;i++) {
             NBTTagCompound ihNBT = (NBTTagCompound) nbt.getTag("ih-"+i);
             int slots = ihNBT.getInteger("slots");
-            int offset = ihNBT.getInteger("offset");
+            int offset = ihNBT.getInteger("offsetih");
             boolean[] canInsert = IEUtils.intToBoolean(ihNBT.getIntArray("canInsert"));
             boolean[] canExtract = IEUtils.intToBoolean(ihNBT.getIntArray("canExtract"));
             inventoryHandlers.add(new OffsetExposedIEInventoryHandler(slots,this,offset,canInsert,canExtract));
         }
 
-        setFace(EnumFacing.values()[nbt.getInteger("face")]);
-
     }
 
-    @Nullable
+    /*@Nullable
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         this.writeCustomNBT(compound,true);
-        return new SPacketUpdateTileEntity(getPos(),1,compound);
-    }
+        return new SPacketUpdateTileEntity(getPos(),3,compound);
+    }*/
 
     @Override
     public float getMinProcessDistance(MultiblockProcess<R> multiblockProcess) {
@@ -719,6 +723,13 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     }
 
     // =================== AE2 compat
+
+
+    @Override
+    public boolean isDummy() {
+        if (offset == null || offset.length != 3) return true;
+        return super.isDummy();
+    }
 
     public void disassemble()
     {

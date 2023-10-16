@@ -2,25 +2,42 @@ package BananaFructa.TTIEMultiblocks;
 
 import BananaFructa.TTIEMultiblocks.IECopy.BlockTTBase;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
+import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.RocketModule_SMC;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockClass;
 import BananaFructa.TiagThings.TTMain;
+import BananaFructa.TiagThings.Utils;
 import blusunrize.immersiveengineering.api.ManualHelper;
 import blusunrize.immersiveengineering.api.ManualPageMultiblock;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
+import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.client.IECustomStateMapper;
+import blusunrize.immersiveengineering.common.IEContent;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockMetalDecoration1;
+import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration1;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
 import blusunrize.lib.manual.ManualPages;
 import flaxbeard.immersivepetroleum.client.page.ManualPageBigMultiblock;
+import nc.gui.element.NCButton;
+import net.dries007.tfc.api.types.Rock;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.block.statemap.DefaultStateMapper;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -30,6 +47,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.item.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +58,18 @@ public class TTIEContent {
 
     public static BlockTTBase<TTBlockTypes_MetalMultiblock> ttBlockMetalMultiblock;
     public static BlockTTBase<TTBlockTypes_MetalMultiblock_1> ttBlockMetalMultiblock_1;
+    public static BlockTTBase<TTBlockTypes_MetalMultiblock_2> ttBlockMetalMultiblock_2;
 
     public static List<Block> registeredTTBlocks = new ArrayList<>();
     public static List<Item> registeredTTItems = new ArrayList<>();
 
     static {
+        advancedComputerBlock = new Block(Material.IRON).setRegistryName("advanced_computer_block").setUnlocalizedName("advanced_computer_block").setCreativeTab(CreativeTabs.MISC);
+        rocketControllerBlock = new Block(Material.IRON).setRegistryName("rocket_controller_block").setUnlocalizedName("rocket_controller_block").setCreativeTab(CreativeTabs.MISC);
+
         ttBlockMetalMultiblock = new TTBlockMetalMultiblocks();
         ttBlockMetalMultiblock_1 = new TTBlockMetalMultiblocks_1();
+        ttBlockMetalMultiblock_2 = new TTBlockMetalMultiblocks_2();
         OBJLoader.INSTANCE.addDomain(TTMain.modId);
     }
 
@@ -66,9 +89,21 @@ public class TTIEContent {
     public static SimplifiedMultiblockClass tresherMultiblock;
     public static SimplifiedMultiblockClass electricOvenMultiblock;
     public static SimplifiedMultiblockClass computerClusterUnit;
+    public static SimplifiedMultiblockClass computerClusterController;
+    public static SimplifiedMultiblockClass memoryFormatter;
+    public static SimplifiedMultiblockClass clayOven;
+    public static SimplifiedMultiblockClass masonryHeater;
+    public static SimplifiedMultiblockClass rocketModuleScaffold;
+    public static SimplifiedMultiblockClass rktModule1,rktModule2,rktModule3;
+
+    public static Block advancedComputerBlock;
+    public static Item advancedComputerBlockItem;
+    public static Block rocketControllerBlock;
+    public static Item rocketControllerBlockItem;
 
     @SideOnly(Side.CLIENT)
     public static void clientInit() {
+
         ManualHelper.addEntry("Electric Heater","temperatureControl",
                 new ManualPageMultiblock(ManualHelper.getManual(),"The electric heater uses 2000 RF/t in order to raise the temperature around it by 21 \u00b0C / 69.8 F. It is worth to note that it becomes less efficient when multiple heaters are needed compared to the Steam Radiator.",electricHeaterMultiblock)
                 );
@@ -111,6 +146,9 @@ public class TTIEContent {
     }
 
     public static void init() {
+
+        GameRegistry.registerTileEntity(TileEntityAE2CompatMultiblock.class,new ResourceLocation(TTMain.modId,TileEntityAE2CompatMultiblock.class.getSimpleName()));
+
         GameRegistry.registerTileEntity(TileEntityElectricHeater.class,new ResourceLocation(TTMain.modId,TileEntityElectricHeater.class.getSimpleName()));
         GameRegistry.registerTileEntity(TileEntityFlareStack.class,new ResourceLocation(TTMain.modId,TileEntityFlareStack.class.getSimpleName()));
         GameRegistry.registerTileEntity(TileEntityCoalBoiler.class,new ResourceLocation(TTMain.modId,TileEntityCoalBoiler.class.getSimpleName()));
@@ -127,6 +165,14 @@ public class TTIEContent {
         GameRegistry.registerTileEntity(TileEntityTresher.class,new ResourceLocation(TTMain.modId,TileEntityTresher.class.getSimpleName()));
         GameRegistry.registerTileEntity(TileEntityElectricOven.class,new ResourceLocation(TTMain.modId,TileEntityElectricOven.class.getSimpleName()));
         GameRegistry.registerTileEntity(TileEntityComputerClusterUnit.class,new ResourceLocation(TTMain.modId,TileEntityComputerClusterUnit.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityComputerClusterUnit_AE2.class,new ResourceLocation(TTMain.modId,TileEntityComputerClusterUnit_AE2.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityComputerClusterController.class,new ResourceLocation(TTMain.modId,TileEntityComputerClusterController.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityComputerClusterController_AE2.class,new ResourceLocation(TTMain.modId,TileEntityComputerClusterController_AE2.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityMemoryFormatter.class,new ResourceLocation(TTMain.modId,TileEntityMemoryFormatter.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityMemoryFormatter_AE2.class,new ResourceLocation(TTMain.modId,TileEntityMemoryFormatter_AE2.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityClayOven.class,new ResourceLocation(TTMain.modId,TileEntityClayOven.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityMasonryHeater.class,new ResourceLocation(TTMain.modId,TileEntityMasonryHeater.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityRocketScaffold.class,new ResourceLocation(TTMain.modId,TileEntityRocketScaffold.class.getSimpleName()));
 
         electricHeaterMultiblock = new SimplifiedMultiblockClass(
                 "TT:ElectricHeater",
@@ -241,6 +287,85 @@ public class TTIEContent {
                 TTIEContent.ttBlockMetalMultiblock.getStateFromMeta(TTBlockTypes_MetalMultiblock.COMPUTER_CLUSTER_UNIT_CHILD.getMeta())
         );
 
+        computerClusterController = new SimplifiedMultiblockClass(
+                "TT:ComputerClusterController",
+                "computer_cluster_controller.tgz",
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.COMPUTER_CLUSTER_CONTROLLER.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.COMPUTER_CLUSTER_CONTROLLER_CHILD.getMeta())
+        );
+
+        memoryFormatter = new SimplifiedMultiblockClass(
+                "TT:MemoryFormatter",
+                "memory_formatter.tgz",
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.MEMORY_FORMATTER.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.MEMORY_FORMATTER_CHILD.getMeta())
+        );
+
+        clayOven = new SimplifiedMultiblockClass(
+                "TT:ClayOven",
+                "clay_oven.tgz",
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.CLAY_OVEN.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.CLAY_OVEN_CHILD.getMeta())
+        );
+
+        masonryHeater = new SimplifiedMultiblockClass(
+                "TT:MasonryHeater",
+                "masonry_heater.tgz",
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.MASONRY_HEATER.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.MASONRY_HEATER_CHILD.getMeta())
+        );
+
+        rocketModuleScaffold = new SimplifiedMultiblockClass(
+                "TT:RocketScaffold",
+                "rocket_scaffold.tgz",
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.ROCKET_SCAFFOLD.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.ROCKET_SCAFFOLD_CHILD.getMeta())
+        );
+
+
+
+        rktModule1 = new RocketModule_SMC(
+                "TT:RktModule1",
+                "rkt_1.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ){
+            private ItemStack rkt = Utils.itemStackFromCTId("<galacticraftcore:rocket_t1>");
+
+            @Override
+            public ItemStack getItem() {
+                return rkt.copy();
+            }
+        };
+
+        rktModule2 = new RocketModule_SMC(
+                "TT:RktModule2",
+                "rkt_2.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ){
+            private ItemStack rkt = Utils.itemStackFromCTId("<galacticraftcore:rocket_t1>");
+
+            @Override
+            public ItemStack getItem() {
+                return rkt.copy();
+            }
+        };
+
+        rktModule3 = new RocketModule_SMC(
+                "TT:RktModule3",
+                "rkt_3.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ){
+            private ItemStack rkt = Utils.itemStackFromCTId("<galacticraftplanets:rocket_t3>");
+
+            @Override
+            public ItemStack getItem() {
+                return rkt.copy();
+            }
+        };
+
         MultiblockHandler.registerMultiblock(electricHeaterMultiblock);
         MultiblockHandler.registerMultiblock(flareStackMultiblock);
         MultiblockHandler.registerMultiblock(coalBoilerMultiblock);
@@ -257,6 +382,14 @@ public class TTIEContent {
         MultiblockHandler.registerMultiblock(tresherMultiblock);
         MultiblockHandler.registerMultiblock(electricOvenMultiblock);
         MultiblockHandler.registerMultiblock(computerClusterUnit);
+        MultiblockHandler.registerMultiblock(computerClusterController);
+        MultiblockHandler.registerMultiblock(memoryFormatter);
+        MultiblockHandler.registerMultiblock(clayOven);
+        MultiblockHandler.registerMultiblock(masonryHeater);
+        MultiblockHandler.registerMultiblock(rocketModuleScaffold);
+        MultiblockHandler.registerMultiblock(rktModule1);
+        MultiblockHandler.registerMultiblock(rktModule2);
+        MultiblockHandler.registerMultiblock(rktModule3);
     }
 
     @SubscribeEvent
@@ -264,6 +397,8 @@ public class TTIEContent {
         for (Item i : registeredTTItems) {
             event.getRegistry().register(i);
         }
+        event.getRegistry().register(advancedComputerBlockItem = (new ItemBlock(advancedComputerBlock)).setRegistryName("advanced_computer_block"));
+        event.getRegistry().register(rocketControllerBlockItem = (new ItemBlock(rocketControllerBlock)).setRegistryName("rocket_controller_block"));
     }
 
     @SubscribeEvent
@@ -271,11 +406,18 @@ public class TTIEContent {
         for (Block b : registeredTTBlocks) {
             event.getRegistry().register(b);
         }
+        event.getRegistry().register(advancedComputerBlock);
+        event.getRegistry().register(rocketControllerBlock);
     }
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event) {
+
+        ModelLoader.setCustomModelResourceLocation(advancedComputerBlockItem, 0, new ModelResourceLocation(advancedComputerBlockItem.getRegistryName(), "normal"));
+        ModelLoader.setCustomStateMapper(advancedComputerBlock, new DefaultStateMapper());
+        ModelLoader.setCustomModelResourceLocation(rocketControllerBlockItem, 0, new ModelResourceLocation(rocketControllerBlockItem.getRegistryName(), "normal"));
+        ModelLoader.setCustomStateMapper(rocketControllerBlock, new DefaultStateMapper());
 
         for(Block block : registeredTTBlocks) {
             final ResourceLocation loc = Block.REGISTRY.getNameForObject(block);

@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -84,4 +85,8 @@ public abstract class BlockTTMultiblock<E extends Enum<E> & BlockTTBase.IBlockEn
         return ItemStack.EMPTY;
     }
 
+    @Override
+    public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+        super.onEntityCollidedWithBlock(world, pos, state, entity);
+    }
 }

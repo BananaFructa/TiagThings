@@ -6,13 +6,18 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+
+import javax.annotation.Nullable;
 
 /**
  * CAN ONLY BE USED FOR BLOCKS THAT ARE DUMMIES FOR AE2 CONNECTIONS AS IT HAS NONE OF THE LOGIC REQUIRED TO BE THE MASTER BLOCK
@@ -28,6 +33,11 @@ public class TileEntityAE2CompatMultiblock<T extends TileEntityMultiblockPart<T>
     protected final int[] structureDimensions;
 
     SimplifiedMultiblockClass multiblockClass;
+
+    protected TileEntityAE2CompatMultiblock(SimplifiedMultiblockClass multiblockClass) {
+        this.multiblockClass = multiblockClass;
+        this.structureDimensions = multiblockClass.size;
+    }
 
     protected TileEntityAE2CompatMultiblock(SimplifiedMultiblockClass multiblockClass, TileEntityMultiblockPart<?> oldPart) {
         this.multiblockClass = multiblockClass;
@@ -161,4 +171,26 @@ public class TileEntityAE2CompatMultiblock<T extends TileEntityMultiblockPart<T>
         return super.writeToNBT(nbt);
     }
 
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setBoolean("formed", formed);
+        nbt.setInteger("pos", pos);
+        nbt.setIntArray("offset", offset);
+        nbt.setBoolean("mirrored", mirrored);
+        nbt.setInteger("facing", facing.ordinal());
+        return new SPacketUpdateTileEntity(getPos(),3,nbt);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net,pkt);
+        NBTTagCompound nbt = pkt.getNbtCompound();
+        formed = nbt.getBoolean("formed");
+        pos = nbt.getInteger("pos");
+        offset = nbt.getIntArray("offset");
+        mirrored = nbt.getBoolean("mirrored");
+        facing = EnumFacing.getFront(nbt.getInteger("facing"));
+    }
 }

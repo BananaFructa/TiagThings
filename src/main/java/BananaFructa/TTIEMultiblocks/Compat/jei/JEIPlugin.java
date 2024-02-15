@@ -1,20 +1,25 @@
 package BananaFructa.TTIEMultiblocks.Compat.jei;
 
-import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock;
-import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_1;
-import BananaFructa.TTIEMultiblocks.TTIEContent;
+import BananaFructa.TTIEMultiblocks.*;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
+import mezz.jei.api.gui.IGuiFluidStackGroup;
+import mezz.jei.api.gui.IGuiItemStackGroup;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import nc.multiblock.qComputer.QuantumGate;
+import net.dries007.tfc.api.types.Metal;
+import net.dries007.tfc.objects.fluids.FluidsTFC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.swing.tree.TreeCellEditor;
 import java.util.ArrayList;
@@ -40,6 +45,18 @@ public class JEIPlugin implements IModPlugin {
     public static TTCategory outdoorAcCategory;
     public static TTCategory electricOvenCategory;
     public static TTCategory tresherCategory;
+    public static TTCategory ccm;
+    public static TTCategory fbr;
+    public static TTCategory shaftFurnace;
+    public static TTCategory openHearthFurnace;
+    public static TTCategory magneticSeparator;
+    public static TTCategory memoryFormatter;
+    public static TTCategory openHearthFurnaceFuelSolid;
+    public static TTCategory openHearthFurnaceFuelLiquid;
+    public static TTCategory openHearthFurnaceSit;
+    public static TTCategory clayOven;
+    public static TTCategory smallCoalFuel;
+    public static TTCategory smallCoalBoiler;
 
     void registerRecipes() {
         recipesToRegister.add(new Tuple<>(TileEntityCoalBoiler.burnRecipes,TTJEICategory.COAL_BOILER_BURN));
@@ -58,7 +75,18 @@ public class JEIPlugin implements IModPlugin {
         recipesToRegister.add(new Tuple<>(TileEntityOutdoorACUnit.recipes,TTJEICategory.OUTDOOR_AC));
         recipesToRegister.add(new Tuple<>(TileEntityElectricOven.recipes,TTJEICategory.ELECTRIC_OVEN));
         recipesToRegister.add(new Tuple<>(TileEntityTresher.recipes, TTJEICategory.TRESHER));
-
+        recipesToRegister.add(new Tuple<>(TileEntityCCM.recipes,TTJEICategory.CCM));
+        recipesToRegister.add(new Tuple<>(TileEntityFBR.recipes,TTJEICategory.FBR));
+        recipesToRegister.add(new Tuple<>(TileEntityShaftFurnace.recipes,TTJEICategory.SHAFT_FURNACE));
+        recipesToRegister.add(new Tuple<>(TileEntityOpenHearthFurnace.centralisedRecipes,TTJEICategory.OPEN_HEARTH_FURNACE));
+        recipesToRegister.add(new Tuple<>(TileEntityMagneticSeparator.recipes,TTJEICategory.MAGNETIC_SEPARATOR));
+        recipesToRegister.add(new Tuple<>(TileEntityMemoryFormatter.recipes,TTJEICategory.MEMORY_FORMATTER));
+        recipesToRegister.add(new Tuple<>(new ArrayList<SimplifiedMultiblockRecipe>(){{add(TileEntityOpenHearthFurnace.burningRecipes.get(0));}},TTJEICategory.OPHF_SOLID));
+        recipesToRegister.add(new Tuple<>(new ArrayList<SimplifiedMultiblockRecipe>(){{add(TileEntityOpenHearthFurnace.burningRecipes.get(1));}},TTJEICategory.OPHF_LIQUID));
+        recipesToRegister.add(new Tuple<>(TileEntityOpenHearthFurnace.sitRecipes,TTJEICategory.OPHF_SIT));
+        recipesToRegister.add(new Tuple<>(TileEntityClayOven.recipes,TTJEICategory.CLAY_OVEN));
+        recipesToRegister.add(new Tuple<>(TileEntitySmallCoalBoiler.burnRecipes,TTJEICategory.SMALL_COAL_FUEL));
+        recipesToRegister.add(new Tuple<>(new ArrayList<SimplifiedMultiblockRecipe>(){{add(TileEntitySmallCoalBoiler.waterBurnRecipe);add(TileEntitySmallCoalBoiler.waterBurnRecipe2);}},TTJEICategory.SMALL_COAL_BOILER));
     }
 
     @Override
@@ -351,7 +379,243 @@ public class JEIPlugin implements IModPlugin {
                 new TTCategory.UniversalSlot[0],
                 141,0,46,17,47,19
         );
-        registry.addRecipeCategories(tresherCategory);
+        //registry.addRecipeCategories(tresherCategory);
+
+        ccm = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_3,1, TTBlockTypes_MetalMultiblock_3.CCM.getMeta()),
+                "tiagthings:textures/gui/ccm.png",
+                "Continuous Casting Machine",
+                TTJEICategory.CCM,
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,107,21)
+                },
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,5,6)
+                },
+                new TTCategory.UniversalSlot[0],
+                143,2,80,20,25,20
+
+
+        );
+        registry.addRecipeCategories(ccm);
+
+        fbr = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_3,1, TTBlockTypes_MetalMultiblock_3.FBR.getMeta()),
+                "tiagthings:textures/gui/fbr.png",
+                "Fluidized Bed Reactor",
+                TTJEICategory.FBR,
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,37,6)
+                },
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,9,6)
+                },
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,115,6)
+                },
+                142,1,80,50,30,1
+        );
+        registry.addRecipeCategories(fbr);
+
+        shaftFurnace = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_3,1, TTBlockTypes_MetalMultiblock_3.SHAFT_FURNACE.getMeta()),
+                "tiagthings:textures/gui/shaft_furnace.png",
+                "Shaft Furnace",
+                TTJEICategory.SHAFT_FURNACE,
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,33,6)
+                },
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,107,6)
+                },
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,5,6)
+                },
+                new TTCategory.UniversalSlot[0],
+                141,1,80,51,26,0
+        );
+        registry.addRecipeCategories(shaftFurnace);
+
+        openHearthFurnace = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_2,1, TTBlockTypes_MetalMultiblock_2.OPEN_HEARTH_FURNACE.getMeta()),
+                "tiagthings:textures/gui/open_hearth_furnace.png",
+                "Open Hearth Furnace",
+                TTJEICategory.OPEN_HEARTH_FURNACE,
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,10,6)
+                },
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,114,6)
+                },
+                141,1,80,81,30,8
+        ){
+            @Override
+            public void setRecipe(IRecipeLayout iRecipeLayout, SimplifiedRecipeWrapper recipeWrapper, IIngredients iIngredients) {
+                super.setRecipe(iRecipeLayout, recipeWrapper, iIngredients);
+                IGuiItemStackGroup guiItemStackGroup = iRecipeLayout.getItemStacks();
+                IGuiFluidStackGroup guiFluidStackGroup = iRecipeLayout.getFluidStacks();
+                guiFluidStackGroup.init(fluidSlotsOut.length + fluidSlotsIn.length, true, 40, 26, 59, 8, 1, false, null);
+                guiFluidStackGroup.set(fluidSlotsOut.length + fluidSlotsIn.length, new ArrayList<FluidStack>() {{
+                    add(new FluidStack(FluidsTFC.getFluidFromMetal(Metal.STEEL),1));
+                }});
+            }
+        };
+        registry.addRecipeCategories(openHearthFurnace);
+
+        magneticSeparator = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_2,1, TTBlockTypes_MetalMultiblock_2.MAGNETIC_SEPARATOR.getMeta()),
+                "tiagthings:textures/gui/magnetic_separator.png",
+                "Magnetic Separator",
+                TTJEICategory.MAGNETIC_SEPARATOR,
+                new TTCategory.UniversalSlot[] {
+                        new TTCategory.UniversalSlot(0,33,6)
+                },
+                new TTCategory.UniversalSlot[] {
+                        new TTCategory.UniversalSlot(0,107,33)
+                },
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,5,6)
+                },
+                new TTCategory.UniversalSlot[0],
+                142,1,97,38,26,13
+        );
+        registry.addRecipeCategories(magneticSeparator);
+
+        memoryFormatter = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_2,1, TTBlockTypes_MetalMultiblock_2.MEMORY_FORMATTER.getMeta()),
+                "tiagthings:textures/gui/memory_formatter.png",
+                "Memory Formatter",
+                TTJEICategory.MEMORY_FORMATTER,
+                new TTCategory.UniversalSlot[] {
+                        new TTCategory.UniversalSlot(0,26,20)
+                },
+                new TTCategory.UniversalSlot[] {
+                        new TTCategory.UniversalSlot(0,97,20)
+                },
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[0],
+                141,1,46,16,47,20
+        );
+        registry.addRecipeCategories(memoryFormatter);
+
+        openHearthFurnaceFuelLiquid = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_2,1, TTBlockTypes_MetalMultiblock_2.OPEN_HEARTH_FURNACE.getMeta()),
+                "tiagthings:textures/gui/oil_boiler_burn.png",
+                "Open Hearth Furnace Fuel",
+                TTJEICategory.OPHF_LIQUID,
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[] {
+                        new TTCategory.UniversalSlot(0,11,7)
+                },
+                new TTCategory.UniversalSlot[0]
+        );
+        registry.addRecipeCategories(openHearthFurnaceFuelLiquid);
+
+        openHearthFurnaceFuelSolid = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_2,1, TTBlockTypes_MetalMultiblock_2.OPEN_HEARTH_FURNACE.getMeta()),
+                "tiagthings:textures/gui/coal_boiler_burn.png",
+                "Open Hearth Furnace Fuel",
+                TTJEICategory.OPHF_SOLID,
+                new TTCategory.UniversalSlot[] { // item inputs
+                        new TTCategory.UniversalSlot(0,22,21)
+                },
+                new TTCategory.UniversalSlot[0], // item outputs
+                new TTCategory.UniversalSlot[0], // fluid inputs
+                new TTCategory.UniversalSlot[0] // fluid outputs
+        );
+        registry.addRecipeCategories(openHearthFurnaceFuelSolid);
+
+        openHearthFurnaceSit = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_2,1, TTBlockTypes_MetalMultiblock_2.OPEN_HEARTH_FURNACE.getMeta()),
+                "tiagthings:textures/gui/open_hearth_furnace_sit.png",
+                "Open Hearth Furnace Decarbonization",
+                TTJEICategory.OPHF_SIT,
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,114,6)
+                },
+                179,34,43,16,68,41
+        ){
+            @Override
+            public void setRecipe(IRecipeLayout iRecipeLayout, SimplifiedRecipeWrapper recipeWrapper, IIngredients iIngredients) {
+                super.setRecipe(iRecipeLayout, recipeWrapper, iIngredients);
+                IGuiItemStackGroup guiItemStackGroup = iRecipeLayout.getItemStacks();
+                IGuiFluidStackGroup guiFluidStackGroup = iRecipeLayout.getFluidStacks();
+                guiFluidStackGroup.init(fluidSlotsOut.length + fluidSlotsIn.length, true, 40, 26, 59, 8, 1, false, null);
+                guiFluidStackGroup.set(fluidSlotsOut.length + fluidSlotsIn.length, new ArrayList<FluidStack>() {{
+                    add(new FluidStack(FluidsTFC.getFluidFromMetal(Metal.STEEL),1));
+                }});
+            }
+        };
+        registry.addRecipeCategories(openHearthFurnaceSit);
+
+        clayOven = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_2,1, TTBlockTypes_MetalMultiblock_2.CLAY_OVEN.getMeta()),
+                "tiagthings:textures/gui/clay_oven.png",
+                "Clay Oven",
+                TTJEICategory.CLAY_OVEN,
+                new TTCategory.UniversalSlot[] { // item inputs
+                        new TTCategory.UniversalSlot(0,26,28)
+                },
+                new TTCategory.UniversalSlot[] { // item inputs
+                        new TTCategory.UniversalSlot(0,108,28)
+                },
+                new TTCategory.UniversalSlot[0], // fluid inputs
+                new TTCategory.UniversalSlot[0], // fluid outputs
+                141,1,45,16,61,29
+        );
+        registry.addRecipeCategories(clayOven);
+
+        smallCoalFuel = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_3,1, TTBlockTypes_MetalMultiblock_3.SMALL_COAL_BOILER.getMeta()),
+                "tiagthings:textures/gui/small_coal_boiler_fuel.png",
+                "Small Coal Boiler Fuel",
+                TTJEICategory.SMALL_COAL_FUEL,
+                new TTCategory.UniversalSlot[] { // item inputs
+                        new TTCategory.UniversalSlot(0,13,20)
+                },
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[0], // fluid inputs
+                new TTCategory.UniversalSlot[0] // fluid outputs
+        );
+        registry.addRecipeCategories(smallCoalFuel);
+
+        smallCoalBoiler = new TTCategory(
+                guiHelper,
+                new ItemStack(TTIEContent.ttBlockMetalMultiblock_3,1, TTBlockTypes_MetalMultiblock_3.SMALL_COAL_BOILER.getMeta()),
+                "tiagthings:textures/gui/small_coal_boiler.png",
+                "Small Coal Boiler",
+                TTJEICategory.SMALL_COAL_BOILER,
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[0],
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,11,6)
+                }, // fluid inputs
+                new TTCategory.UniversalSlot[]{
+                        new TTCategory.UniversalSlot(0,113,6)
+                }, // fluid outputs
+                141,1,78,28,31,8
+        );
+        registry.addRecipeCategories(smallCoalBoiler);
+
     }
 
     @Override
@@ -367,6 +631,8 @@ public class JEIPlugin implements IModPlugin {
                 switch (recipesInCategory.getSecond()) {
                     case COAL_BOILER_BURN:
                     case OIL_BOILER_BURN:
+                    case OPHF_LIQUID:
+                    case OPHF_SOLID:
                         wrapper = new SimplifiedRecipeWrapper(recipe) {
                             @Override
                             public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
@@ -440,11 +706,73 @@ public class JEIPlugin implements IModPlugin {
                         break;
                     case ELECTRIC_OVEN:
                     case TRESHER:
+                    case CCM:
                         wrapper = new SimplifiedRecipeWrapper(recipe) {
                             @Override
                             public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
                                 minecraft.fontRenderer.drawString((recipe.getTotalProcessTime()/20.0f) + "s",47,41,0xff000000);
                                 minecraft.fontRenderer.drawString((int)(recipe.totalProcessEnergy/(float)recipe.getTotalProcessTime()) + " RF/t",47,51,0xff000000);
+                            }
+                        };
+                        break;
+                    case MEMORY_FORMATTER:
+                        wrapper = new SimplifiedRecipeWrapper(recipe) {
+                            @Override
+                            public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+                                minecraft.fontRenderer.drawString((recipe.getTotalProcessTime()/20.0f) + "s",47,41,0xff000000);
+                                minecraft.fontRenderer.drawString((int)(recipe.totalProcessEnergy/(float)recipe.getTotalProcessTime()) + " RF/t",47,51,0xff000000);
+                                minecraft.fontRenderer.drawString("Resource utilization: " + TileEntityMemoryFormatter.getProcessingPowerForRecipe_static(recipe),6,6,0xff000000);
+                            }
+                        };
+                        break;
+                    case FBR:
+                    case SHAFT_FURNACE:
+                        wrapper = new SimplifiedRecipeWrapper(recipe) {
+                            @Override
+                            public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+                                minecraft.fontRenderer.drawString((recipe.getTotalProcessTime()/20.0f) + "s",30,35,0xff000000);
+                            }
+                        };
+                        break;
+                    case MAGNETIC_SEPARATOR:
+                        wrapper = new SimplifiedRecipeWrapper(recipe) {
+                            @Override
+                            public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+                                minecraft.fontRenderer.drawString((recipe.getTotalProcessTime()/20.0f) + "s",55,2,0xff000000);
+                                minecraft.fontRenderer.drawString((int)(recipe.totalProcessEnergy/(float)recipe.getTotalProcessTime()) + " RF/t",90,2,0xff000000);
+                            }
+                        };
+                        break;
+                    case OPHF_SIT:
+                        wrapper = new SimplifiedRecipeWrapper(recipe) {
+                            @Override
+                            public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+                                minecraft.fontRenderer.drawString("Converts in 40s.",6,6,0xff000000);
+                            }
+                        };
+                        break;
+                    case CLAY_OVEN:
+                        wrapper = new SimplifiedRecipeWrapper(recipe) {
+                            @Override
+                            public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+                                int h = (int)((recipe.getTotalProcessTime())/(60*20));
+                                minecraft.fontRenderer.drawString("Cooks in " + h + " hour" + (h != 1 ? "s." : "."),53,13,0xff000000);
+                            }
+                        };
+                        break;
+                    case SMALL_COAL_BOILER:
+                        wrapper = new SimplifiedRecipeWrapper(recipe) {
+                            @Override
+                            public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+                                minecraft.fontRenderer.drawString((recipe.getTotalProcessTime()/20.0f) + "s",31,40,0xffffffff);
+                            }
+                        };
+                        break;
+                    case SMALL_COAL_FUEL:
+                        wrapper = new SimplifiedRecipeWrapper(recipe) {
+                            @Override
+                            public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+                                minecraft.fontRenderer.drawString("Burns in " + (recipe.getTotalProcessTime()/20.0f) + "s",55,25,0xffffffff);
                             }
                         };
                         break;
@@ -473,5 +801,17 @@ public class JEIPlugin implements IModPlugin {
         registry.addRecipeCategoryCraftingItem(outdoorAcCategory.catalyst,outdoorAcCategory.getUid());
         registry.addRecipeCategoryCraftingItem(electricOvenCategory.catalyst, electricOvenCategory.getUid());
         registry.addRecipeCategoryCraftingItem(tresherCategory.catalyst, tresherCategory.getUid());
+        registry.addRecipeCategoryCraftingItem(ccm.catalyst, ccm.getUid());
+        registry.addRecipeCategoryCraftingItem(fbr.catalyst, fbr.getUid());
+        registry.addRecipeCategoryCraftingItem(shaftFurnace.catalyst,shaftFurnace.getUid());
+        registry.addRecipeCategoryCraftingItem(openHearthFurnace.catalyst,openHearthFurnace.getUid());
+        registry.addRecipeCategoryCraftingItem(magneticSeparator.catalyst,magneticSeparator.getUid());
+        registry.addRecipeCategoryCraftingItem(memoryFormatter.catalyst,memoryFormatter.getUid());
+        registry.addRecipeCategoryCraftingItem(openHearthFurnaceFuelSolid.catalyst,openHearthFurnaceFuelSolid.getUid());
+        registry.addRecipeCategoryCraftingItem(openHearthFurnaceFuelLiquid.catalyst,openHearthFurnaceFuelLiquid.getUid());
+        registry.addRecipeCategoryCraftingItem(openHearthFurnaceSit.catalyst,openHearthFurnaceSit.getUid());
+        registry.addRecipeCategoryCraftingItem(clayOven.catalyst,clayOven.getUid());
+        registry.addRecipeCategoryCraftingItem(smallCoalBoiler.catalyst, smallCoalBoiler.getUid());
+        registry.addRecipeCategoryCraftingItem(smallCoalFuel.catalyst,smallCoalFuel.getUid());
     }
 }

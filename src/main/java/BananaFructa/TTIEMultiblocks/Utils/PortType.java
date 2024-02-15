@@ -2,5 +2,7 @@ package BananaFructa.TTIEMultiblocks.Utils;
 
 public enum PortType {
     INPUT,
-    OUTPUT
+    OUTPUT,
+    INPUT_INTERNAL,
+    OUTPUT_INTERNAL;
 }

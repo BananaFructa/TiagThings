@@ -90,7 +90,7 @@ public class TTCategory implements IRecipeCategory<SimplifiedRecipeWrapper> {
         for (int i = 0; i < itemSlotsOut.length; i++) {
             UniversalSlot slot = itemSlotsOut[i];
             guiItemStackGroup.init(i + itemSlotsIn.length, true, slot.x, slot.y);
-            if (iIngredients.getInputs(ItemStack.class).size() > slot.ingredient)
+            if (iIngredients.getOutputs(ItemStack.class).size() > slot.ingredient)
                 guiItemStackGroup.set(i+ itemSlotsIn.length, iIngredients.getOutputs(ItemStack.class).get(slot.ingredient));
         }
 

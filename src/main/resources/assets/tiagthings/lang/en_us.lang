@@ -1,6 +1,6 @@
 item.magnetized_nickel_sheet.name=Magnetized Nickel Sheet
 item.magnetite_powder.name=Magnetite Powder
-item.rough_iron_powder.name=Rough Iron Powder
+item.rough_iron_powder.name=Iron Ore Concentrate
 item.jute_string.name=Jute String
 item.earthenware_pot_ash.name=Pot with Ash
 item.earthenware_pot_potash.name=Pot with Potash
@@ -146,14 +146,50 @@ tile.liquid_helium3.name=Liquid Helium-3
 fluid.clarified_water=Clarified Water
 tile.clarified_water.name=Clarified Water
 
+fluid.hall_mix=Alumina-Cryolite Molten Salt Bath
+tile.hall_mix.name=Alumina-Cryolite Molten Salt Bath
+
 fluid.clarified_sea_water=Clarified Salt Water
 tile.clarified_sea_water.name=Clarified Salt Water
 
 fluid.treated_water_nn=Filtered Water
 tile.treated_water_nn.name=Filtered Water
 
+fluid.salt_solution=Salt Solution
+tile.salt_solution.name=Salt Solution
+
+fluid.molten_cryolite=Molten Cryolite
+tile.molten_cryolite.name=Molten Cryolite
+
+fluid.alumina_oxide_sol=Alumina Solution
+tile.alumina_oxide_sol.name=Alumina Solution
+
+fluid.ticl=Titanium Tetrachloride
+tile.ticl.name=Titanium Tetrachloride
+
+fluid.mgcl=Magnesium Chloride
+tile.mgcl.name=Magnesium Chloride
+
+fluid.mgclmixti=Magnesium Chloride-Titanium mix
+tile.mgclmixti.name=Magnesium Chloride-Titanium mix
+
+fluid.bauxite_bd_mix=Bauxite-Sodium Hydroxide Mix
+tile.bauxite_bd_mix.name=Bauxite-Sodium Hydroxide Mix
+
 fluid.treated_water=Treated Water
 tile.treated_water.name=Treated Water
+
+fluid.sodium_zirconate=Sodium Zirconate Mixture
+tile.sodium_zirconate.name=Sodium Zirconate Mixture
+
+fluid.zirconia_precipitate=Zirconia Precipitate
+tile.zirconia_precipitate.name=Zirconia Precipitate
+
+fluid.zrcl=Zirconium Tetrachloride
+tile.zrcl.name=Zirconium Tetrachloride
+
+fluid.mgzrcl=Magnesium Chloride-Zirconium Mix
+tile.mgzrcl.name=Magnesium Chloride-Zirconium Mix
 
 fluid.venusian_atmospheric_gas=Venusian Atmospheric Gas
 tile.venusian_atmospheric_gas.name=Venusian Atmospheric Gas
@@ -163,6 +199,9 @@ tile.liquid_venusian_atmospheric_gas.name=Liquid Venusian Atmospheric Gas
 
 item.tritium_canister.name=Filled Tritium Canister
 item.tritium_canister_partial.name=Tritium Canister
+
+item.zircon_powder.name=Zircon Powder
+item.zirconia_powder.name=Zirconia Powder
 
 item.lithium_6_canister.name=Lithium-6 Canister
 item.lithium_7_tritium_canister.name=Lithium-7 & Tritium Canister
@@ -177,8 +216,17 @@ vein.sulfur.name=Sulfur
 
 item.pyrolusite_powder.name=Pyrolusite Powder
 item.magnesite_powder.name=Magnesite Powder
+item.mild_steel_rod.name=Mild Steel Rod
 
-item.unf_controller_circuit_board.name=Unformatted Controller Circuit Board
+item.cryolite_powder.name=Cryolite Powder
+
+item.fesi.name=Ferrosilicon
+
+item.small_coke_pile.name=Small Coke Pile
+
+item.direct_reduced_iron.name=Direct Reduced Iron
+
+item.unf_controller_circuit_board.name=Unformatted Advanced Computer Circuit Board
 item.launch_software_memory_card.name=Launch Software Memory Card
 
 tile.tiagthings.computer_cluster.name=Computer Cluster Controller
@@ -232,7 +280,11 @@ item.clean_peridotite.name=Clean Peridotite
 item.clean_porphyry.name=Clean Porphyry
 item.chalcopyrite_powder.name=Chalcopyrite Powder
 item.pentlandite_powder.name=Pentlandite Powder
+item.coke_powder.name=Coke Powder
 
+item.jet_powder.name=Jet Powder
+item.lignite_powder.name=Lignite Powder
+item.bituminous_coal_powder.name=Bituminous Coal Powder
 tile.tiagthings.tt_metal_multiblock.flare_stack.name=Flare Stack
 tile.tiagthings.tt_metal_multiblock.coal_boiler.name=Coal Boiler
 tile.tiagthings.tt_metal_multiblock.electric_heater.name=Electric Heater
@@ -248,6 +300,19 @@ tile.tiagthings.tt_metal_multiblock_1.indoor_ac_unit.name=Indoor AC Unit
 tile.tiagthings.tt_metal_multiblock_1.outdoor_ac_unit.name=Outdoor AC Unit
 tile.tiagthings.tt_metal_multiblock_1.tresher.name=Thresher
 tile.tiagthings.tt_metal_multiblock_1.electric_oven.name=Electric Oven
+tile.tiagthings.tt_metal_multiblock_3.fbr.name=Fluidized Bed Reactor
+tile.tiagthings.tt_metal_multiblock.computer_cluster_unit.name=Computer Cluster Unit
+tile.tiagthings.tt_metal_multiblock_2.computer_cluster_controller.name=Computer Cluster Controller
+tile.tiagthings.tt_metal_multiblock_2.memory_formatter.name=Memory Formatter
+tile.tiagthings.tt_metal_multiblock_2.clay_oven.name=Clay Oven
+tile.tiagthings.tt_metal_multiblock_2.masonry_heater.name=Masonry Heater
+tile.tiagthings.tt_metal_multiblock_2.open_hearth_furnace.name=Open Hearth Furnace
+tile.tiagthings.tt_metal_multiblock_2.rocket_scaffold.name=Rocket Assembly Scaffold
+tile.tiagthings.tt_metal_multiblock_2.magnetic_separator.name=Magnetic Separator
+tile.tiagthings.tt_metal_multiblock_3.shaft_furnace.name=Shaft Furnace
+tile.tiagthings.tt_metal_multiblock_3.ccm.name=Continuous Casing Machine
+tile.tiagthings.tt_metal_multiblock_.name=
+
 
 item.raw_silicon_wafer.name=Raw Silicon Wafer
 item.printed_silicon_wafer_1.name=Printed Silicon Wafer (um Process)
@@ -315,3 +380,8 @@ ie.manual.category.industrialBoilers.name=Industrial Boilers
 ie.manual.category.waterTreatment.name=Water Treatment
 ie.manual.category.plms.name=Photolithography Machines
 ie.manual.category.uraniumProcessing.name=Uranium Processing
+ie.manual.category.computerCluster.name=Computer Cluster Networks
+ie.manual.category.primitiveDevices.name=Primitive Devices
+ie.manual.category.chemicalProcessing.name=Chemical Processing
+ie.manual.category.metallurgy.name=Metallurgy
+ie.manual.category.spaceTechnology.name=Space Technology

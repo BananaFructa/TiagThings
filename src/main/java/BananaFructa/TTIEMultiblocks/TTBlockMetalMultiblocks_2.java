@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,9 +26,17 @@ import net.minecraftforge.common.property.Properties;
 
 import javax.annotation.Nullable;
 
+/**
+ * CODE ADAPTED FROM THE IMMERSIVE ENGINEERING SOURCE CODE
+ * REPOSITORY CAN BE FOUND HERE https://github.com/BluSunrize/ImmersiveEngineering/tree/1.13pre
+ */
+
 public class TTBlockMetalMultiblocks_2 extends BlockTTMultiblock<TTBlockTypes_MetalMultiblock_2> {
+
+    static PropertyInteger animProp = PropertyInteger.create("anim_id",0,1);
+
     public TTBlockMetalMultiblocks_2() {
-        super("tt_metal_multiblock_2", Material.IRON, PropertyEnum.create("type", TTBlockTypes_MetalMultiblock_2.class), ItemBlockTTBase.class, new Object[]{IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0], Properties.AnimationProperty, IEProperties.OBJ_TEXTURE_REMAP});
+        super("tt_metal_multiblock_2", Material.IRON, PropertyEnum.create("type", TTBlockTypes_MetalMultiblock_2.class),animProp, ItemBlockTTBase.class, new Object[]{IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0], Properties.AnimationProperty, IEProperties.OBJ_TEXTURE_REMAP,animProp});
         for (int i = 0;i < TTBlockTypes_MetalMultiblock_2.values().length;i++) {
             if (i != TTBlockTypes_MetalMultiblock_2.MASONRY_HEATER.getMeta() && i!=TTBlockTypes_MetalMultiblock_2.MEMORY_FORMATTER_CHILD.getMeta()) setNotNormalBlock(i);
         }
@@ -71,6 +80,12 @@ public class TTBlockMetalMultiblocks_2 extends BlockTTMultiblock<TTBlockTypes_Me
             case ROCKET_SCAFFOLD_CHILD:
             case ROCKET_SCAFFOLD_BODY:
                 return new TileEntityRocketScaffold();
+            case MAGNETIC_SEPARATOR:
+            case MAGNETIC_SEPARATOR_CHILD:
+                return new TileEntityMagneticSeparator();
+            case OPEN_HEARTH_FURNACE:
+            case OPEN_HEARTH_FURNACE_CHILD:
+                return new TileEntityOpenHearthFurnace();
         }
         return null;
     }

@@ -83,6 +83,10 @@
         "model": "tiagthings:um_photolithography_machine.obj",
         "custom": { "flip-v": true }
       }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

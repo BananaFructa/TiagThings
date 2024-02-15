@@ -52,8 +52,9 @@ public class GetTEPos extends CommandBase {
             sender.sendMessage(new TextComponentString("Part in AE2 compatibility mode! (TileEntityAE2CompatMultiblock.class)"));
             sender.sendMessage(new TextComponentString("Multiblock Part has pos code: " + poste + "."));
         } else {
-
             sender.sendMessage(new TextComponentString("Not a multiblock part."));
+            if (te != null) sender.sendMessage(new TextComponentString(te.getClass().getName()));
+            else sender.sendMessage(new TextComponentString("null"));
         }
     }
 

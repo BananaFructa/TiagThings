@@ -27,8 +27,8 @@ public class TileEntityWaterFilter extends SimplifiedTileEntityMultiblockMetal<T
 
     @Override
     public void initPorts() {
-        int inputTank = registerFluidTank(new FluidTank(2500));
-        int outputTank = registerFluidTank(new FluidTank(2500));
+        int inputTank = registerFluidTank(2500);
+        int outputTank = registerFluidTank(2500);
         registerFluidPort(4,outputTank,PortType.OUTPUT,EnumFacing.NORTH);
         registerFluidPort(3,inputTank,PortType.INPUT,EnumFacing.SOUTH);
     }

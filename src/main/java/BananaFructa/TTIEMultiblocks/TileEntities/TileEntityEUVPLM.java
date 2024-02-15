@@ -5,6 +5,7 @@ import BananaFructa.TTIEMultiblocks.Utils.PortType;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TiagThings.Items.ItemLoaderHandler;
+import BananaFructa.TiagThings.Utils;
 import mctmods.immersivetechnology.common.ITContent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -25,9 +26,9 @@ public class TileEntityEUVPLM extends SimplifiedTileEntityMultiblockMetal<TileEn
     public int process = 2;
 
     public static List<SimplifiedMultiblockRecipe> recipes = new ArrayList<SimplifiedMultiblockRecipe>() {{
-        add(new SimplifiedMultiblockRecipe(new ItemStack[]{new ItemStack(ItemLoaderHandler.siliconWafer,1)},new FluidStack[]{new FluidStack(ITContent.fluidDistWater,100)}, new ItemStack[]{new ItemStack(ItemLoaderHandler.printedSiliconWafer1,1)},new FluidStack[0],2048,15 * 20));
-        add(new SimplifiedMultiblockRecipe(new ItemStack[]{new ItemStack(ItemLoaderHandler.siliconWafer,1)},new FluidStack[]{new FluidStack(ITContent.fluidDistWater,100)}, new ItemStack[]{new ItemStack(ItemLoaderHandler.printedSiliconWafer2,1)},new FluidStack[0],2048,30 * 20));
-        add(new SimplifiedMultiblockRecipe(new ItemStack[]{new ItemStack(ItemLoaderHandler.siliconWafer,1)},new FluidStack[]{new FluidStack(ITContent.fluidDistWater,100)}, new ItemStack[]{new ItemStack(ItemLoaderHandler.printedSiliconWafer3,1)},new FluidStack[0],2048,60 * 20));
+        add(new SimplifiedMultiblockRecipe(new ItemStack[]{new ItemStack(ItemLoaderHandler.siliconWafer,1)},new FluidStack[]{new FluidStack(Utils.fluidFromCTId("<liquid:hydrogen>"),10000)}, new ItemStack[]{new ItemStack(ItemLoaderHandler.printedSiliconWafer1,1)},new FluidStack[0],2048,15 * 20));
+        add(new SimplifiedMultiblockRecipe(new ItemStack[]{new ItemStack(ItemLoaderHandler.siliconWafer,1)},new FluidStack[]{new FluidStack(Utils.fluidFromCTId("<liquid:hydrogen>"),50000)}, new ItemStack[]{new ItemStack(ItemLoaderHandler.printedSiliconWafer2,1)},new FluidStack[0],2048,30 * 20));
+        add(new SimplifiedMultiblockRecipe(new ItemStack[]{new ItemStack(ItemLoaderHandler.siliconWafer,1)},new FluidStack[]{new FluidStack(Utils.fluidFromCTId("<liquid:hydrogen>"),100000)}, new ItemStack[]{new ItemStack(ItemLoaderHandler.printedSiliconWafer3,1)},new FluidStack[0],2048,60 * 20));
     }};
 
     @Override
@@ -47,7 +48,7 @@ public class TileEntityEUVPLM extends SimplifiedTileEntityMultiblockMetal<TileEn
         int itemOutput = registerItemHandler(1,new boolean[]{false},new boolean[]{true});
         registerItemPort(9,itemInput, PortType.INPUT, EnumFacing.WEST);
         registerItemPort(0,itemOutput,PortType.OUTPUT,EnumFacing.EAST);
-        int fluidInput = registerFluidTank(new FluidTank(1000));
+        int fluidInput = registerFluidTank(100000);
         registerFluidPort(9,fluidInput,PortType.INPUT,EnumFacing.SOUTH);
     }
 

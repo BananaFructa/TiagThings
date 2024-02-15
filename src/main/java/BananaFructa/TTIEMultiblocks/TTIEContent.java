@@ -3,6 +3,7 @@ package BananaFructa.TTIEMultiblocks;
 import BananaFructa.TTIEMultiblocks.IECopy.BlockTTBase;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.MultiblockAnimation.AnimationGroup;
 import BananaFructa.TTIEMultiblocks.Utils.RocketModule_SMC;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockClass;
 import BananaFructa.TiagThings.TTMain;
@@ -22,6 +23,7 @@ import blusunrize.lib.manual.ManualPages;
 import flaxbeard.immersivepetroleum.client.page.ManualPageBigMultiblock;
 import nc.gui.element.NCButton;
 import net.dries007.tfc.api.types.Rock;
+import net.dries007.tfc.util.block.Multiblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -49,6 +51,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.item.*;
 
+import javax.vecmath.GMatrix;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +62,7 @@ public class TTIEContent {
     public static BlockTTBase<TTBlockTypes_MetalMultiblock> ttBlockMetalMultiblock;
     public static BlockTTBase<TTBlockTypes_MetalMultiblock_1> ttBlockMetalMultiblock_1;
     public static BlockTTBase<TTBlockTypes_MetalMultiblock_2> ttBlockMetalMultiblock_2;
+    public static BlockTTBase<TTBlockTypes_MetalMultiblock_3> ttBlockMetalMultiblock_3;
 
     public static List<Block> registeredTTBlocks = new ArrayList<>();
     public static List<Item> registeredTTItems = new ArrayList<>();
@@ -66,10 +70,12 @@ public class TTIEContent {
     static {
         advancedComputerBlock = new Block(Material.IRON).setRegistryName("advanced_computer_block").setUnlocalizedName("advanced_computer_block").setCreativeTab(CreativeTabs.MISC);
         rocketControllerBlock = new Block(Material.IRON).setRegistryName("rocket_controller_block").setUnlocalizedName("rocket_controller_block").setCreativeTab(CreativeTabs.MISC);
+        magnetizedNickelSheetMetal = new Block(Material.IRON).setRegistryName("magnetized_nickel_sm").setUnlocalizedName("magnetized_nickel_sm").setCreativeTab(CreativeTabs.MISC);
 
         ttBlockMetalMultiblock = new TTBlockMetalMultiblocks();
         ttBlockMetalMultiblock_1 = new TTBlockMetalMultiblocks_1();
         ttBlockMetalMultiblock_2 = new TTBlockMetalMultiblocks_2();
+        ttBlockMetalMultiblock_3 = new TTBlockMetalMultiblocks_3();
         OBJLoader.INSTANCE.addDomain(TTMain.modId);
     }
 
@@ -95,8 +101,21 @@ public class TTIEContent {
     public static SimplifiedMultiblockClass masonryHeater;
     public static SimplifiedMultiblockClass rocketModuleScaffold;
     public static SimplifiedMultiblockClass rktModule1,rktModule2,rktModule3;
+    public static SimplifiedMultiblockClass magneticSeparator;
+    public static SimplifiedMultiblockClass openHearthFurnace;
+    public static SimplifiedMultiblockClass shaftFurnace;
+    public static SimplifiedMultiblockClass fbr;
+    public static SimplifiedMultiblockClass ccm;
+    public static SimplifiedMultiblockClass smallCoalBoiler;
+
+    public static SimplifiedMultiblockClass rocketScaffoldBase;
+    public static SimplifiedMultiblockClass rocketScaffoldBody;
+    public static SimplifiedMultiblockClass rocket1Slice,rocket2Slice,rocket3Slice;
+    public static SimplifiedMultiblockClass steamEngine;
 
     public static Block advancedComputerBlock;
+    public static Block magnetizedNickelSheetMetal;
+    public static Item magnetizedNickelSheetMetalItem;
     public static Item advancedComputerBlockItem;
     public static Block rocketControllerBlock;
     public static Item rocketControllerBlockItem;
@@ -112,11 +131,11 @@ public class TTIEContent {
         ManualHelper.addEntry("Air Conditioning","temperatureControl",
                 new ManualPageMultiblock(ManualHelper.getManual(),"The indoor AC unit takes in cold fluoromethane and gives out hotfluoromethane generating a cooling effect of -10\u00b0C /-18 F.",indoorAcUnitMultiblock),
                 new ManualPageMultiblock(ManualHelper.getManual(),"The outdoor AC unit Takes in (hot) fluoromethane and gives out cold fluoromethane. Uses 2000 RF/t.",outdoorAcUnitMultiblock));
-        ManualHelper.addEntry("Thresher","utility",
+        /*ManualHelper.addEntry("Thresher","utility",
                 new ManualPageMultiblock(ManualHelper.getManual(),"Used to separate grains from their chaff and straw.",tresherMultiblock)
-                );
+                );*/
         ManualHelper.addEntry("Electric Oven","utility",
-                new ManualPageMultiblock(ManualHelper.getManual(),"Electric version of the normal Oven. Also does the job of the leaf drying mat.",electricOvenMultiblock));
+                new ManualPageMultiblock(ManualHelper.getManual(),"Electric version of the Clay Oven. Also does the job of the leaf drying mat.",electricOvenMultiblock));
         ManualHelper.addEntry("Flare Stack","ip",
                 new ManualPageBigMultiblock(ManualHelper.getManual(),flareStackMultiblock),
                 new ManualPages.Text(ManualHelper.getManual(),"Used to dispose Butane.")
@@ -142,7 +161,51 @@ public class TTIEContent {
                 new ManualPageMultiblock(ManualHelper.getManual(),"Third tier of lithography machine. Can be used to create silicon wafers in either EUV, nm or um processes. To change the process used right click on the machine while holding the Engineer's Hammer in the main hand.",euvPhotolitographyMachine));
         ManualHelper.addEntry("Gas Centrifuge","uraniumProcessing",
                 new ManualPageMultiblock(ManualHelper.getManual(),"Used to gradually concentrate Uranium Hexafluoride. Several stages are required to achieve a purity of either 99.9% of U-238 or 99.9% U-235 from an input gas of 99.3% U-238 and 0.7% U-235.",gasCentrifugeMultiblock));
-
+        ManualHelper.addEntry("Computer Cluster Unit","computerCluster",
+                new ManualPageMultiblock(ManualHelper.getManual(),"Each Computer Cluster Unit has an ME connection port behind it (the purple port). In order for the cluster unit to be of use it must powered on (uses 4096 RF/t) and be connected in the same network with one Computer Cluster Controller. The multiblock is formed by right",computerClusterUnit),
+                new ManualPages.Text(ManualHelper.getManual(),"clicking with the Engineer's Hammer on the bottom left 64k Crafting Storage block from the front of the machine.")
+                );
+        ManualHelper.addEntry("Computer Cluster Controller", "computerCluster",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The Computer Cluster Controller manages the resources of computer cluster network and allows other various ME connected devices (e.g. the Memory Formatter) to utilize mentioned resources. While formed one can check the current status and",computerClusterController),
+                new ManualPages.Text(ManualHelper.getManual(),"availability of the computer cluster network in WAILA while looking at it. The multiblock is formed by right clicking with the Engineer's Hammer on the bottom left 64k Crafting Storage block from the front of the machine.")
+                );
+        ManualHelper.addEntry("Memory Formatter","computerCluster",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The Memory Formatter is used to program various devices. All recipes require a certain amount of resources from the computer cluster network. In order for it to access the computer cluster network it must be in the same ME network as the Computer Cluster Controller of the cluster",memoryFormatter),
+                        new ManualPages.Text(ManualHelper.getManual(),"network. The multiblock is formed by right clicking with the Engineer's Hammer on the middle ME Controller block. Recipes and resource requirements can be checked in JEI."));
+        ManualHelper.addEntry("Clay Oven","primitiveDevices",
+                new ManualPageMultiblock(ManualHelper.getManual(),"In order to form the Clay Oven a Fire Pit must be placed in the back of the front cavity and afterwards a player must shift-right click on the side pointing outwards of the Fire Pit (not the top). In order to cook inside the Clay Oven, the Fire Pit must be lit and the",clayOven),
+                new ManualPages.Text(ManualHelper.getManual(),"items that need to be cooked be placed on the ground, vertically (default keybind is \"V\"). After the specified time (can be seen in JEI or in WAILA while looking at the oven) the placed items will turn into their cooked products."));
+        ManualHelper.addEntry("Masonry Heater","primitiveDevices",
+                new ManualPageMultiblock(ManualHelper.getManual(),"In order to form the Masonry Heater a Fire Pit must be placed in the back of the front cavity and afterwards a player must shift-right click on the side pointing outwards of the",masonryHeater),
+                new ManualPages.Text(ManualHelper.getManual(),"Masonry Heater (not the top). While the Fire Pit inside is burning it gives of around 4 times more heat than a normal fire pit."));
+        ManualHelper.addEntry("Fluidized Bed Reactor","chemicalProcessing",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The Fluidized Bed Reactor is used to conduct reactions between a solid and a liquid. It does not require power to run. To form the device right click with the Engineer's Hammer on the bottom middle steel sheet metal block which has on its left side 2 mechanical engineering blocks.",fbr));
+        ManualHelper.addEntry("Continuous Casting Machine","metallurgy",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The Continous Casting Machine is used to turn molten metal into solid ingots automatically. It is formed by right clicking with the Engineer's Hammer on the front heavy mechanical engineering block.",ccm));
+        ManualHelper.addEntry("Shaft Furnace","metallurgy",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The Shaft Furnace is used to conduct metallurgic reduction processes. The item input hatch is",shaftFurnace),
+                new ManualPages.Text(ManualHelper.getManual(),"located at the top of the structure and the output hatch at the bottom of the structure. The liquid input hatch is located on one of the side. The structure is formed by right clicking on one side of the bottom most mechanical engineering block."));
+        ManualHelper.addEntry("Magnetic Separator", "metallurgy",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The Magnetic Separator is used to purify iron ore powder into iron ore concentrate that can be more effectively worked with. It is formed by rick clicking with the Engineer's Hammer on bottom left steel sheet metal block, below the magnetized nickel sheet metal block and on",magneticSeparator),
+                new ManualPages.Text(ManualHelper.getManual(),"the same side as the steel scaffolding slab."));
+        ManualHelper.addEntry("Rocket Scaffold", "spaceTechnology",
+            new ManualPages.Text(ManualHelper.getManual(),"The first step in space travel is the construction of the launch rocket. The rockets are by building the correct block structure inside the Rocket Assembly Scaffold. The Rocket Assembly scaffold is a tall multiblock device built out of steel scaffolding. Look at the next page to see how to build it."),
+                new ManualPageMultiblock(ManualHelper.getManual(),"Since the multiblock itself is quite large it does not fit on a single page (the multiblock projector can also be used). Above there is the rocket scaffold base which is the first section of the structure,",rocketScaffoldBase),
+                new ManualPages.Text(ManualHelper.getManual()," everything else going above it. At the end in order to form the whole structure the middle steel scaffolding present on the first layer must be right clicked with the Engineer's Hammer. See next page for the rocket scaffold body."),
+                new ManualPageMultiblock(ManualHelper.getManual(),"Above the base the rocket scaffold body must be built 9 time. It is important to note that in order to build inside the scaffold it must be given 8192 RF/t and 100mb/sec of distilled water.",rocketScaffoldBody)
+        );
+        ManualHelper.addEntry("Lunar Rocket", "spaceTechnology",
+                new ManualPageMultiblock(ManualHelper.getManual(),"This rocket type is able to travel to the Moon or establish a space station around the Earth. It can be made with two possible structure, one using simpler electronics and the",rocket1Slice),
+                new ManualPages.Text(ManualHelper.getManual(),"other one more advanced ones. The one above is the first version. Only one slice of the whole structure is displayed, to fit in page, and it must be built inside the Rocket Scaffold, where the slice is repeated throughout its whole height (70 blocks high). After finishing the structure, right click with the Engineer's Hammer on the middle block from the upmost layer. If the structure is correctly built it will disappear and you will be given the rocket in your inventory. See the next page for the second variation of the rocket."),
+                new ManualPageMultiblock(ManualHelper.getManual(),"This is the slice of the alternative version of the rocket. The only difference is in the tier of the electronic engineering blocks used.",rocket2Slice)
+                );
+        ManualHelper.addEntry("Solar System Rocket", "spaceTechnology",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The way it is built is the same as for the Lunar Rocket. It is able to travel everywhere the Lunar Rocket was able to plus the rest of the planets/places that exist in the game, namely:",rocket3Slice),
+                new ManualPages.Text(ManualHelper.getManual(),"Mars, Venus and the Asteroid Belt."));
+        ManualHelper.addEntry("Open Hearth Furnace","metallurgy",
+                new ManualPageMultiblock(ManualHelper.getManual(),"The Open Hearth is able to turn Pig Iron into Steel and Steel into Mild Steel. Coke or Diesel can be used as a fuel inputted",openHearthFurnace),
+                new ManualPages.Text(ManualHelper.getManual(),"from the bottom left. In the front there are 2 input port one for solid metal and the other for molten metal, it does not matter which one is used. In order for it to operate it must be fed fuel and be kept at maximum temperature. To turn Pig Iron to Steel, the furnace must be fed any amount of Steel and then Pig Iron can be introduced. If the furnace is at maximum temperature then the Pig Iron will slowly start to convert to steel. Furthermore, if the steel is left idle at maximum temperature for 40 seconds it will turn into"),
+                new ManualPages.Text(ManualHelper.getManual(),"Mild Steel. All molten outputs can be collected with a pipe from the liquid output port from the front of the machine."));
     }
 
     public static void init() {
@@ -173,6 +236,13 @@ public class TTIEContent {
         GameRegistry.registerTileEntity(TileEntityClayOven.class,new ResourceLocation(TTMain.modId,TileEntityClayOven.class.getSimpleName()));
         GameRegistry.registerTileEntity(TileEntityMasonryHeater.class,new ResourceLocation(TTMain.modId,TileEntityMasonryHeater.class.getSimpleName()));
         GameRegistry.registerTileEntity(TileEntityRocketScaffold.class,new ResourceLocation(TTMain.modId,TileEntityRocketScaffold.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityMagneticSeparator.class,new ResourceLocation(TTMain.modId,TileEntityMagneticSeparator.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityOpenHearthFurnace.class,new ResourceLocation(TTMain.modId,TileEntityOpenHearthFurnace.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityShaftFurnace.class,new ResourceLocation(TTMain.modId,TileEntityShaftFurnace.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityFBR.class,new ResourceLocation(TTMain.modId,TileEntityFBR.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityCCM.class,new ResourceLocation(TTMain.modId,TileEntityCCM.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntitySmallCoalBoiler.class,new ResourceLocation(TTMain.modId,TileEntitySmallCoalBoiler.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntitySteamEngine.class,new ResourceLocation(TTMain.modId,TileEntityOilBoiler.class.getSimpleName()));
 
         electricHeaterMultiblock = new SimplifiedMultiblockClass(
                 "TT:ElectricHeater",
@@ -322,7 +392,60 @@ public class TTIEContent {
                 TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.ROCKET_SCAFFOLD_CHILD.getMeta())
         );
 
+        magneticSeparator = new SimplifiedMultiblockClass(
+                "TT:MagneticSeparator",
+                "magnetic_separator.tgz",
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.MAGNETIC_SEPARATOR.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.MAGNETIC_SEPARATOR_CHILD.getMeta())
+        );
 
+        openHearthFurnace = new SimplifiedMultiblockClass(
+                "TT:OpenHearthFurnace",
+                "open_hearth_furnace.tgz",
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.OPEN_HEARTH_FURNACE.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_2.getStateFromMeta(TTBlockTypes_MetalMultiblock_2.OPEN_HEARTH_FURNACE_CHILD.getMeta())
+        ){
+            @Override
+            public float getManualScale() {
+                return 6;
+            }
+        };
+
+        shaftFurnace = new SimplifiedMultiblockClass(
+                "TT:ShaftFurnace",
+                "shaft_furnace.tgz",
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.SHAFT_FURNACE.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.SHAFT_FURNACE_CHILD.getMeta())
+        ){
+            @Override
+            public float getManualScale() {
+                return 5;
+            }
+        };
+
+        fbr = new SimplifiedMultiblockClass(
+                "TT:FBR",
+                "fbr.tgz",
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.FBR.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.FBR_CHILD.getMeta())
+        ){
+            @Override
+            public float getManualScale() {
+                return 14;
+            }
+        };
+
+        ccm = new SimplifiedMultiblockClass(
+                "TT:CCM",
+                "ccm.tgz",
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.CCM.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.CCM_CHILD.getMeta())
+        ) {
+            @Override
+            public float getManualScale() {
+                return 14;
+            }
+        };
 
         rktModule1 = new RocketModule_SMC(
                 "TT:RktModule1",
@@ -366,20 +489,104 @@ public class TTIEContent {
             }
         };
 
-        MultiblockHandler.registerMultiblock(electricHeaterMultiblock);
+        rocketScaffoldBase = new SimplifiedMultiblockClass(
+                "TT:rocketScaffoldBase_NO_MULTIBLOCK",
+                "rocket_scaffold_base.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ){
+            @Override
+            public float getManualScale() {
+                return 5;
+            }
+        };
+
+        rocketScaffoldBody = new SimplifiedMultiblockClass(
+                "TT:rocketScaffoldBody_NO_MULTIBLOCK",
+                "rocket_scaffold_body.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ){
+            @Override
+            public float getManualScale() {
+                return 5;
+            }
+        };;
+
+        rocket1Slice = new SimplifiedMultiblockClass(
+                "TT:rocketSlice1_NO_MULTIBLOCK",
+                "rocket_1_slice.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ) {
+            @Override
+            public float getManualScale() {
+                return 10;
+            }
+        };
+
+        rocket2Slice = new SimplifiedMultiblockClass(
+                "TT:rocketSlice2_NO_MULTIBLOCK",
+                "rocket_2_slice.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ){
+            @Override
+            public float getManualScale() {
+                return 10;
+            }
+        };
+
+        rocket3Slice = new SimplifiedMultiblockClass(
+                "TT:rocketSlice3_NO_MULTIBLOCK",
+                "rocket_3_slice.tgz",
+                Blocks.AIR.getDefaultState(),
+                Blocks.AIR.getDefaultState()
+        ){
+            @Override
+            public float getManualScale() {
+                return 10;
+            }
+        };
+
+        smallCoalBoiler = new SimplifiedMultiblockClass(
+                "TT:SmallCoalBoiler",
+                "small_coal_boiler.tgz",
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.SMALL_COAL_BOILER.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.SMALL_COAL_BOILER_CHILD.getMeta())
+        ){
+            @Override
+            public float getManualScale() {
+                return 14;
+            }
+        };
+
+        steamEngine = new SimplifiedMultiblockClass(
+                "TT:SteamEngine",
+                "steam_engine.tgz",
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.STEAM_ENGINE.getMeta()),
+                TTIEContent.ttBlockMetalMultiblock_3.getStateFromMeta(TTBlockTypes_MetalMultiblock_3.STEAM_ENGINE_CHILD.getMeta())
+        ){
+            @Override
+            public float getManualScale() {
+                return 14;
+            }
+        };
+
+        MultiblockHandler.registerMultiblock(electricHeaterMultiblock); //
         MultiblockHandler.registerMultiblock(flareStackMultiblock);
-        MultiblockHandler.registerMultiblock(coalBoilerMultiblock);
+        MultiblockHandler.registerMultiblock(coalBoilerMultiblock); //
         MultiblockHandler.registerMultiblock(clarifierMultiblock);
         MultiblockHandler.registerMultiblock(waterFilter);
-        MultiblockHandler.registerMultiblock(oilBoilerMultiblock);
+        MultiblockHandler.registerMultiblock(oilBoilerMultiblock); //
         MultiblockHandler.registerMultiblock(umPhotolithographyMachine);
         MultiblockHandler.registerMultiblock(nmPhotolitographyMachine);
         MultiblockHandler.registerMultiblock(euvPhotolitographyMachine);
         MultiblockHandler.registerMultiblock(gasCentrifugeMultiblock);
         MultiblockHandler.registerMultiblock(steamRadiatorMultiblock);
         MultiblockHandler.registerMultiblock(indoorAcUnitMultiblock);
-        MultiblockHandler.registerMultiblock(outdoorAcUnitMultiblock);
-        MultiblockHandler.registerMultiblock(tresherMultiblock);
+        MultiblockHandler.registerMultiblock(outdoorAcUnitMultiblock);//
+        //MultiblockHandler.registerMultiblock(tresherMultiblock);
         MultiblockHandler.registerMultiblock(electricOvenMultiblock);
         MultiblockHandler.registerMultiblock(computerClusterUnit);
         MultiblockHandler.registerMultiblock(computerClusterController);
@@ -390,7 +597,19 @@ public class TTIEContent {
         MultiblockHandler.registerMultiblock(rktModule1);
         MultiblockHandler.registerMultiblock(rktModule2);
         MultiblockHandler.registerMultiblock(rktModule3);
+        MultiblockHandler.registerMultiblock(magneticSeparator); //
+        MultiblockHandler.registerMultiblock(openHearthFurnace); //?
+        MultiblockHandler.registerMultiblock(shaftFurnace);
+        MultiblockHandler.registerMultiblock(fbr);
+        MultiblockHandler.registerMultiblock(ccm);
+        MultiblockHandler.registerMultiblock(smallCoalBoiler);
+        MultiblockHandler.registerMultiblock(steamEngine);
     }
+
+    /**
+     * CODE ADAPTED FROM THE IMMERSIVE ENGINEERING SOURCE CODE
+     * REPOSITORY CAN BE FOUND HERE https://github.com/BluSunrize/ImmersiveEngineering/tree/1.13pre
+     */
 
     @SubscribeEvent
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
@@ -399,6 +618,7 @@ public class TTIEContent {
         }
         event.getRegistry().register(advancedComputerBlockItem = (new ItemBlock(advancedComputerBlock)).setRegistryName("advanced_computer_block"));
         event.getRegistry().register(rocketControllerBlockItem = (new ItemBlock(rocketControllerBlock)).setRegistryName("rocket_controller_block"));
+        event.getRegistry().register(magnetizedNickelSheetMetalItem = (new ItemBlock(magnetizedNickelSheetMetal)).setRegistryName("magnetized_nickel_sm"));
     }
 
     @SubscribeEvent
@@ -408,6 +628,7 @@ public class TTIEContent {
         }
         event.getRegistry().register(advancedComputerBlock);
         event.getRegistry().register(rocketControllerBlock);
+        event.getRegistry().register(magnetizedNickelSheetMetal);
     }
 
     @SideOnly(Side.CLIENT)
@@ -418,6 +639,10 @@ public class TTIEContent {
         ModelLoader.setCustomStateMapper(advancedComputerBlock, new DefaultStateMapper());
         ModelLoader.setCustomModelResourceLocation(rocketControllerBlockItem, 0, new ModelResourceLocation(rocketControllerBlockItem.getRegistryName(), "normal"));
         ModelLoader.setCustomStateMapper(rocketControllerBlock, new DefaultStateMapper());
+
+
+        ModelLoader.setCustomModelResourceLocation(magnetizedNickelSheetMetalItem, 0, new ModelResourceLocation(magnetizedNickelSheetMetalItem.getRegistryName(), "normal"));
+        ModelLoader.setCustomStateMapper(magnetizedNickelSheetMetal, new DefaultStateMapper());
 
         for(Block block : registeredTTBlocks) {
             final ResourceLocation loc = Block.REGISTRY.getNameForObject(block);

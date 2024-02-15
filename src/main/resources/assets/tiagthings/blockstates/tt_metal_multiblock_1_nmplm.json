@@ -83,6 +83,10 @@
         "model": "tiagthings:nmplm.obj",
         "custom": { "flip-v": true }
       }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

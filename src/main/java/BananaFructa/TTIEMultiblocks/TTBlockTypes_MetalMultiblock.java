@@ -6,6 +6,11 @@ import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
+/**
+ * CODE ADAPTED FROM THE IMMERSIVE ENGINEERING SOURCE CODE
+ * REPOSITORY CAN BE FOUND HERE https://github.com/BluSunrize/ImmersiveEngineering/tree/1.13pre
+ */
+
 public enum TTBlockTypes_MetalMultiblock implements IStringSerializable, BlockTTBase.IBlockEnum {
 
     COAL_BOILER(true),
@@ -44,6 +49,8 @@ public enum TTBlockTypes_MetalMultiblock implements IStringSerializable, BlockTT
      */
 
     private boolean needsCustomState;
+    public boolean hasGui = false;
+    public int guiId = -1;
 
     public boolean needsCustomState() {
         return needsCustomState;
@@ -51,6 +58,11 @@ public enum TTBlockTypes_MetalMultiblock implements IStringSerializable, BlockTT
 
     TTBlockTypes_MetalMultiblock(boolean needsCustomState) {
         this.needsCustomState = needsCustomState;
+    }
+    TTBlockTypes_MetalMultiblock(boolean needsCustomState,boolean hasGui,int guiId) {
+        this.needsCustomState = needsCustomState;
+        this.hasGui = hasGui;
+        this.guiId = guiId;
     }
 
     @Override

@@ -14,7 +14,7 @@
       {
         "model": "tiagthings:computer_cluster_controller.obj",
         "transform": {
-          "scale": 0.15,
+          "scale": 0.24,
           "rotation": [
             {
               "x": 20
@@ -24,8 +24,8 @@
             }
           ],
           "translation": [
-            0.15,
-            -0.4,
+            -0.1,
+            -0.3,
             0
           ]
         }
@@ -35,18 +35,18 @@
       {
         "model": "tiagthings:memory_formatter.obj",
         "transform": {
-          "scale": 0.15,
+          "scale": 0.25,
           "rotation": [
             {
               "x": 20
             },
             {
-              "y": -225
+              "y": -135
             }
           ],
           "translation": [
-            0.15,
-            -0.4,
+            0.1,
+            -0.25,
             0
           ]
         }
@@ -56,18 +56,18 @@
       {
         "model": "tiagthings:clay_oven.obj",
         "transform": {
-          "scale": 0.15,
+          "scale": 0.26,
           "rotation": [
             {
               "x": 20
             },
             {
-              "y": -225
+              "y": -135
             }
           ],
           "translation": [
-            0.15,
-            -0.4,
+            -0.25,
+            -0.09,
             0
           ]
         }
@@ -77,27 +77,65 @@
       {
         "model": "tiagthings:masonry_heater.obj",
         "transform": {
-          "scale": 0.15,
+          "scale": 0.16,
           "rotation": [
             {
               "x": 20
             },
             {
-              "y": -225
+              "y": -135
             }
           ],
           "translation": [
-            0.15,
-            -0.4,
+            -0.15,
+            -0.3,
             0
           ]
         }
       }
     ],
     "inventory,type=rocket_scaffold_child": [{
-      "model": "tiagthings:rocket_scaffold.obj",
+      "model": "tiagthings:rocket_scaffold_body.obj",
       "transform": {
-        "scale": 0.25,
+        "scale": 0.055,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          0.22,
+          -0.3,
+          0
+        ]
+      }
+    }],
+    "inventory,type=magnetic_separator_child": [{
+      "model": "tiagthings:magnetic_separator.obj",
+      "transform": {
+        "scale": 0.23,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          -0.00,
+          -0.20,
+          0
+        ]
+      }
+    }],
+    "inventory,type=open_hearth_furnace_child": [{
+      "model": "tiagthings:open_hearth_furnace.obj",
+      "transform": {
+        "scale": 0.05,
         "rotation": [
           {
             "x": 20
@@ -127,6 +165,12 @@
         "model": "immersiveengineering:ie_empty"
       },
       "rocket_scaffold_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "magnetic_separator_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "open_hearth_furnace_child": {
         "model": "immersiveengineering:ie_empty"
       }
     },
@@ -171,6 +215,10 @@
     "boolean0": {
       "false": {},
       "true": {}
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

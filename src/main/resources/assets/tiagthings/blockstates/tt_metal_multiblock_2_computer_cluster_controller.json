@@ -13,17 +13,17 @@
     "inventory,type=computer_cluster_controller": [{
       "model": "tiagthings:computer_cluster_controller.obj",
       "transform": {
-        "scale": 0.25,
+        "scale": 0.24,
         "rotation": [
           {
             "x": 20
           },
           {
-            "y": -135
+            "y": -225
           }
         ],
         "translation": [
-          0.1,
+          -0.1,
           -0.3,
           0
         ]
@@ -83,6 +83,10 @@
         "model": "tiagthings:computer_cluster_controller.obj",
         "custom": { "flip-v": true }
       }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

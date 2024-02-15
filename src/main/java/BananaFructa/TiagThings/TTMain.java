@@ -4,96 +4,62 @@ import BananaFructa.AppliedEnergistics.EntityChargedQuartzModified;
 import BananaFructa.ImmersiveIntelligence.*;
 import BananaFructa.NCCraft.SelectiveArrayListNC;
 import BananaFructa.RailcraftModifications.RFTileBlockCrusher;
-import BananaFructa.TFCTech.TEInductionCrucibleCAP;
+import BananaFructa.TFC.TEInductionCrucibleCAP;
 import BananaFructa.TTIEMultiblocks.Commands.GetTEPos;
 import BananaFructa.TTIEMultiblocks.Commands.StructureGeneratorCommand;
 import BananaFructa.TTIEMultiblocks.Renderers.ClarifierRenderer;
-import BananaFructa.TTIEMultiblocks.Renderers.ScaffoldRenderer;
+import BananaFructa.TTIEMultiblocks.Renderers.SteamEngineRenderer;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
-import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TiagThings.Commands.Wikis;
 import BananaFructa.TiagThings.Items.FluidLoaderHandler;
 import BananaFructa.TiagThings.Items.ItemLoaderHandler;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.Proxy.CommonProxy;
-import appeng.core.localization.GuiText;
 import appeng.items.materials.MaterialType;
 import blusunrize.immersiveengineering.api.crafting.BottlingMachineRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.util.compat.crafttweaker.BottlingMachine;
-import com.cleanroommc.multiblocked.api.recipe.RecipeLogic;
-import com.cleanroommc.multiblocked.api.tile.ControllerTileEntity;
 import com.lumintorious.ambiental.api.TemperatureRegistry;
 import com.lumintorious.ambiental.capability.TemperatureCapability;
 import com.lumintorious.ambiental.modifiers.*;
-import mctmods.immersivetechnology.common.ITContent;
-import mctmods.immersivetechnology.common.blocks.BlockITFluid;
-import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.venus.VenusBlocks;
-import mods.railcraft.common.blocks.BlockMeta;
-import mods.railcraft.common.carts.EntityLocomotive;
 import nc.init.NCFluids;
 import nc.integration.crafttweaker.CTRemoveRecipe;
 import net.dries007.tfc.api.capability.food.FoodData;
 import net.dries007.tfc.api.capability.food.IFoodStatsTFC;
 import net.dries007.tfc.objects.blocks.devices.BlockFirePit;
-import net.dries007.tfc.objects.blocks.property.ILightableBlock;
 import net.dries007.tfc.objects.fluids.FluidsTFC;
 import net.dries007.tfc.objects.te.TEFirePit;
-import net.dries007.tfc.util.calendar.CalendarTFC;
-import net.dries007.tfc.util.climate.ClimateTFC;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.event.terraingen.ChunkGeneratorEvent;
-import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 import pl.pabilo8.immersiveintelligence.api.Utils;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.IIPotions;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
+
 import net.minecraft.item.*;
 
 @Mod(modid = TTMain.modId,version = TTMain.version,name = TTMain.name,dependencies = "after:railcraft;after:buildcraftbuilders;after:firmalife;after:immersiveintelligence;before:nuclearcraft;after:immersivetech;after:galacticraftcore;after:immersiveengineering;before:tfcflorae")
@@ -281,6 +247,21 @@ public class TTMain {
         FluidLoaderHandler.addLiquid("utetf","blocks/uhexf","blocks/uhexf", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("uranium_precipitate_mix_1","blocks/uranium_precipitate_mix","blocks/uranium_precipitate_mix", Material.WATER,false,false);
         FluidLoaderHandler.addLiquid("uranium_precipitate_mix_2","blocks/uranium_precipitate_mix","blocks/uranium_precipitate_mix", Material.WATER,false,false);
+
+        FluidLoaderHandler.addLiquid("bauxite_bd_mix","blocks/bauxite_bd_mix","blocks/bauxite_bd_mix", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("alumina_oxide_sol","blocks/alumina_oxide_sol","blocks/alumina_oxide_sol", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("molten_cryolite","blocks/molten_cryolite","blocks/molten_cryolite", Material.LAVA,false,false);
+
+        FluidLoaderHandler.addLiquid("hall_mix","blocks/hall_mix","blocks/hall_mix", Material.LAVA,false,false);
+
+        FluidLoaderHandler.addLiquid("ticl","blocks/ticl","blocks/ticl", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("mgcl","blocks/mgcl","blocks/mgcl", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("mgclmixti","blocks/mgclmixti","blocks/mgclmixti", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("salt_solution","blocks/salt_solution","blocks/salt_solution", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("sodium_zirconate","blocks/sodium_zirconate","blocks/sodium_zirconate", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("zirconia_precipitate","blocks/zirconia_precipitate","blocks/zirconia_precipitate", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("zrcl","blocks/zrcl","blocks/zrcl", Material.WATER,false,false);
+        FluidLoaderHandler.addLiquid("mgzrcl","blocks/mgzrcl","blocks/mgzrcl", Material.WATER,false,false);
         NCFluids.fluidPairList = new SelectiveArrayListNC(); // This crime was the only way
         //for (Block i : ITContent.registeredITBlocks) {
         //    if (i instanceof BlockITFluid) {
@@ -297,6 +278,7 @@ public class TTMain {
     public void init(FMLInitializationEvent event){
         Coke.registerFuel();
         proxy.init();
+        NetworkRegistry.INSTANCE.registerGuiHandler(this,proxy);
         FMLInterModComms.sendMessage("waila", "register", "BananaFructa.TTIEMultiblocks.Compat.Waila.TTWailaProvider.callbackRegister");
         GameRegistry.registerTileEntity(RFTileBlockCrusher.class,new ResourceLocation(modId, RFTileBlockCrusher.class.getSimpleName()));
         GameRegistry.registerTileEntity(TEInductionCrucibleCAP.class,new ResourceLocation(modId,TEInductionCrucibleCAP.class.getSimpleName()));
@@ -305,6 +287,7 @@ public class TTMain {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityClarifier.class, new ClarifierRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteamEngine.class, new SteamEngineRenderer());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRocketScaffold.class, new ScaffoldRenderer());
         VenusBlocks.crashedProbe = Blocks.AIR;
         IIPotions.infrared_vision = Potion.getPotionById(16);

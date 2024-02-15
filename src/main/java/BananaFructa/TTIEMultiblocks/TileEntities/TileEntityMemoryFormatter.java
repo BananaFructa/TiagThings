@@ -35,6 +35,13 @@ public class TileEntityMemoryFormatter extends STEMM_ClusterClient<TileEntityMem
         return 0;
     }
 
+    // TODO: this is bad
+    public static int getProcessingPowerForRecipe_static(SimplifiedMultiblockRecipe recipe) {
+        if (recipe == recipes.get(0)) return 8;
+        if (recipe == recipes.get(1)) return 80;
+        return 0;
+    }
+
     @Override
     protected int getPosOfPort() {
         return 5;

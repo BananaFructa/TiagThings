@@ -35,8 +35,8 @@ public class TileEntityClarifier extends SimplifiedTileEntityMultiblockMetal<Til
 
     @Override
     public void initPorts() {
-        int inputTank = registerFluidTank(new FluidTank(150000));
-        int outputTank = registerFluidTank(new FluidTank(10000));
+        int inputTank = registerFluidTank(150000);
+        int outputTank = registerFluidTank(10000);
         registerFluidPort(120,inputTank, PortType.INPUT, EnumFacing.NORTH);
         registerFluidPort(110,outputTank,PortType.OUTPUT,EnumFacing.NORTH);
         addEnergyPort(131);

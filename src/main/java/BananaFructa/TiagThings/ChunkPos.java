@@ -1,5 +1,8 @@
 package BananaFructa.TiagThings;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -23,5 +26,18 @@ public class ChunkPos implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(x, z);
+    }
+
+    public NBTTagCompound toNbt() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger("x",x);
+        nbt.setInteger("z",z);
+        return nbt;
+    }
+
+    public static ChunkPos fromNBT(NBTTagCompound nbt) {
+        int x = nbt.getInteger("x");
+        int z = nbt.getInteger("z");
+        return new ChunkPos(x,z);
     }
 }

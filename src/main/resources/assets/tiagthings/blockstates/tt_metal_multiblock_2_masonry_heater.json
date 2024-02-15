@@ -13,7 +13,7 @@
     "inventory,type=masonry_heater": [{
       "model": "tiagthings:masonry_heater.obj",
       "transform": {
-        "scale": 0.25,
+        "scale": 0.16,
         "rotation": [
           {
             "x": 20
@@ -23,7 +23,7 @@
           }
         ],
         "translation": [
-          0.1,
+          -0.15,
           -0.3,
           0
         ]
@@ -83,6 +83,10 @@
         "model": "tiagthings:masonry_heater.obj",
         "custom": { "flip-v": true }
       }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

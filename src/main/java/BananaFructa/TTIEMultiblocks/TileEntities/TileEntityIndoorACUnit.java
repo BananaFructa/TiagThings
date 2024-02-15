@@ -27,8 +27,8 @@ public class TileEntityIndoorACUnit extends SimplifiedTileEntityMultiblockMetal<
 
     @Override
     public void initPorts() {
-        int inputTank = registerFluidTank(new FluidTank(2000));
-        int outputTank = registerFluidTank(new FluidTank(2000));
+        int inputTank = registerFluidTank(2000);
+        int outputTank = registerFluidTank(2000);
         registerFluidPort(2,inputTank, PortType.INPUT, EnumFacing.SOUTH);
         registerFluidPort(0,outputTank,PortType.OUTPUT,EnumFacing.SOUTH);
     }

@@ -7,6 +7,11 @@ import tfcflorae.TFCFlorae;
 
 import java.util.Locale;
 
+/**
+ * CODE ADAPTED FROM THE IMMERSIVE ENGINEERING SOURCE CODE
+ * REPOSITORY CAN BE FOUND HERE https://github.com/BluSunrize/ImmersiveEngineering/tree/1.13pre
+ */
+
 public enum TTBlockTypes_MetalMultiblock_1 implements IStringSerializable, BlockTTBase.IBlockEnum {
 
     NMPLM(true),
@@ -27,6 +32,9 @@ public enum TTBlockTypes_MetalMultiblock_1 implements IStringSerializable, Block
     ELECTRIC_OVEN_CHILD(false);
 
     private boolean needsCustomState;
+    public boolean hasGui = false;
+    public int guiId = -1;
+
 
     public boolean needsCustomState() {
         return needsCustomState;
@@ -34,6 +42,11 @@ public enum TTBlockTypes_MetalMultiblock_1 implements IStringSerializable, Block
 
     TTBlockTypes_MetalMultiblock_1(boolean needsCustomState) {
         this.needsCustomState = needsCustomState;
+    }
+    TTBlockTypes_MetalMultiblock_1(boolean needsCustomState,boolean hasGui,int guiId) {
+        this.needsCustomState = needsCustomState;
+        this.hasGui = hasGui;
+        this.guiId = guiId;
     }
 
     @Override

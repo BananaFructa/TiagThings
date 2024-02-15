@@ -39,6 +39,7 @@ public class TTWailaProvider implements IWailaDataProvider {
 
             if (te.offset.length == 3 && te.master() != null) {
                 te = te.master();
+                tooltip.add("Working at " + String.format("%.02f", 100-(100/15.0f)*te.redstoneLevel) + "%");
                 tooltip.add("Temperature: " + te.getTemperature() + "\u00b0C");
                 IItemHandler itemHandler = te.inventoryHandlers.get(0);
                 ItemStack stack = itemHandler.getStackInSlot(0);
@@ -60,6 +61,7 @@ public class TTWailaProvider implements IWailaDataProvider {
 
             if (te.offset.length == 3 && te.master() != null) {
                 te = te.master();
+                tooltip.add("Working at " + String.format("%.02f", 100-(100/15.0f)*te.redstoneLevel) + "%");
                 tooltip.add("Temperature: " + te.getTemperature() + "\u00b0C");
                 FluidTank inputFluid = te.tanks.get(0);
                 if (inputFluid == null || inputFluid.getFluid() == null) tooltip.add("Fuel Fluid Input: Empty");
@@ -165,6 +167,49 @@ public class TTWailaProvider implements IWailaDataProvider {
                 }
             }
         }
+
+        if (accessor.getTileEntity() instanceof TileEntityOpenHearthFurnace) {
+            TileEntityOpenHearthFurnace te = ((TileEntityOpenHearthFurnace)accessor.getTileEntity());
+
+            if (te.offset.length == 3 && te.master() != null) {
+                te = te.master();
+                tooltip.add("Temperature: " + te.getTemperature() + "\u00b0C");
+                if (te.pigIronMb != 0) tooltip.add("Pig Iron: " + te.pigIronMb + " mb");
+                if (te.tanks.get(1).getFluidAmount() != 0) {
+                    if (te.tanks.get(1).getFluid().getFluid() == TileEntityOpenHearthFurnace.liquidSteel) {
+                        tooltip.add("Steel: " + te.tanks.get(1).getFluidAmount() + " mb");
+                    } else {
+                        tooltip.add("Mild Steel: " + te.tanks.get(1).getFluidAmount() + " mb");
+                    }
+                }
+                int idleTime = te.idleTime;
+                if (idleTime > 0) {
+                    tooltip.add("Converting to Mild Steel in: " + (int)((TileEntityOpenHearthFurnace.idleTimeToMildSteel - idleTime)/20) + " second");
+                }
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof TileEntitySmallCoalBoiler) {
+            TileEntitySmallCoalBoiler te = ((TileEntitySmallCoalBoiler)accessor.getTileEntity());
+
+            if (te.offset.length == 3 && te.master() != null) {
+                te = te.master();
+                tooltip.add("Temperature: " + te.getTemperature() + "\u00b0C");
+                IItemHandler itemHandler = te.inventoryHandlers.get(0);
+                ItemStack stack = itemHandler.getStackInSlot(0);
+                if (stack == null || stack.isEmpty()) tooltip.add("Input: Empty");
+                else tooltip.add("Input: " + stack.getItem().getItemStackDisplayName(stack) + " x" + stack.getCount());
+
+                FluidTank inputTank = te.tanks.get(1);
+                if (inputTank == null || inputTank.getFluid() == null) tooltip.add("Fluid Input: Empty");
+                else tooltip.add("Fluid Input: " + inputTank.getFluid().getLocalizedName() + " " + inputTank.getFluidAmount() + " mb");
+
+                FluidTank outputTank = te.tanks.get(0);
+                if (outputTank == null || outputTank.getFluid() == null) tooltip.add("Fluid Output: Empty");
+                else tooltip.add("Fluid Output: " + outputTank.getFluid().getLocalizedName() + " " + outputTank.getFluidAmount() + " mb");
+            }
+        }
+
         return tooltip;
     }
 }

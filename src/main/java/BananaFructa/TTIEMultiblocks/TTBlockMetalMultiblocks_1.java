@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,9 +22,16 @@ import net.minecraftforge.common.property.Properties;
 
 import javax.annotation.Nullable;
 
+/**
+ * CODE ADAPTED FROM THE IMMERSIVE ENGINEERING SOURCE CODE
+ * REPOSITORY CAN BE FOUND HERE https://github.com/BluSunrize/ImmersiveEngineering/tree/1.13pre
+ */
+
 public class TTBlockMetalMultiblocks_1 extends BlockTTMultiblock<TTBlockTypes_MetalMultiblock_1> {
+
+    static PropertyInteger animProp = PropertyInteger.create("anim_id",0,1);
     public TTBlockMetalMultiblocks_1() {
-        super("tt_metal_multiblock_1", Material.IRON, PropertyEnum.create("type", TTBlockTypes_MetalMultiblock_1.class), ItemBlockTTBase.class, new Object[]{IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0], Properties.AnimationProperty, IEProperties.OBJ_TEXTURE_REMAP});
+        super("tt_metal_multiblock_1", Material.IRON, PropertyEnum.create("type", TTBlockTypes_MetalMultiblock_1.class),animProp, ItemBlockTTBase.class, new Object[]{IEProperties.DYNAMICRENDER, IEProperties.BOOLEANS[0], Properties.AnimationProperty, IEProperties.OBJ_TEXTURE_REMAP,animProp});
         this.setAllNotNormalBlock();
         this.setHardness(3.0F);
         this.setResistance(15.0F);

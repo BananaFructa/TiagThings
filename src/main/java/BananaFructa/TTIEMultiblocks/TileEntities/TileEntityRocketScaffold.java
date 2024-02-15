@@ -52,7 +52,7 @@ public class TileEntityRocketScaffold extends SimplifiedTileEntityMultiblockMeta
 
     @Override
     public void initPorts() {
-        int fluid = registerFluidTank(new FluidTank(5000));
+        int fluid = registerFluidTank(5000);
         registerFluidPort(0,fluid,PortType.INPUT,EnumFacing.SOUTH);
         addEnergyPort(12);
         addEnergyPort(181);

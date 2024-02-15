@@ -83,6 +83,10 @@
         "model": "tiagthings:electric_oven.obj",
         "custom": { "flip-v": true }
       }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

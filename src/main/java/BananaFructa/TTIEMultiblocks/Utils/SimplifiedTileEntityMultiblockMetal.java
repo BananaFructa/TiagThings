@@ -1,59 +1,51 @@
 package BananaFructa.TTIEMultiblocks.Utils;
 
 import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityAE2CompatMultiblock;
-import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityCoalBoiler;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
-import blusunrize.immersiveengineering.common.util.inventory.IEInventoryHandler;
+import com.sun.jna.platform.win32.WinUser;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.sound.sampled.Port;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTileEntityMultiblockMetal<M,R> ,R extends SimplifiedMultiblockRecipe> extends TileEntityMultiblockMetal<M,R> {
 
     public List<R> recipes;
     public List<Integer> energyPorts = new ArrayList<>(); //
     public List<Integer> redstonePorts = new ArrayList<>();//
-    public List<FluidTank> tanks = new ArrayList<>();//
-    public HashMap<Integer,List<PortInfo>> fluidPorts = new HashMap<>();//
+    public List<STEMMFluidTank> tanks = new ArrayList<>();//
+    public HashMap<Integer,List<PortInfo>> fluidPorts = new LinkedHashMap<>();//
 
-    public List<OffsetExposedIEInventoryHandler> inventoryHandlers = new ArrayList<>();//
-
-    public HashMap<Integer,List<PortInfo>> itemPorts = new HashMap<>();//
+    public List<STEMMInventoryHandler> inventoryHandlers = new ArrayList<>();//
+    public HashMap<Integer,List<PortInfo>> itemPorts = new LinkedHashMap<>();//
 
     public NonNullList<ItemStack> inventory = NonNullList.withSize(20,ItemStack.EMPTY);//
 
     int itemCounter = 0; // used when a recipes finishes to cycle through the different output ports
     int fluidCounter = 0;
 
-    int slotCounter = 0;
+    public int slotCounter = 0;
 
     //EnumFacing face = EnumFacing.NORTH;//
 
@@ -76,6 +68,14 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             if (process.recipe == recipe && process.canProcess(this)) return true;
         }
         return false;
+    }
+
+    public MultiblockProcess<R> getProcessForRecipe(R recipe) {
+        if (isRSDisabled()) return null;
+        for (MultiblockProcess<R> process : this.processQueue) {
+            if (process.recipe == recipe && process.canProcess(this)) return process;
+        }
+        return null;
     }
 
     public boolean isWorking() {
@@ -132,8 +132,18 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         redstonePorts.add(pos);
     }
 
-    protected int registerFluidTank(FluidTank tank) {
-        tanks.add(tank);
+    protected int registerFluidTank(int capacity) {
+        tanks.add(new STEMMFluidTank(capacity,this));
+        return tanks.size() - 1;
+    }
+
+    protected int registerFluidTank(int capacity,int ihi,int iho) {
+        STEMMFluidTank stemmFluidTank = new STEMMFluidTank(capacity,this);
+        stemmFluidTank.setFluidIHInput(ihi);
+        stemmFluidTank.setFluidOHInput(iho);
+        tanks.add(stemmFluidTank);
+        inventoryHandlers.get(ihi).setFluidOnly(true);
+        inventoryHandlers.get(iho).setFluidOnly(true);
         return tanks.size() - 1;
     }
 
@@ -143,10 +153,19 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         } else {
             fluidPorts.put(pos,new ArrayList<PortInfo>(){{add(new PortInfo(portType, northRelativeFacing, tank,pos));}});
         }
+        if (tank != -1 && portType == PortType.INPUT) {
+            int id = 0;
+            for (Integer p : fluidPorts.keySet()) {
+                for (int i = 0;i < fluidPorts.get(p).size();i++) {
+                    if (fluidPorts.get(p).get(i).type == PortType.INPUT) id++;
+                }
+            }
+            tanks.get(tank).addRecipeFlowCorelation(id-1);
+        }
     }
 
     protected int registerItemHandler(int slots,boolean canInsert[],boolean[] canExtract) { // creates sub set of inventory
-        OffsetExposedIEInventoryHandler handler = new OffsetExposedIEInventoryHandler(slots,this,slotCounter,canInsert,canExtract);
+        STEMMInventoryHandler handler = new STEMMInventoryHandler(slots,this,slotCounter,canInsert,canExtract);
         slotCounter += slots;
         inventoryHandlers.add(handler);
         //for(int i = 0;i < handler.getSlots();i++) master().inventory.add(ItemStack.EMPTY);
@@ -159,9 +178,19 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         } else {
             itemPorts.put(pos,new ArrayList<PortInfo>(){{add(new PortInfo(type, northRelativeFacing, handler,pos));}});
         }
+        if (handler != -1 && type == PortType.INPUT) {
+            int id = 0;
+            for (Integer p : itemPorts.keySet()) {
+                for (int i = 0;i < itemPorts.get(p).size();i++) {
+                    if (itemPorts.get(p).get(i).type == type) id++;
+                }
+            }
+            inventoryHandlers.get(handler).addRecipeFlowCorelation(id-1);
+        }
     }
 
     EnumFacing shiftRelativeToNorth(EnumFacing face) {
+        if (face == EnumFacing.UP || face == EnumFacing.DOWN) return face;
         switch (this.facing) {
             case NORTH:
                 if (!mirrored && (face == EnumFacing.WEST || face == EnumFacing.EAST)) return face.getOpposite();
@@ -224,7 +253,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             IItemHandler handler = inventoryHandlers.get(info.index);
             for(int j = 0;j < handler.getSlots();j++) {
                 stacks.add(handler.getStackInSlot(j));
-                slots.add(j + ((OffsetExposedIEInventoryHandler)handler).getOffset());
+                slots.add(j + ((STEMMInventoryHandler)handler).getOffset());
             }
         }
         return new Tuple<>(stacks.toArray(new ItemStack[0]),slots.stream().mapToInt(i->i).toArray());
@@ -244,8 +273,6 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         }
         return new Tuple<>(stacks.toArray(new FluidStack[0]),indexes.stream().mapToInt(i->i).toArray());
     }
-
-    // TODO: if resource removel is needed more code is required
 
     @Override
     public void update() {
@@ -278,9 +305,31 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             if (recipe != null && canDoRecipe(recipe)) {
                 resetPortCounters();
                 if (enoughSpaceForRecipe(recipe)) {
-                    this.processQueue.add(new MultiblockProcessInMachine<R>(recipe));
+                    MultiblockProcessInMachine<R> process = new MultiblockProcessInMachine<R>(recipe);
+                    if (process.recipe.consumeFirst) onProcessFinishNoCheck(process);
+                    this.processQueue.add(process);
                 }
                 resetPortCounters();
+            }
+
+            for (STEMMFluidTank tank : tanks) {
+                if (tank.fluidOHInput == -1 || tank.fluidIHInput == -1) continue;
+                STEMMInventoryHandler ihi = inventoryHandlers.get(tank.fluidIHInput);
+                STEMMInventoryHandler ohi = inventoryHandlers.get(tank.fluidOHInput);
+                ItemStack input = ihi.getStackInSlot(0);
+                IFluidHandlerItem fh = (IFluidHandlerItem)input.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, (EnumFacing)null);
+                if (fh != null && fh.getTankProperties().length != 0) {
+                    FluidStack fs = fh.getTankProperties()[0].getContents();
+                    if (fs == null) continue;
+                    if (tank.fill(fs,false) == fs.amount) {
+                        tank.fill(fs,true);
+                        fh.drain(fs,true);
+                        ihi.setStackInSlot(0,ItemStack.EMPTY);
+                        ohi.setStackInSlot(0,fh.getContainer());
+                        markDirty();
+                        IEUtils.notifyClientUpdate(world,getPos()); // why ??
+                    }
+                }
             }
         }
 
@@ -295,7 +344,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
                 PortInfo info = getNextItemPort(PortType.OUTPUT);
                 if (info == null) return false;
                 if (info.index == -1) return true; // no internal inventory associated
-                OffsetExposedIEInventoryHandler handler = inventoryHandlers.get(info.index);
+                STEMMInventoryHandler handler = inventoryHandlers.get(info.index);
                 boolean foundSlot = false;
                 for (int s = 0; s < handler.getSlots(); s++) {
                     ItemStack outStack = handler.getStackInSlot(s);
@@ -325,7 +374,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         return true;
     }
 
-    private void outputFluids() {
+    protected void outputFluids() {
         // already in master
         for (Integer port : fluidPorts.keySet()) {
             for (PortInfo portInfo : fluidPorts.get(port)) {
@@ -342,7 +391,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         }
     }
 
-    private void outputItems() {
+    protected void outputItems() {
         for (Integer pos : itemPorts.keySet()) {
             for (PortInfo info : itemPorts.get(pos)) {
                 if (info.type == PortType.OUTPUT && info.index > -1) { // means that there is internal storage for output items
@@ -465,9 +514,9 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         //if (port == -1) return;
         if (!rest.isEmpty()) {
             if (info.index > -1) {
-                IItemHandler handler = inventoryHandlers.get(info.index);
+                STEMMInventoryHandler handler = inventoryHandlers.get(info.index);
                 for (int i = 0;i < handler.getSlots() && rest != null;i++) {
-                    rest = handler.insertItem(i,rest,false);
+                    rest = handler.outputItem(i,rest,false);
                 }
             }
         }
@@ -479,7 +528,20 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             }
         }
         if (!rest.isEmpty()) {
-            Utils.dropStackAtPos(world,getBlockPosForPos(info.pos),rest,info.face);
+            BlockPos pos = getBlockPosForPos(info.pos);
+            ItemStack stack = rest;
+            EnumFacing facing = info.face;
+            if (!stack.isEmpty()) {
+                EntityItem ei = new EntityItem(world, (double)pos.getX() + 0.5, (double)pos.getY() + (facing != EnumFacing.DOWN ? 0.5 : -0.5), (double)pos.getZ() + 0.5, stack.copy());
+                ei.motionY = 0.025000000372529;
+                if (facing != null) {
+                    ei.motionX = (double)(0.075F * (float)facing.getFrontOffsetX());
+                    ei.motionZ = (double)(0.075F * (float)facing.getFrontOffsetZ());
+                    ei.motionY = (double)(0.075F * (float)facing.getFrontOffsetY());
+                }
+
+                world.spawnEntity(ei);
+            }
         }
     }
 
@@ -530,8 +592,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
 
     }
 
-    @Override
-    public void onProcessFinish(MultiblockProcess<R> multiblockProcess) {
+    public void onProcessFinishNoCheck(MultiblockProcess<R> multiblockProcess) {
         resetPortCounters();
 
         // extracts inputs in order
@@ -541,7 +602,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         resetPortCounters();
 
         for (IngredientStack stack : recipe.getItemInputs()) {
-            OffsetExposedIEInventoryHandler handler = (OffsetExposedIEInventoryHandler) inventoryHandlers.get(getNextItemPort(PortType.INPUT).index);
+            STEMMInventoryHandler handler = (STEMMInventoryHandler) inventoryHandlers.get(getNextItemPort(PortType.INPUT).index);
             if (stack.stack == null) continue;
             int remaining = stack.stack.getCount();
             for (int i = 0;i < handler.getSlots();i++) {
@@ -564,6 +625,10 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         }
 
         resetPortCounters();
+    }
+    @Override
+    public void onProcessFinish(MultiblockProcess<R> multiblockProcess) {
+        if (!((SimplifiedMultiblockRecipe)multiblockProcess.recipe).consumeFirst) onProcessFinishNoCheck(multiblockProcess);
     }
 
     @Override
@@ -617,10 +682,15 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         nbt.setInteger("ihCount",inventoryHandlers.size());
         for (int i = 0;i < inventoryHandlers.size();i++) {
             NBTTagCompound handlerNBT = new NBTTagCompound();
+            handlerNBT.setBoolean("fluidOnly",inventoryHandlers.get(i).getFluidOnly());
             handlerNBT.setInteger("slots",inventoryHandlers.get(i).getSlots());
             handlerNBT.setInteger("offsetih",inventoryHandlers.get(i).getOffset());
             handlerNBT.setIntArray("canInsert",IEUtils.booleanToInt(inventoryHandlers.get(i).getCanInsert()));
             handlerNBT.setIntArray("canExtract",IEUtils.booleanToInt(inventoryHandlers.get(i).getCanExtract()));
+            handlerNBT.setInteger("inputs",inventoryHandlers.get(i).recipeInputCorelation.size());
+            for (int j = 0;j <  inventoryHandlers.get(i).recipeInputCorelation.size();j++) {
+                handlerNBT.setInteger("crl-"+j,inventoryHandlers.get(i).recipeInputCorelation.get(j));
+            }
             nbt.setTag("ih-"+i,handlerNBT);
         }
 
@@ -640,7 +710,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         itemPorts.clear();
 
         int tanksCount = nbt.getInteger("tanksCount");
-        for (int i = 0; i < tanksCount; i++) tanks.add(new FluidTank(nbt.getInteger("tankCapacity-"+i)).readFromNBT(nbt.getCompoundTag("tank-" + i)));
+        for (int i = 0; i < tanksCount; i++) tanks.add(new STEMMFluidTank(nbt.getInteger("tankCapacity-"+i),this).readFromNBT(nbt.getCompoundTag("tank-" + i)));
 
 
         for (int i = 0; i < inventory.size(); i++) inventory.set(i,new ItemStack(nbt.getCompoundTag("item-" + i)));
@@ -673,11 +743,18 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         int ihCount = nbt.getInteger("ihCount");
         for (int i = 0;i < ihCount;i++) {
             NBTTagCompound ihNBT = (NBTTagCompound) nbt.getTag("ih-"+i);
+            boolean fluidOnly = ihNBT.getBoolean("fluidOnly");
             int slots = ihNBT.getInteger("slots");
             int offset = ihNBT.getInteger("offsetih");
             boolean[] canInsert = IEUtils.intToBoolean(ihNBT.getIntArray("canInsert"));
             boolean[] canExtract = IEUtils.intToBoolean(ihNBT.getIntArray("canExtract"));
-            inventoryHandlers.add(new OffsetExposedIEInventoryHandler(slots,this,offset,canInsert,canExtract));
+            STEMMInventoryHandler handler = new STEMMInventoryHandler(slots,this,offset,canInsert,canExtract);
+            int size = ihNBT.getInteger("inputs");
+            for (int j = 0;j <  size;j++) {
+                handler.addRecipeFlowCorelation(ihNBT.getInteger("crl-"+j));
+            }
+            handler.setFluidOnly(fluidOnly);
+            inventoryHandlers.add(handler);
         }
 
     }

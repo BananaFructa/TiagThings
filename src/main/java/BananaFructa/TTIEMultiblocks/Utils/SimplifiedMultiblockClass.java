@@ -4,6 +4,7 @@ import BananaFructa.TTIEMultiblocks.IECopy.BlockTTMultiblock;
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock;
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_1;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
+import BananaFructa.TTIEMultiblocks.Utils.MultiblockAnimation.AnimationGroup;
 import BananaFructa.TiagThings.TTMain;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
@@ -49,6 +50,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
     public IBlockState stateChild;
     public int[] size;
     public Class<? extends TileEntity>[] teOverload;
+    public AnimationGroup animationGroup = null;
 
     public SimplifiedMultiblockClass(String name, ItemStack[][][] structure, int hSource, int lSource, int wSource, IBlockState state, IBlockState stateChild, Class<? extends TileEntity>... teOverload) {
         this.name = name;
@@ -58,7 +60,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         this.wSource = wSource;
         this.state = state;
         this.stateChild = stateChild;
-        this.materials = IEUtils.getMaterialsForStructure(structure,hSource,lSource,wSource);
+        this.materials = IEUtils.getMaterialsForStructure(structure);
         this.size = new int[]{this.structure.length,this.structure[0].length,this.structure[0][0].length};
         this.teOverload = teOverload;
     }
@@ -92,7 +94,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         this.name = name;
         this.state = state;
         this.stateChild = stateChild;
-        this.materials = IEUtils.getMaterialsForStructure(structure,hSource,lSource,wSource);
+        this.materials = IEUtils.getMaterialsForStructure(structure);
         this.teOverload = teOverload;
     }
 

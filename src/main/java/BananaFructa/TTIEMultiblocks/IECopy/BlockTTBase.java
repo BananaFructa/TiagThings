@@ -12,6 +12,7 @@ import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -42,6 +43,7 @@ public abstract class BlockTTBase<E extends Enum<E> & BlockTTBase.IBlockEnum> ex
 
     public final String name;
     public final PropertyEnum<E> property;
+    public final PropertyInteger animProperty;
     public final IProperty[] additionalProperties;
     public final IUnlistedProperty[] additionalUnlistedProperties;
     public final E[] enumValues;
@@ -56,7 +58,7 @@ public abstract class BlockTTBase<E extends Enum<E> & BlockTTBase.IBlockEnum> ex
     protected boolean[] canHammerHarvest;
     protected boolean[] metaNotNormalBlock;
     private boolean opaqueCube = false;
-    public BlockTTBase(String name, Material material, PropertyEnum<E> mainProperty, Class<? extends ItemBlockTTBase> itemBlock, Object... additionalProperties)
+    public BlockTTBase(String name, Material material, PropertyEnum<E> mainProperty, PropertyInteger animProperty, Class<? extends ItemBlockTTBase> itemBlock, Object... additionalProperties)
     {
         super(setTempProperties(material, mainProperty, additionalProperties));
         this.name = name;
@@ -67,7 +69,7 @@ public abstract class BlockTTBase<E extends Enum<E> & BlockTTBase.IBlockEnum> ex
         this.metaRenderLayers = new Set[this.enumValues.length];
         this.canHammerHarvest = new boolean[this.enumValues.length];
         this.metaMobilityFlags = new EnumPushReaction[this.enumValues.length];
-
+        this.animProperty = animProperty;
         ArrayList<IProperty> propList = new ArrayList<IProperty>();
         ArrayList<IUnlistedProperty> unlistedPropList = new ArrayList<IUnlistedProperty>();
         for(Object o : additionalProperties)
@@ -517,10 +519,10 @@ public abstract class BlockTTBase<E extends Enum<E> & BlockTTBase.IBlockEnum> ex
     }
     public abstract static class IELadderBlock<E extends Enum<E> & IBlockEnum> extends BlockTTBase<E>
     {
-        public IELadderBlock(String name, Material material, PropertyEnum<E> mainProperty,
+        public IELadderBlock(String name, Material material, PropertyEnum<E> mainProperty, PropertyInteger animProperty,
                              Class<? extends ItemBlockTTBase> itemBlock, Object... additionalProperties)
         {
-            super(name, material, mainProperty, itemBlock, additionalProperties);
+            super(name, material, mainProperty,animProperty, itemBlock, additionalProperties);
         }
 
         @Override

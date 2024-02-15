@@ -15,6 +15,7 @@ public class SimplifiedMultiblockRecipe extends MultiblockRecipe {
 
     public int totalProcessTime;
     public int totalProcessEnergy;
+    boolean consumeFirst = false;
 
     public SimplifiedMultiblockRecipe(ItemStack[] itemInputs,FluidStack[] fluidInputs,ItemStack[] itemOutputs,FluidStack[] fluidOutput,int energyPerTick,int duration) {
         this.inputList = new ArrayList<>();
@@ -27,6 +28,20 @@ public class SimplifiedMultiblockRecipe extends MultiblockRecipe {
         this.fluidOutputList = new ArrayList<>(Arrays.asList(fluidOutput));
         this.totalProcessTime = duration;
         this.totalProcessEnergy = energyPerTick * duration;
+    }
+
+    public SimplifiedMultiblockRecipe(ItemStack[] itemInputs,FluidStack[] fluidInputs,ItemStack[] itemOutputs,FluidStack[] fluidOutput,int energyPerTick,int duration,boolean consumeFirst) {
+        this.inputList = new ArrayList<>();
+        for (ItemStack i : itemInputs) this.inputList.add(new IngredientStack(i));
+        this.fluidInputList = new ArrayList<>(Arrays.asList(fluidInputs));
+
+        this.outputList = NonNullList.create(); // tf ?
+        this.outputList.addAll(Arrays.asList(itemOutputs));
+
+        this.fluidOutputList = new ArrayList<>(Arrays.asList(fluidOutput));
+        this.totalProcessTime = duration;
+        this.totalProcessEnergy = energyPerTick * duration;
+        this.consumeFirst = consumeFirst;
     }
 
     @Override

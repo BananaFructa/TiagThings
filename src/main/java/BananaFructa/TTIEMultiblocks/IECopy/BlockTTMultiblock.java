@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.common.blocks.*;
 import blusunrize.immersiveengineering.common.util.inventory.IIEInventory;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -22,9 +23,9 @@ import javax.annotation.Nullable;
 
 public abstract class BlockTTMultiblock<E extends Enum<E> & BlockTTBase.IBlockEnum> extends BlockTTTileProvider<E> {
 
-    public BlockTTMultiblock(String name, Material material, PropertyEnum<E> mainProperty, Class<? extends ItemBlockTTBase> itemBlock, Object... additionalProperties)
+    public BlockTTMultiblock(String name, Material material, PropertyEnum<E> mainProperty, PropertyInteger animProperty, Class<? extends ItemBlockTTBase> itemBlock, Object... additionalProperties)
     {
-        super(name, material, mainProperty, itemBlock, combineProperties(additionalProperties, IEProperties.FACING_HORIZONTAL,IEProperties.MULTIBLOCKSLAVE));
+        super(name, material, mainProperty,animProperty, itemBlock, combineProperties(additionalProperties, IEProperties.FACING_HORIZONTAL,IEProperties.MULTIBLOCKSLAVE));
     }
 
     @Override

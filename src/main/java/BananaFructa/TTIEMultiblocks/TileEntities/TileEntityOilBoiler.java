@@ -27,7 +27,7 @@ import java.util.List;
 public class TileEntityOilBoiler extends SimplifiedTileEntityMultiblockMetal<TileEntityOilBoiler, SimplifiedMultiblockRecipe> {
 
 
-    public static final SimplifiedMultiblockRecipe coalBurnRecipe = new SimplifiedMultiblockRecipe(new ItemStack[0],new FluidStack[]{new FluidStack(IPContent.fluidDiesel,10)},new ItemStack[0],new FluidStack[0],4096,2);
+    public static final SimplifiedMultiblockRecipe coalBurnRecipe = new SimplifiedMultiblockRecipe(new ItemStack[0],new FluidStack[]{new FluidStack(IPContent.fluidDiesel,10)},new ItemStack[0],new FluidStack[0],1024,2,true);
 
     public static final SimplifiedMultiblockRecipe waterBurnRecipe = new SimplifiedMultiblockRecipe(new ItemStack[0],new FluidStack[]{null,new FluidStack(TTMain.treatedWater,100)},new ItemStack[0],new FluidStack[]{new FluidStack(RailcraftFluids.STEAM.getBlock().getFluid(), 200)},0,2);
 
@@ -35,7 +35,7 @@ public class TileEntityOilBoiler extends SimplifiedTileEntityMultiblockMetal<Til
 
     boolean clientActiveBurning = false;
     float clientBurnPosX,clientBurnPosY,clientBurnPosZ;
-
+    public int redstoneLevel = 0;
     boolean wasBurning = false;
 
     public static List<SimplifiedMultiblockRecipe> recipes = new ArrayList<SimplifiedMultiblockRecipe>() {{
@@ -54,19 +54,22 @@ public class TileEntityOilBoiler extends SimplifiedTileEntityMultiblockMetal<Til
             for (int i = 0;i < 10;i++) world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,true,clientBurnPosX + world.rand.nextFloat() - 0.5,clientBurnPosY+ world.rand.nextFloat() - 0.5,clientBurnPosZ+ world.rand.nextFloat() - 0.5,0,world.rand.nextFloat() * 2,0);
         }
         if (world.isRemote || isDummy()) return;
+        redstoneLevel = getRedstoneInLevel();
         boolean isBurning = isBurningCoal();
         if ((temperature != 0 && temperature != 600) || (isBurning ^ wasBurning)) world.notifyBlockUpdate(getPos(),world.getBlockState(getPos()),world.getBlockState(getPos()),2);
         wasBurning = isBurning;
-        if (isBurning) temperature++;
+        if (isBurning) {
+            if (!isRSDisabled()) temperature++;
+        }
         else temperature--;
         temperature = Math.max(Math.min(temperature,600),0);
     }
 
     @Override
     public void initPorts() {
-        int inputFuel = registerFluidTank(new FluidTank(2000));
-        int inputFluid = registerFluidTank(new FluidTank(1000));
-        int outputFluid = registerFluidTank(new FluidTank(1000));
+        int inputFuel = registerFluidTank(2000);
+        int inputFluid = registerFluidTank(1000);
+        int outputFluid = registerFluidTank(1000);
         addEnergyPort(479);
         addRedstonePorts(76);
         registerFluidPort(56, inputFuel, PortType.INPUT, EnumFacing.EAST);
@@ -125,6 +128,7 @@ public class TileEntityOilBoiler extends SimplifiedTileEntityMultiblockMetal<Til
         nbtTagCompound.setFloat("smokePosy",smokePos.getY() / 4.0f + 0.5f);
         nbtTagCompound.setFloat("smokePosz",smokePos.getZ() / 4.0f + 0.5f);
         nbtTagCompound.setInteger("temperature",temperature);
+        nbtTagCompound.setInteger("redstoneControl",redstoneLevel);
         return new SPacketUpdateTileEntity(getPos(),1,nbtTagCompound);
     }
 
@@ -136,9 +140,40 @@ public class TileEntityOilBoiler extends SimplifiedTileEntityMultiblockMetal<Til
         clientBurnPosY = pkt.getNbtCompound().getFloat("smokePosy");
         clientBurnPosZ = pkt.getNbtCompound().getFloat("smokePosz");
         temperature = pkt.getNbtCompound().getInteger("temperature");
+        redstoneLevel = pkt.getNbtCompound().getInteger("redstoneControl");
     }
 
     public int getTemperature() {
         return temperature;
+    }
+
+    @Override
+    public boolean isRSDisabled() {
+        if (world.getTotalWorldTime() % 15 >= redstoneLevel) return false;
+        return true;
+    }
+
+    public int getRedstoneInLevel() {
+        int[] rsPositions = getRedstonePos();
+        if(rsPositions==null || rsPositions.length<1)
+            return (redstoneControlInverted ? 15 : 0);
+        for(int rsPos : rsPositions)
+        {
+            TileEntityOilBoiler tile = this.getTileForPos(rsPos);
+            if(tile!=null)
+            {
+                return  (redstoneControlInverted ? 15-world.isBlockIndirectlyGettingPowered(tile.getPos()) : world.isBlockIndirectlyGettingPowered(tile.getPos()));
+            }
+        }
+        return (redstoneControlInverted ? 15 : 0);
+    }
+
+    @Override
+    public boolean isCurrentlyDoingRecipe(SimplifiedMultiblockRecipe recipe) {
+        if ((!redstoneControlInverted && redstoneLevel == 15) || (redstoneControlInverted && redstoneLevel == 0)) return false;
+        for (MultiblockProcess<SimplifiedMultiblockRecipe> process : this.processQueue) {
+            if (process.recipe == recipe && process.canProcess(this)) return true;
+        }
+        return false;
     }
 }

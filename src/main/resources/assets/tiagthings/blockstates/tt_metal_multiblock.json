@@ -309,9 +309,9 @@
       }
     ],
     "inventory,type=computer_cluster_unit_child": [{
-      "model": "tiagthings:computer_cluster_unit_child.obj",
+      "model": "tiagthings:computer_cluster_unit.obj",
       "transform": {
-        "scale": 0.15,
+        "scale": 0.24,
         "rotation": [
           {
             "x": 20
@@ -321,7 +321,7 @@
           }
         ],
         "translation": [
-          0.17,
+          -0.1,
           -0.35,
           0
         ]
@@ -418,6 +418,10 @@
     "boolean0": {
       "false": {},
       "true": {}
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

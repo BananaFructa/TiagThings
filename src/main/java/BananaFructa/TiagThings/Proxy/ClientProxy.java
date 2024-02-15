@@ -1,38 +1,36 @@
 package BananaFructa.TiagThings.Proxy;
 
-import BananaFructa.EmergingTechnologies.HarvesterTileEntityModified;
 import BananaFructa.THAHModifications.TTChooseClimateGUi;
+import BananaFructa.TTIEMultiblocks.Commands.AdjustOBJAnimatedPivot;
+import BananaFructa.TTIEMultiblocks.Gui.SmallCoalBoilerGui;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
+import BananaFructa.TTIEMultiblocks.TileEntities.TileEntitySmallCoalBoiler;
 import BananaFructa.TiagThings.MainMenu.TTMainMenuGui;
+import BananaFructa.TiagThings.Utils;
 import BananaFructa.thah.gui.ChooseClimateGui;
 import blusunrize.immersiveengineering.common.IEContent;
-import io.moonman.emergingtechnology.machines.harvester.Harvester;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ClientProxy extends CommonProxy {
@@ -82,8 +80,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         super.init();
+        BlockRendererDispatcher blockRendererDispatcher = BananaFructa.TiagThings.Utils.readDeclaredField(Minecraft.class,Minecraft.getMinecraft(),"blockRenderDispatcher");
         ClientRegistry.registerKeyBinding(irHeadset);
         ClientRegistry.registerKeyBinding(exoSkeleton);
+        ClientCommandHandler.instance.registerCommand(new AdjustOBJAnimatedPivot());
     }
 
     @Override
@@ -122,5 +122,18 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if (ID == 0) {
+            TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
+            if (te instanceof TileEntitySmallCoalBoiler) {
+                TileEntitySmallCoalBoiler smc = ((TileEntitySmallCoalBoiler) te).master();
+                return new SmallCoalBoilerGui(player.inventory,smc);
+            }
+        }
+        return null;
     }
 }

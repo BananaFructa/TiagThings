@@ -78,6 +78,10 @@
         "model": "tiagthings:oil_boiler.obj",
         "custom": { "flip-v": true }
       }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

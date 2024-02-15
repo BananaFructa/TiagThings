@@ -6,12 +6,19 @@ import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,8 +48,20 @@ public class ItemLoaderHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
-        /*BasicContainerItem mnsci = new BasicContainerItem("magnetized_nickel_sheet");
-        mnsci.setContainerItem(mnsci);*/
+
+        if(FluidRegistry.isUniversalBucketEnabled())
+        {
+            ForgeModContainer.getInstance().universalBucket = new TTUniversalBucket();
+            ForgeModContainer.getInstance().universalBucket.setUnlocalizedName("forge.bucketFilled");
+            event.getRegistry().register(ForgeModContainer.getInstance().universalBucket.setRegistryName(ForgeVersion.MOD_ID, "bucketFilled"));
+            MinecraftForge.EVENT_BUS.register(ForgeModContainer.getInstance().universalBucket);
+        }
+
+        Item item = (new ItemBucket(Blocks.AIR)).setUnlocalizedName("bucket").setRegistryName("minecraft","bucket").setMaxStackSize(16);
+        event.getRegistry().register(item);
+        event.getRegistry().register((new TTItemBucket(Blocks.FLOWING_WATER)).setRegistryName("minecraft","water_bucket").setUnlocalizedName("bucketWater").setContainerItem(item));
+        event.getRegistry().register((new TTItemBucket(Blocks.FLOWING_LAVA)).setRegistryName("minecraft","lava_bucket").setUnlocalizedName("bucketLava").setContainerItem(item));
+
         BasicItems.add(new BasicItem("magnetized_nickel_sheet",5));
         BasicItems.add(new BasicItem("bauxite_powder"));
         BasicItems.add(new BasicItem("rutile_powder"));
@@ -146,6 +165,31 @@ public class ItemLoaderHandler {
         BasicItems.add(icChip2 = new BasicItem("ic_chip_2"));
         BasicItems.add(icChip3 = new BasicItem("ic_chip_3"));
         BasicItems.add(new BasicItem("advanced_processor"));
+
+        BasicItems.add(new BasicItem("mild_steel_rod"));
+
+        BasicItems.add(new BasicItem("cryolite_powder"));
+
+        BasicItems.add(new BasicItem("fesi"));
+
+        BasicItems.add(new BasicItem("direct_reduced_iron"));
+
+        BasicItems.add(new BasicItem("small_coke_pile"));
+        BasicItems.add(new BasicItem("zircon_powder"));
+        BasicItems.add(new BasicItem("zirconia_powder"));
+        BasicItems.add(new BasicItem("coke_powder"));
+
+        // ATFC
+
+        BasicItems.add(new BasicItem("sisal_woven_pirn"));
+        BasicItems.add(new BasicItem("cotton_woven_pirn"));
+        BasicItems.add(new BasicItem("linen_woven_pirn"));
+        BasicItems.add(new BasicItem("hemp_woven_pirn"));
+        BasicItems.add(new BasicItem("yucca_woven_pirn"));
+        BasicItems.add(new BasicItem("pineapple_woven_pirn"));
+        BasicItems.add(new BasicItem("jet_powder"));
+        BasicItems.add(new BasicItem("lignite_powder"));
+        BasicItems.add(new BasicItem("bituminous_coal_powder"));
 
         loadMolds();
 

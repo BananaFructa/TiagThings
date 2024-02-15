@@ -59,9 +59,9 @@ import java.util.Map;
 public abstract class BlockTTTileProvider <E extends Enum<E> & BlockTTBase.IBlockEnum> extends BlockTTBase<E> implements IColouredBlock {
     private boolean hasColours = false;
 
-    public BlockTTTileProvider(String name, Material material, PropertyEnum<E> mainProperty, Class<? extends ItemBlockTTBase> itemBlock, Object... additionalProperties)
+    public BlockTTTileProvider(String name, Material material, PropertyEnum<E> mainProperty, PropertyInteger animProperty, Class<? extends ItemBlockTTBase> itemBlock, Object... additionalProperties)
     {
-        super(name, material, mainProperty, itemBlock, additionalProperties);
+        super(name, material, mainProperty,animProperty, itemBlock, additionalProperties);
     }
 
     private static final Map<DimensionBlockPos, TileEntity> tempTile = new HashMap<>();

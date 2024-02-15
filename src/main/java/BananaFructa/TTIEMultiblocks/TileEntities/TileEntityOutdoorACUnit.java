@@ -30,8 +30,8 @@ public class TileEntityOutdoorACUnit extends SimplifiedTileEntityMultiblockMetal
     @Override
     public void initPorts() {
         addEnergyPort(3);
-        int inputTank = registerFluidTank(new FluidTank(2000));
-        int outputTank = registerFluidTank(new FluidTank(2000));
+        int inputTank = registerFluidTank(2000);
+        int outputTank = registerFluidTank(2000);
         registerFluidPort(0,inputTank, PortType.INPUT, EnumFacing.SOUTH);
         registerFluidPort(2,outputTank,PortType.OUTPUT,EnumFacing.SOUTH);
     }

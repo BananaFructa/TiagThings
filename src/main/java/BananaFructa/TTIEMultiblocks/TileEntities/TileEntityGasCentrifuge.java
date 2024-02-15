@@ -41,9 +41,9 @@ public class TileEntityGasCentrifuge extends SimplifiedTileEntityMultiblockMetal
     @Override
     public void initPorts() {
         addEnergyPort(0);
-        int inputTank = registerFluidTank(new FluidTank(1000));
-        int outputTank0 = registerFluidTank(new FluidTank(1000));
-        int outputTank1 = registerFluidTank(new FluidTank(1000));
+        int inputTank = registerFluidTank(1000);
+        int outputTank0 = registerFluidTank(1000);
+        int outputTank1 = registerFluidTank(1000);
         registerFluidPort(0,inputTank, PortType.INPUT, EnumFacing.NORTH);
         registerFluidPort(0,outputTank0,PortType.OUTPUT,EnumFacing.SOUTH);
         registerFluidPort(0,outputTank1,PortType.OUTPUT,EnumFacing.WEST);

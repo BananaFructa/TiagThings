@@ -49,7 +49,7 @@ public class TileEntityFlareStack extends SimplifiedTileEntityMultiblockMetal<Ti
 
     @Override
     public void initPorts() {
-        int inputTank = registerFluidTank(new FluidTank(1000));
+        int inputTank = registerFluidTank(1000);
         registerFluidPort(7,inputTank, PortType.INPUT,EnumFacing.NORTH);
     }
 

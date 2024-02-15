@@ -1,11 +1,13 @@
 package BananaFructa.TTIEMultiblocks.Utils;
 
+import BananaFructa.TTIEMultiblocks.IECopy.BlockTTBase;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.dries007.tfc.objects.blocks.devices.BlockFirePit;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -36,9 +38,14 @@ public class IEUtils {
         // Indexing shenanigans ahead
         // Still not fully understand some indexing rules, but that does not matter as this code is here to never be looked at again
 
+        BlockTTBase base = (BlockTTBase) state.getBlock();
+        IProperty<Integer> animProperty = base.animProperty;
+
         int structureHeight = structure.length;
         int structureLength = structure[0].length;
         int structureWidth = structure[0][0].length;
+
+        int animationIndex = 0;
 
         for (int l = 0 - structurePositionTriggerLength; l < structureLength - structurePositionTriggerLength; l++) {
             for (int w = 0 - structurePositionTriggerWidth; w < structureWidth - structurePositionTriggerWidth; w++) {
@@ -179,14 +186,14 @@ public class IEUtils {
         return true;
     }
 
-    public static IngredientStack[] getMaterialsForStructure(ItemStack[][][] structure, int structureHeight, int structureLength, int structureWidth) {
+    public static IngredientStack[] getMaterialsForStructure(ItemStack[][][] structure) {
 
         HashMap<BlockWithMeta,Integer> materials = new HashMap<>();
-        for (int l = 0;l < structureLength;l++) {
-            for (int w = 0; w < structureWidth; w++) {
-                for (int h = 0 ; h < structureHeight; h++) {
+        for (int l = 0;l < structure[0].length;l++) {
+            for (int w = 0; w < structure[0][0].length; w++) {
+                for (int h = 0 ; h < structure.length; h++) {
                     ItemStack is = structure[h][l][w];
-                    if (is == null) continue;
+                    if (is == null || is.isEmpty()) continue;
                     Block b = Block.getBlockFromItem(is.getItem());
                     int meta = is.getMetadata();
                     int quantity = is.getCount();

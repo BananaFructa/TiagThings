@@ -11,9 +11,9 @@
   },
   "variants": {
     "inventory,type=rocket_scaffold": [{
-      "model": "tiagthings:rocket_scaffold.obj",
+      "model": "tiagthings:rocket_scaffold_body.obj",
       "transform": {
-        "scale": 0.25,
+        "scale": 0.055,
         "rotation": [
           {
             "x": 20
@@ -23,7 +23,7 @@
           }
         ],
         "translation": [
-          0.1,
+          0.22,
           -0.3,
           0
         ]
@@ -85,6 +85,10 @@
         "model": "tiagthings:rocket_scaffold_base.obj",
         "custom": { "flip-v": true }
       }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
     }
   }
 }

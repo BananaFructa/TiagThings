@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "ticl"
+        }
+      }
+    ]
+  }
+}

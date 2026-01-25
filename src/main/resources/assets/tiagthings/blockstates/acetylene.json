@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "bacetylene"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "acetylene"
+        }
+      }
+    ]
+  }
+}

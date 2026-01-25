@@ -1,0 +1,222 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=shaft_furnace_child": [
+      {
+        "model": "tiagthings:shaft_furnace.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -135
+            }
+          ],
+          "translation": [
+            0.0,
+            -0.35,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=fbr_child": [{
+      "model": "tiagthings:fbr.obj",
+      "transform": {
+        "scale": 0.25,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          0.2,
+          -0.32,
+          0
+        ]
+      }
+    }],
+    "inventory,type=ccm_child": [{
+      "model": "tiagthings:ccm.obj",
+      "transform": {
+        "scale": 0.15,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          0.36,
+          -0.22,
+          0
+        ]
+      }
+    }],
+    "inventory,type=small_coal_boiler_child": [{
+      "model": "tiagthings:small_coal_boiler.obj",
+      "transform": {
+        "scale": 0.05,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          0.0,
+          -0.35,
+          0
+        ]
+      }
+    }],
+    "inventory,type=steam_engine_child": [{
+      "model": "tiagthings:steam_engine.obj",
+      "transform": {
+        "scale": 0.05,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          0.0,
+          -0.35,
+          0
+        ]
+      }
+    }],
+    "inventory,type=lathe_child": [{
+      "model": "tiagthings:lathe.obj",
+      "transform": {
+        "scale": 0.45,
+        "rotation": [{
+          "x": 20
+        },
+          {
+            "y": -225
+          }
+        ],
+        "translation": [
+          0,
+          0.27,
+          0
+        ]
+      }
+    }],
+    "inventory,type=metal_roller_child": [{
+      "model": "tiagthings:metal_roller.obj",
+      "transform": {
+        "scale": 0.45,
+        "rotation": [{
+          "x": 20
+        },
+          {
+            "y": -225
+          }
+        ]
+      }
+    }],
+    "type": {
+      "shaft_furnace_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "fbr_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "ccm_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "small_coal_boiler_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "steam_engine_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "lathe_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "metal_roller_child": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {}
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {}
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "anim_id": {
+      "0": {},
+      "1": {},
+      "2": {},
+      "3": {},
+      "4": {},
+      "5": {},
+      "6": {},
+      "7": {},
+      "8": {},
+      "9": {},
+      "10": {},
+      "11": {},
+      "12": {}
+    }
+  }
+}

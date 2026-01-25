@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "bheated_oil"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "heated_oil"
+        }
+      }
+    ]
+  }
+}

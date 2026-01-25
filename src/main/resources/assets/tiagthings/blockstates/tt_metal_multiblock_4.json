@@ -1,0 +1,150 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=coke_oven_battery_child": [{
+      "model": "tiagthings:coke_oven_battery.obj",
+      "transform": {
+        "scale": 0.05,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -225
+          }
+        ],
+        "translation": [
+          -0.1,
+          -0.3,
+          0
+        ]
+      }
+    }],
+    "inventory,type=electric_food_oven_child": [{
+      "model": "tiagthings:electric_food_oven.obj",
+      "transform": {
+        "scale": 0.1,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -225
+          }
+        ],
+        "translation": [
+          0.3,
+          -0.2,
+          0
+        ]
+      }
+    }],
+    "inventory,type=magnetizer_child": [{
+      "model": "tiagthings:magnetizer.obj",
+      "transform": {
+        "scale": 0.5,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -225
+          }
+        ],
+        "translation": [
+          0,
+          -0.1,
+          0
+        ]
+      }
+    }],
+    "inventory,type=coker_unit_child": [{
+      "model": "tiagthings:coker_unit.obj",
+      "transform": {
+        "scale": 0.04,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -225
+          }
+        ],
+        "translation": [
+          -0.1,
+          -0.5,
+          0
+        ]
+      }
+    }],
+    "type": {
+      "coke_oven_battery_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "electric_food_oven_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "magnetizer_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "coker_unit_child": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {}
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {}
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
+    }
+  }
+}

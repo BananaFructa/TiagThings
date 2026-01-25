@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "tiagthings:electric_motor_tt"
+      }
+    ],
+    "facing=north": {
+      "model": "tiagthings:electric_motor_tt",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "tiagthings:electric_motor_tt",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tiagthings:electric_motor_tt",
+      "y": -90
+    },
+    "facing=east": {
+      "model": "tiagthings:electric_motor_tt",
+      "y": 90
+    }
+  }
+}

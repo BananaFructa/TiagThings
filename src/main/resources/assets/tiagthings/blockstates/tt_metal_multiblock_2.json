@@ -1,0 +1,247 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=computer_cluster_controller_child": [
+      {
+        "model": "tiagthings:computer_cluster_controller.obj",
+        "transform": {
+          "scale": 0.24,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -225
+            }
+          ],
+          "translation": [
+            -0.1,
+            -0.3,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=memory_formatter_child": [
+      {
+        "model": "tiagthings:memory_formatter.obj",
+        "transform": {
+          "scale": 0.25,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -135
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.25,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=clay_oven_child": [
+      {
+        "model": "tiagthings:clay_oven.obj",
+        "transform": {
+          "scale": 0.26,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -135
+            }
+          ],
+          "translation": [
+            -0.25,
+            -0.09,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=masonry_heater_child": [
+      {
+        "model": "tiagthings:masonry_heater.obj",
+        "transform": {
+          "scale": 0.16,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -135
+            }
+          ],
+          "translation": [
+            -0.15,
+            -0.3,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=rocket_scaffold_child": [{
+      "model": "tiagthings:rocket_scaffold_body.obj",
+      "transform": {
+        "scale": 0.055,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          0.22,
+          -0.3,
+          0
+        ]
+      }
+    }],
+    "inventory,type=magnetic_separator_child": [{
+      "model": "tiagthings:magnetic_separator_full.obj",
+      "transform": {
+        "scale": 0.23,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          -0.00,
+          -0.20,
+          0
+        ]
+      }
+    }],
+    "inventory,type=open_hearth_furnace_child": [{
+      "model": "tiagthings:open_hearth_furnace.obj",
+      "transform": {
+        "scale": 0.05,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -135
+          }
+        ],
+        "translation": [
+          0.1,
+          -0.3,
+          0
+        ]
+      }
+    }],
+    "inventory,type=silicon_crucible_child": [{
+      "model": "tiagthings:silicon_crucible.obj",
+      "transform": {
+        "scale": 0.26,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -45
+          }
+        ],
+        "translation": [
+          0,
+          -0.33,
+          0
+        ]
+      }
+    }],
+    "type": {
+      "computer_cluster_controller_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "memory_formatter_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "clay_oven_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "masonry_heater_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "rocket_scaffold_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "magnetic_separator_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "open_hearth_furnace_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "silicon_crucible_child": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {}
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {}
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "anim_id": {
+      "0": {},
+      "1": {},
+      "2": {}
+    }
+  }
+}

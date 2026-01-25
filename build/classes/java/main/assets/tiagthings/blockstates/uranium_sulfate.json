@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "buranium_sulfate"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "uranium_sulfate"
+        }
+      }
+    ]
+  }
+}

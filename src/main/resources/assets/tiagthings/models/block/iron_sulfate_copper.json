@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "textures":
+  {
+    "all": "tiagthings:blocks/iron_sulfate_copper"
+  }
+}

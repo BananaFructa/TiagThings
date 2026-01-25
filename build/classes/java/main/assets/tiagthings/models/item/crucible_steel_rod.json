@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "tiagthings:items/crucible_steel_rod"
-  }
-}

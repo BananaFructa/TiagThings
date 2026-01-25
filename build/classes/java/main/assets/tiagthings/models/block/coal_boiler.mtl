@@ -1,8 +1,0 @@
-# Made in Blockbench 4.7.4
-newmtl m_2874cf30-b642-244b-3d95-ca477258fa02
-map_Kd tiagthings:coal_boiler
-newmtl m_26e1c6e3-42ab-2fcd-6adc-05db36925e0b
-map_Kd tiagthings:coal_boiler_mesh
-newmtl m_70f5a929-c066-89f0-98b6-1fefae6f20f3
-map_Kd tiagthings:coal_boiler_smoke_stack
-newmtl none

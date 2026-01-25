@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: TiagThings
-Implementation-Version: 1.3.4
-Specification-Vendor: examplemodsareus
-Specification-Title: examplemod
-Implementation-Timestamp: 2025-08-06T19:40:16+0300
-Specification-Version: 1
-Implementation-Vendor: examplemodsareus
-

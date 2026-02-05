@@ -4,9 +4,10 @@ package BananaFructa.TTIEMultiblocks.Commands;
 //import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityComputerClusterUnit_AE2;
 //import appeng.api.util.AEPartLocation;
 //import appeng.tile.networking.TileCableBus;
-import blusunrize.immersiveengineering.api.IEProperties;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -57,6 +58,16 @@ public class GetTEPos extends CommandBase {
             sender.sendMessage(new TextComponentString("Not a multiblock part."));
             if (te != null) sender.sendMessage(new TextComponentString(te.getClass().getName()));
             else sender.sendMessage(new TextComponentString("null"));
+        }
+
+        if (te instanceof TransactionalTEConnectorLV) {
+            sender.sendMessage(new TextComponentString("Delta: " + ((TransactionalTEConnectorLV) te).delta));
+        }
+        if (te instanceof TransactionalTEConnectorMV) {
+            sender.sendMessage(new TextComponentString("Delta: " + ((TransactionalTEConnectorMV) te).delta));
+        }
+        if (te instanceof TransactionalTEConnectorHV) {
+            sender.sendMessage(new TextComponentString("Delta: " + ((TransactionalTEConnectorHV) te).delta));
         }
     }
 

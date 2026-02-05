@@ -7,7 +7,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCrusher;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import com.pyraliron.advancedtfctech.te.TileEntityPowerLoom;
-import crafttweaker.api.block.IBlock;
 import flaxbeard.immersivepetroleum.common.blocks.metal.TileEntityPumpjack;
 import li.cil.oc.common.block.Item;
 import net.minecraft.block.state.IBlockState;

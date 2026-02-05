@@ -1,8 +1,6 @@
 package BananaFructa.TTIEMultiblocks.Gui;
 
-import BananaFructa.TTIEMultiblocks.ElectricMotorBlock;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
-import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityMetalRoller;
 import BananaFructa.TiagThings.Netowrk.MessageGuiEvent;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
@@ -10,9 +8,7 @@ import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -21,8 +17,8 @@ import java.util.ArrayList;
 public class ElectricalMotorGui extends GuiIEContainerBase {
 
     ElectricMotorTileEntity tile;
-    ButtonElectricMotorSlider speedSlider;
-    ButtonElectricMotorSlider torqueSlider;
+    GuiElementSlider speedSlider;
+    GuiElementSlider torqueSlider;
 
     public ElectricalMotorGui(InventoryPlayer inventoryPlayer, ElectricMotorTileEntity tile) {
         super(new ContainerElectricMotor(inventoryPlayer,tile));
@@ -32,8 +28,8 @@ public class ElectricalMotorGui extends GuiIEContainerBase {
     @Override
     public void initGui() {
         super.initGui();
-        ButtonElectricMotorSlider speed = new ButtonElectricMotorSlider(0,guiLeft+25,guiTop+23,126,4,"Speed Control");
-        ButtonElectricMotorSlider torque = new ButtonElectricMotorSlider(1,guiLeft+25,guiTop+44,126,4,"Torque Control");
+        GuiElementSlider speed = new GuiElementSlider(0,guiLeft+25,guiTop+23,126,4,"Speed Control");
+        GuiElementSlider torque = new GuiElementSlider(1,guiLeft+25,guiTop+44,126,4,"Torque Control");
         this.speedSlider = speed;
         this.torqueSlider = torque;
         ElectricMotorTileEntity.PowerConnectionType connectionType = tile.connectionType;
@@ -97,8 +93,8 @@ public class ElectricalMotorGui extends GuiIEContainerBase {
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
-        if (button instanceof ButtonElectricMotorSlider) {
-            ((ButtonElectricMotorSlider)(button)).buttonHeld = true;
+        if (button instanceof GuiElementSlider) {
+            ((GuiElementSlider)(button)).buttonHeld = true;
         }
     }
 
@@ -106,8 +102,8 @@ public class ElectricalMotorGui extends GuiIEContainerBase {
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
         for (GuiButton button : this.buttonList) {
-            if (button instanceof ButtonElectricMotorSlider) {
-                ButtonElectricMotorSlider buttonElectricMotorSlider = ((ButtonElectricMotorSlider)(button));
+            if (button instanceof GuiElementSlider) {
+                GuiElementSlider buttonElectricMotorSlider = ((GuiElementSlider)(button));
                 if (buttonElectricMotorSlider.buttonHeld) {
                     NBTTagCompound tagCompound = new NBTTagCompound();
                     tagCompound.setFloat("speed",speedSlider.val);

@@ -6,8 +6,9 @@ import BananaFructa.ImmersiveEngineering.ModifiedTileEntityMetalPress;
 import BananaFructa.ImmersiveEngineering.TEFluidPumpAlternativeModified;
 import BananaFructa.ImmersiveIntelligence.TileEntityModifiedMechanicalPump;
 import BananaFructa.ImmersivePetroleum.ModifiedTileEntityPumpjackParent;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
-import BananaFructa.TTIEMultiblocks.SignalSourceBlock;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
 import BananaFructa.TTIEMultiblocks.SignalSourceTileEntity;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 //import BananaFructa.TTIEMultiblocks.Utils.STEMM_ClusterClient;
@@ -22,52 +23,41 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockM
 import com.pyraliron.advancedtfctech.te.TileEntityPowerLoom;
 import flaxbeard.immersivepetroleum.common.blocks.metal.TileEntityDistillationTower;
 import flaxbeard.immersivepetroleum.common.blocks.metal.TileEntityPumpjack;
-import mcp.mobius.waila.Waila;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityFluidPumpAlternative;
-import net.darkhax.wawla.engine.WailaEngine;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
-import tfctech.compat.waila.WailaIntegration;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static BananaFructa.TTIEMultiblocks.SignalSourceBlock.POWERED;
 
 public class TTWailaProvider implements IWailaDataProvider {
 
-    public static void callbackRegister(IWailaRegistrar registrar) {
+    public static void callbackRegister(IWailaRegistrar registry) {
         TTWailaProvider provider = new TTWailaProvider();
-        registrar.registerTailProvider(provider, TileEntityCrusher.class);
-        registrar.registerBodyProvider(provider, SimplifiedTileEntityMultiblockMetal.class);
-        registrar.registerBodyProvider(provider, ElectricMotorTileEntity.class);
-        registrar.registerBodyProvider(provider, TileEntityMetalPress.class);
-        registrar.registerBodyProvider(provider, TileEntityPumpjack.class);
-        registrar.registerBodyProvider(provider, TileEntityCrusher.class);
-        registrar.registerBodyProvider(provider, TileEntityPowerLoom.class);
-        registrar.registerBodyProvider(provider, TEFluidPumpAlternativeModified.class);
-        registrar.registerBodyProvider(provider, TileEntityModifiedMechanicalPump.class);
-        registrar.registerBodyProvider(provider, TileEntityFluidPumpAlternative.class);
-        registrar.registerBodyProvider(provider, TileEntityModifiedMechanicalPump.class);
-        registrar.registerBodyProvider(provider, DrainTileEntity.class);
-        registrar.registerBodyProvider(provider, DrainFluidPlacer.class);
-        registrar.registerBodyProvider(provider, SignalSourceTileEntity.class);
+        registry.registerTailProvider(provider, TileEntityCrusher.class);
+        registry.registerBodyProvider(provider, SimplifiedTileEntityMultiblockMetal.class);
+        registry.registerBodyProvider(provider, ElectricMotorTileEntity.class);
+        registry.registerBodyProvider(provider, TileEntityMetalPress.class);
+        registry.registerBodyProvider(provider, TileEntityPumpjack.class);
+        registry.registerBodyProvider(provider, TileEntityCrusher.class);
+        registry.registerBodyProvider(provider, TileEntityPowerLoom.class);
+        registry.registerBodyProvider(provider, TEFluidPumpAlternativeModified.class);
+        registry.registerBodyProvider(provider, TileEntityModifiedMechanicalPump.class);
+        registry.registerBodyProvider(provider, TileEntityFluidPumpAlternative.class);
+        registry.registerBodyProvider(provider, TileEntityModifiedMechanicalPump.class);
+        registry.registerBodyProvider(provider, DrainTileEntity.class);
+        registry.registerBodyProvider(provider, DrainFluidPlacer.class);
+        registry.registerBodyProvider(provider, SignalSourceTileEntity.class);
+        registry.registerBodyProvider(provider, LoadSensorTileEntity.class);
     }
 
     @Nonnull
@@ -305,6 +295,16 @@ public class TTWailaProvider implements IWailaDataProvider {
             if (storage != null) {
                 tooltip.add("RF " + storage.getEnergyStored() + "/" +storage.getMaxEnergyStored());
             }
+        }
+
+        if (accessor.getTileEntity() instanceof LoadSensorTileEntity) {
+            LoadSensorTileEntity te = ((LoadSensorTileEntity) accessor.getTileEntity());
+            int delta = te.delta;
+            tooltip.add("Delta RF/t: " + (delta >= 0 ? "\u00a7a" : "\u00a7c") + delta);
+        }
+
+        if (accessor.getTileEntity() instanceof TransactionalTEConnectorLV) {
+            TransactionalTEConnectorLV te = (TransactionalTEConnectorLV) accessor.getTileEntity();
         }
 
         if (accessor.getTileEntity() instanceof TileEntityDistillationTower) {

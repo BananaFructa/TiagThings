@@ -25,11 +25,15 @@ import BananaFructa.RailcraftModifications.TileRollingMachinePoweredChanged;
 import BananaFructa.TFC.TEBlastFurnaceModified;
 import BananaFructa.TFC.TECrucibleCAP;
 import BananaFructa.TFC.TEInductionCrucibleCAP;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
 import BananaFructa.TTIEMultiblocks.Gui.*;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
 import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.ContainerCokerUnit;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.ContainerElectricFoodOven;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
 import BananaFructa.TTIEMultiblocks.SignalSourceTileEntity;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
@@ -457,6 +461,13 @@ public class CommonProxy implements IGuiHandler {
                 }
                 if (entity instanceof TileEntityWheelSteel) {
                     event.getWorld().setTileEntity(entity.getPos(),new ModifiedWheelTileEntitySteel(((TileEntityWheelSteel)entity).facing));
+                }
+                if (entity instanceof TileEntityConnectorHV) {
+                    event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorHV(((TileEntityConnectorHV) entity).facing));
+                } else if (entity instanceof TileEntityConnectorMV) {
+                    event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorMV(((TileEntityConnectorMV) entity).facing));
+                } else if (entity instanceof TileEntityConnectorLV) {
+                    event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorLV(((TileEntityConnectorLV) entity).facing));
                 }
                 /*if (entity instanceof TileEntityCapacitorLV) {
                     event.getWorld().setTileEntity(entity.getPos(),new TileEntityCapacitorLVModified());
@@ -1058,6 +1069,11 @@ public class CommonProxy implements IGuiHandler {
                 if (te instanceof TileEntityOpenHearthFurnace) {
                     TileEntityOpenHearthFurnace ohf = ((TileEntityOpenHearthFurnace) te).master();
                     return new ContainerOpenHearthFurnace(player.inventory,ohf);
+                }
+                break;
+            case 13:
+                if (te instanceof LoadSensorTileEntity) {
+                    return new ContainerLoadSensor(player.inventory,(LoadSensorTileEntity) te);
                 }
                 break;
         }

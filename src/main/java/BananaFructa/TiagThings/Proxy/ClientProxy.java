@@ -3,6 +3,7 @@ package BananaFructa.TiagThings.Proxy;
 import BananaFructa.ImmersiveEngineering.ModifiedGuiModWorkbench;
 import BananaFructa.THAHModifications.TTChooseClimateGUi;
 import BananaFructa.TTIEMultiblocks.Commands.AdjustOBJAnimatedPivot;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
 import BananaFructa.TTIEMultiblocks.Gui.*;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
@@ -270,6 +271,11 @@ public class ClientProxy extends CommonProxy {
                         lastCache = gui;
                     } catch (Exception err) {}
                     return lastCache;
+                }
+                break;
+            case 13:
+                if (te instanceof LoadSensorTileEntity) {
+                    return new LoadSensorGui(player.inventory,(LoadSensorTileEntity) te);
                 }
                 break;
         }

@@ -24,7 +24,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
 import com.lumintorious.ambiental.api.TemperatureRegistry;
 import com.lumintorious.ambiental.capability.TemperatureCapability;
 import com.lumintorious.ambiental.modifiers.*;
-import crafttweaker.mods.jei.JEI;
 import mezz.jei.JustEnoughItems;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.venus.VenusBlocks;
@@ -73,7 +72,7 @@ public class TTMain {
 
     public static final String modId = "tiagthings";
     public static final String name = "Tiag Things";
-    public static final String version = "1.3.4";
+    public static final String version = "1.4.0";
 
     public static TTMain INSTANCE;
 

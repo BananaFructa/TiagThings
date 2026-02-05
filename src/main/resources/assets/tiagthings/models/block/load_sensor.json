@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube_all",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "tiagthings:blocks/load_sensor_bottom",
+    "down": "tiagthings:blocks/load_sensor_bottom",
+    "up": "tiagthings:blocks/load_sensor_top",
+    "north": "tiagthings:blocks/load_sensor_north",
+    "east": "tiagthings:blocks/load_sensor_east",
+    "south": "tiagthings:blocks/load_sensor_south",
+    "west": "tiagthings:blocks/load_sensor_west"
+  }
+}

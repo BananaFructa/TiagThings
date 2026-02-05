@@ -1,6 +1,12 @@
 package BananaFructa.TTIEMultiblocks;
 
+import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensor;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.VirtualConnector;
 import BananaFructa.TTIEMultiblocks.IECopy.BlockTTBase;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import BananaFructa.TTIEMultiblocks.Utils.RocketModule_SMC;
 import BananaFructa.TTIEMultiblocks.Utils.RotaryRequirement;
@@ -17,7 +23,6 @@ import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
 import blusunrize.immersiveengineering.common.items.ItemIEBase;
 import blusunrize.lib.manual.ManualPages;
 import com.pyraliron.advancedtfctech.te.TileEntityPowerLoom;
-import crafttweaker.mods.jei.JEI;
 import flaxbeard.immersivepetroleum.client.page.ManualPageBigMultiblock;
 import flaxbeard.immersivepetroleum.common.blocks.metal.TileEntityPumpjack;
 import mods.railcraft.common.util.misc.Game;
@@ -73,6 +78,7 @@ public class TTIEContent {
         electricMotorBlock = (ElectricMotorBlock) new ElectricMotorBlock().setRegistryName("electric_motor_tt").setUnlocalizedName("electric_motor_tt").setCreativeTab(CreativeTabs.MISC);
         signalSourceBlock = (SignalSourceBlock) new SignalSourceBlock().setRegistryName("signal_source_tt").setUnlocalizedName("signal_source_tt").setCreativeTab(CreativeTabs.MISC);
         magnetizedSteelSheetmetal = new Block(Material.IRON).setRegistryName("magnetized_steel_sm").setUnlocalizedName("magnetized_steel_sm").setCreativeTab(CreativeTabs.MISC);
+        loadSensor = new LoadSensor().setRegistryName("load_sensor").setUnlocalizedName("load_sensor").setCreativeTab(CreativeTabs.MISC);
 
         ttBlockMetalMultiblock = new TTBlockMetalMultiblocks();
         ttBlockMetalMultiblock_1 = new TTBlockMetalMultiblocks_1();
@@ -133,6 +139,9 @@ public class TTIEContent {
 
     public static Block magnetizedSteelSheetmetal;
     public static Item magnetizedSteelSheetmetalItem;
+
+    public static Block loadSensor;
+    public static Item loadSensorItem;
 
     @SideOnly(Side.CLIENT)
     public static void clientInit() {
@@ -266,6 +275,11 @@ public class TTIEContent {
         GameRegistry.registerTileEntity(TileEntityMagnetizer.class,new ResourceLocation(TTMain.modId, TileEntityMagnetizer.class.getSimpleName()));
         GameRegistry.registerTileEntity(TileEntityCokerUnit.class,new ResourceLocation(TTMain.modId, TileEntityCokerUnit.class.getSimpleName()));
         GameRegistry.registerTileEntity(SignalSourceTileEntity.class,new ResourceLocation(TTMain.modId, SignalSourceTileEntity.class.getSimpleName()));
+        GameRegistry.registerTileEntity(LoadSensorTileEntity.class, new ResourceLocation(TTMain.modId, LoadSensorTileEntity.class.getSimpleName()));
+        GameRegistry.registerTileEntity(VirtualConnector.class, new ResourceLocation(TTMain.modId,VirtualConnector.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TransactionalTEConnectorLV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorLV.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TransactionalTEConnectorMV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorMV.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TransactionalTEConnectorHV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorHV.class.getSimpleName()));
 
         electricHeaterMultiblock = new SimplifiedMultiblockClass(
                 "TT:ElectricHeater",
@@ -683,6 +697,7 @@ public class TTIEContent {
         event.getRegistry().register(rocketControllerBlockItem = (new ItemBlock(rocketControllerBlock)).setRegistryName("rocket_controller_block"));
         event.getRegistry().register(magnetizedNickelSheetMetalItem = (new ItemBlock(magnetizedNickelSheetMetal)).setRegistryName("magnetized_nickel_sm"));
         event.getRegistry().register(electricMotorBlockItem = (new ItemBlock(electricMotorBlock)).setRegistryName("electric_motor_tt"));
+        event.getRegistry().register(loadSensorItem = (new ItemBlock(loadSensor)).setRegistryName("load_sensor"));
         event.getRegistry().register(signalSourceBlockItem = (new ItemBlock(signalSourceBlock)).setRegistryName("signal_source_tt"));
         event.getRegistry().register(magnetizedSteelSheetmetalItem = (new ItemBlock(magnetizedSteelSheetmetal)).setRegistryName("magnetized_steel_sm"));
     }
@@ -696,6 +711,7 @@ public class TTIEContent {
         event.getRegistry().register(rocketControllerBlock);
         event.getRegistry().register(magnetizedNickelSheetMetal);
         event.getRegistry().register(electricMotorBlock);
+        event.getRegistry().register(loadSensor);
         event.getRegistry().register(signalSourceBlock);
         event.getRegistry().register(magnetizedSteelSheetmetal);
     }
@@ -714,8 +730,10 @@ public class TTIEContent {
         ModelLoader.setCustomModelResourceLocation(magnetizedSteelSheetmetalItem,0,new ModelResourceLocation(magnetizedSteelSheetmetalItem.getRegistryName(), "normal"));
         ModelLoader.setCustomStateMapper(magnetizedNickelSheetMetal, new DefaultStateMapper());
         ModelLoader.setCustomModelResourceLocation(electricMotorBlockItem, 0, new ModelResourceLocation(electricMotorBlockItem.getRegistryName(), "normal"));
+        ModelLoader.setCustomModelResourceLocation(loadSensorItem, 0, new ModelResourceLocation(loadSensorItem.getRegistryName(), "normal"));
         ModelLoader.setCustomModelResourceLocation(signalSourceBlockItem, 0, new ModelResourceLocation(signalSourceBlockItem.getRegistryName(), "normal"));
         ModelLoader.setCustomStateMapper(electricMotorBlock, new DefaultStateMapper());
+        ModelLoader.setCustomStateMapper(loadSensor, new DefaultStateMapper());
         ModelLoader.setCustomStateMapper(signalSourceBlock, new DefaultStateMapper());
         ModelLoader.setCustomStateMapper(magnetizedSteelSheetmetal, new DefaultStateMapper());
 

@@ -232,7 +232,8 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     }
 
     EnumFacing shiftRelativeToNorth(EnumFacing face) {
-        if (face == EnumFacing.UP || face == EnumFacing.DOWN) return face;
+        return IEUtils.shiftRelativeToNorth(this.facing,mirrored,face);
+        /*if (face == EnumFacing.UP || face == EnumFacing.DOWN) return face;
         switch (this.facing) {
             case NORTH:
                 if (!mirrored && (face == EnumFacing.WEST || face == EnumFacing.EAST)) return face.getOpposite();
@@ -247,7 +248,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
                 if (!mirrored && (face == EnumFacing.WEST || face == EnumFacing.EAST)) return face.rotateY();
                 return face.rotateY().getOpposite();
         }
-        return face;
+        return face;*/
     }
 
     private void resetPortCounters() {

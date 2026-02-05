@@ -351,6 +351,26 @@ public class IEUtils {
         thisRe.setRotationSpeed(0);
     }
 
+    public static EnumFacing shiftRelativeToNorth(EnumFacing facing, boolean mirrored, EnumFacing toShift) {
+        if (facing == null) return null;
+        if (toShift == EnumFacing.UP || toShift == EnumFacing.DOWN) return toShift;
+        switch (facing) {
+            case NORTH:
+                if (!mirrored && (toShift == EnumFacing.WEST || toShift == EnumFacing.EAST)) return toShift.getOpposite();
+                return toShift;
+            case SOUTH:
+                if (!mirrored && (toShift == EnumFacing.WEST || toShift == EnumFacing.EAST)) return toShift;
+                return toShift.getOpposite();
+            case EAST:
+                if (!mirrored && (toShift == EnumFacing.WEST || toShift == EnumFacing.EAST)) return toShift.rotateY().getOpposite();
+                return toShift.rotateY();
+            case WEST:
+                if (!mirrored && (toShift == EnumFacing.WEST || toShift == EnumFacing.EAST)) return toShift.rotateY();
+                return toShift.rotateY().getOpposite();
+        }
+        return toShift;
+    }
+
 
 
 }

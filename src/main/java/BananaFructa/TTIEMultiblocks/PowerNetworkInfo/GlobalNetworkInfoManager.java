@@ -1,0 +1,132 @@
+package BananaFructa.TTIEMultiblocks.PowerNetworkInfo;
+
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
+import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
+import blusunrize.immersiveengineering.api.ApiUtils;
+import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
+import blusunrize.immersiveengineering.common.util.Utils;
+import nc.tile.energy.TileEnergy;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import scala.Int;
+
+import java.util.*;
+
+@Mod.EventBusSubscriber
+public class GlobalNetworkInfoManager {
+
+    public static int connectionId = 0;
+
+    public static HashMap<UUID,List<Integer>> registeredNetworks = new HashMap<>();
+    public static HashMap<UUID, NetworkData> networkData = new HashMap<>();
+    public static List<UUID> inactiveNetwork = new ArrayList<>();
+    public static HashMap<Integer,UUID> cache = new HashMap<>();
+
+    public static int getNewId() {
+        return connectionId++;
+    }
+
+    public static void registerNetworkTransaction(NetworkElement element, BlockPos node, World world, int delta, TileEnergy interactor) {
+        if (cache.containsKey(element.getId())) {
+            networkData.get(cache.get(element.getId())).registerTransfer(delta,interactor);
+            return;
+        }
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.add(element.getId());
+        Set<ImmersiveNetHandler.AbstractConnection> cons = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(node,world,true);
+        for (ImmersiveNetHandler.AbstractConnection con : cons) {
+            IImmersiveConnectable connectable = ApiUtils.toIIC(con.end,world);
+            if (connectable instanceof NetworkElement && connectable != element) {
+                ids.add(((NetworkElement) connectable).getId());
+            }
+        }
+        for (UUID uuid : registeredNetworks.keySet()) {
+            List<Integer> network = registeredNetworks.get(uuid);
+            // Unitary changes considered only
+            if (ids.size() == network.size() && compareIds(ids,network) == ids.size()) {
+                System.out.println("NETWORK FOUND");
+
+                networkData.get(uuid).registerTransfer(delta,interactor);
+                inactiveNetwork.remove(uuid);
+
+                return;
+            } else if (ids.size() > network.size() && compareIds(ids,network) == network.size()) {
+                System.out.println("NETWORK MERGED");
+                // THE NETWORK HAS EXTENDED
+                List<Integer> other = subtractIds(ids,network);
+                for (UUID otherSet : registeredNetworks.keySet()) {
+                    if (registeredNetworks.get(otherSet).size() == other.size() && compareIds(other,registeredNetworks.get(otherSet)) == other.size() ) {
+                        NetworkData data1 = networkData.get(uuid);
+                        NetworkData data2 = networkData.get(otherSet);
+                        if (data1.getActivityScore() < data2.getActivityScore()) {
+                            System.out.println("NETWORK CHOOSE OTHER");
+                            registeredNetworks.put(otherSet,ids);
+                            networkData.get(otherSet).registerTransfer(delta,interactor);
+                            inactiveNetwork.remove(otherSet);
+                            addToCache(ids,uuid);
+                            return;
+                        }
+                    }
+                }
+                System.out.println("NETWORK CHOOSE FIRST");
+                registeredNetworks.put(uuid,ids);
+                networkData.get(uuid).registerTransfer(delta,interactor);
+                inactiveNetwork.remove(uuid);
+                addToCache(ids,uuid);
+            } else if (ids.size() < network.size() && compareIds(ids,network) == ids.size()) {
+                System.out.println("NETWORK SPLIT");
+                // THE NETWORK WAS SPLIT
+                registeredNetworks.put(uuid,ids);
+                networkData.get(uuid).registerTransfer(delta,interactor);
+                inactiveNetwork.remove(uuid);
+                addToCache(ids,uuid);
+                return;
+            }
+        }
+        System.out.println("NEW NETWORK");
+        UUID newUuid = UUID.randomUUID();
+        registeredNetworks.put(newUuid,ids);
+        networkData.get(newUuid).registerTransfer(delta,interactor);
+        addToCache(ids,newUuid);
+    }
+
+    public static void addToCache(List<Integer> ids, UUID network) {
+        for (Integer i : ids) cache.put(i,network);
+    }
+
+    public static int compareIds(List<Integer> first, List<Integer> second) {
+        int match = 0;
+        for (Integer integer : first) {
+            if (second.contains(integer)) match++; // TODO: pretty sure there is a better way to do this but im too lazy rn
+        }
+        return match;
+    }
+
+    public static List<Integer> subtractIds(List<Integer> first, List<Integer> second) {
+        List<Integer> dif = new ArrayList<>();
+        for (Integer i : first) {
+            if (!second.contains(i)) dif.add(i);
+        }
+        return dif;
+    }
+
+    @SubscribeEvent
+    public static void serverTick(TickEvent.ServerTickEvent event) {
+        cache.clear();
+        for (UUID uuid : inactiveNetwork) {
+            registeredNetworks.remove(uuid);
+            networkData.remove(uuid);
+            System.out.println("NETWORK REMOVED " + networkData.size());
+        }
+        for (UUID uuid : networkData.keySet()) {
+            networkData.get(uuid).tick();
+        }
+        inactiveNetwork.addAll(registeredNetworks.keySet());
+    }
+
+}

@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.common.util.Utils;
 import nc.tile.energy.TileEnergy;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
@@ -31,7 +32,18 @@ public class GlobalNetworkInfoManager {
         return connectionId++;
     }
 
-    public static void registerNetworkTransaction(NetworkElement element, BlockPos node, World world, int delta, TileEnergy interactor) {
+    public static NetworkData getNetworkDataFor(TileEntity node) {
+        if (node instanceof NetworkElement) {
+            int id = ((NetworkElement) node).getId();
+            for (UUID uuid : registeredNetworks.keySet()) {
+                if (registeredNetworks.get(uuid).contains(id)) return networkData.get(uuid);
+            }
+        }
+        return null;
+    }
+
+    public static void registerNetworkTransaction(NetworkElement element, BlockPos node, World world, int delta, TileEntity interactor) {
+        if (interactor == null) return;
         if (cache.containsKey(element.getId())) {
             networkData.get(cache.get(element.getId())).registerTransfer(delta,interactor);
             return;
@@ -45,6 +57,8 @@ public class GlobalNetworkInfoManager {
                 ids.add(((NetworkElement) connectable).getId());
             }
         }
+        System.out.println(ids);
+        System.out.println("DING");
         for (UUID uuid : registeredNetworks.keySet()) {
             List<Integer> network = registeredNetworks.get(uuid);
             // Unitary changes considered only
@@ -91,6 +105,8 @@ public class GlobalNetworkInfoManager {
         System.out.println("NEW NETWORK");
         UUID newUuid = UUID.randomUUID();
         registeredNetworks.put(newUuid,ids);
+        inactiveNetwork.remove(newUuid);
+        networkData.put(newUuid,new NetworkData());
         networkData.get(newUuid).registerTransfer(delta,interactor);
         addToCache(ids,newUuid);
     }
@@ -117,15 +133,17 @@ public class GlobalNetworkInfoManager {
 
     @SubscribeEvent
     public static void serverTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         cache.clear();
         for (UUID uuid : inactiveNetwork) {
             registeredNetworks.remove(uuid);
             networkData.remove(uuid);
-            System.out.println("NETWORK REMOVED " + networkData.size());
+            System.out.println("NETWORK REMOVED " + networkData.size() + " " +inactiveNetwork.size());
         }
         for (UUID uuid : networkData.keySet()) {
             networkData.get(uuid).tick();
         }
+        inactiveNetwork.clear();
         inactiveNetwork.addAll(registeredNetworks.keySet());
     }
 

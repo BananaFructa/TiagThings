@@ -4,18 +4,29 @@ import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
 import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import blusunrize.immersiveengineering.api.ApiUtils;
+import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
+import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorCreative;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorLV;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorLV;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements NetworkElement {
 
@@ -28,7 +39,7 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
         this();
         this.facing = facing;
         netId = GlobalNetworkInfoManager.getNewId();
-        MinecraftForge.EVENT_BUS.register(this);
+        //MinecraftForge.EVENT_BUS.register(this);
     }
 
     public TransactionalTEConnectorLV() {
@@ -54,10 +65,10 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
         netId = nbt.getInteger("net_id");
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onFirstTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
-        delta = Math.min(Math.max(currentDelta,-getMaxOutput()),getMaxInput());;
+    public void onTick() {
+        delta = Math.min(Math.max(currentDelta,-getMaxOutput()),getMaxInput());
+        System.out.println("SEND");
+        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,delta,world.getTileEntity(pos.offset(facing)));
         currentDelta = 0;
         markDirty();
         IEUtils.notifyClientUpdate(world, pos);
@@ -84,7 +95,7 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
                 TileEntity capacitor = Utils.getExistingTileEntity(this.world, this.getPos().offset(this.facing));
                 int ret = EnergyHelper.insertFlux(capacitor, this.facing.getOpposite(), toAccept, simulate);
                 if (!simulate) {
-                    currentDelta = ret;
+                    currentDelta = -ret;
                     this.currentTickToMachine += ret;
                 }
 
@@ -107,8 +118,58 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
         return netId;
     }
 
+    boolean firstTick = true;
+
     @Override
     public void update() {
+        FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(this::onTick);
+        if (!this.world.isRemote) {
+            if (getFluxStorage().getEnergyStored() > 0) {
+                int temp = this.transferEnergy(getFluxStorage().getEnergyStored(), true, 0);
+                if (temp > 0) {
+                    getFluxStorage().modifyEnergyStored(-this.transferEnergy(temp, false, 0));
+                    this.markDirty();
+                }
 
+                this.addAvailableEnergy(-1.0F, (Consumer)null);
+                this.notifyAvailableEnergy(getFluxStorage().getEnergyStored(), (Set)null);
+            }
+
+            this.currentTickToMachine = 0;
+            this.currentTickToNet = 0;
+        } else if (this.firstTick) {
+            Set<ImmersiveNetHandler.Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(this.world, this.pos);
+            if (conns != null) {
+                for(ImmersiveNetHandler.Connection conn : conns) {
+                    if (this.pos.compareTo(conn.end) < 0 && this.world.isBlockLoaded(conn.end)) {
+                        this.markContainingBlockForUpdate((IBlockState)null);
+                    }
+                }
+            }
+
+            this.firstTick = false;
+        }
+    }
+
+    private void notifyAvailableEnergy(int energyStored, @Nullable Set<ImmersiveNetHandler.AbstractConnection> outputs) {
+        if (outputs == null) {
+            outputs = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(this.pos, this.world, true);
+        }
+
+        for(ImmersiveNetHandler.AbstractConnection con : outputs) {
+            IImmersiveConnectable end = ApiUtils.toIIC(con.end, this.world);
+            if (con.cableType != null && end != null && end.allowEnergyToPass((ImmersiveNetHandler.Connection)null)) {
+                Pair<Float, Consumer<Float>> e = this.getEnergyForConnection(con);
+                end.addAvailableEnergy((Float)e.getKey(), (Consumer)e.getValue());
+            }
+        }
+
+    }
+
+    private Pair<Float, Consumer<Float>> getEnergyForConnection(@Nullable ImmersiveNetHandler.AbstractConnection c) {
+        float loss = c != null ? c.getAverageLossRate() : 0.0F;
+        float max = (1.0F - loss) * (float)getFluxStorage().getEnergyStored();
+        Consumer<Float> extract = (energy) -> getFluxStorage().modifyEnergyStored((int)(-energy / (1.0F - loss)));
+        return new ImmutablePair(max, extract);
     }
 }

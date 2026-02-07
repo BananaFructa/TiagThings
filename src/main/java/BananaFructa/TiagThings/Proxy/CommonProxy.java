@@ -31,6 +31,7 @@ import BananaFructa.TTIEMultiblocks.Gui.*;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
 import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.ContainerCokerUnit;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.ContainerElectricFoodOven;
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
@@ -41,6 +42,8 @@ import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TerraFirmaCraft.TECropBaseHydroponic;
 import BananaFructa.TiagThings.Items.ItemLoaderHandler;
+import BananaFructa.TiagThings.Netowrk.MessagePowerNetworkAskInfo;
+import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.RockTraces;
 import BananaFructa.TiagThings.RockUtils;
 import BananaFructa.TiagThings.TTMain;
@@ -107,6 +110,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -462,11 +466,11 @@ public class CommonProxy implements IGuiHandler {
                 if (entity instanceof TileEntityWheelSteel) {
                     event.getWorld().setTileEntity(entity.getPos(),new ModifiedWheelTileEntitySteel(((TileEntityWheelSteel)entity).facing));
                 }
-                if (entity instanceof TileEntityConnectorHV) {
+                if (entity instanceof TileEntityConnectorHV && !(entity instanceof TileEntityRelayHV)) {
                     event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorHV(((TileEntityConnectorHV) entity).facing));
-                } else if (entity instanceof TileEntityConnectorMV) {
+                } else if (entity instanceof TileEntityConnectorMV && !(entity instanceof TileEntityRelayMV)) {
                     event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorMV(((TileEntityConnectorMV) entity).facing));
-                } else if (entity instanceof TileEntityConnectorLV) {
+                } else if (entity instanceof TileEntityConnectorLV && !(entity instanceof TileEntityRelayLV)) {
                     event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorLV(((TileEntityConnectorLV) entity).facing));
                 }
                 /*if (entity instanceof TileEntityCapacitorLV) {
@@ -524,7 +528,13 @@ public class CommonProxy implements IGuiHandler {
 
     @SubscribeEvent
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getWorld().isRemote) return;
+        if (event.getWorld().isRemote) {
+            if (event.getItemStack().getItem() == IEContent.itemTool) {
+                Minecraft.getMinecraft().displayGuiScreen(new PowerNetworkInfoGui());
+                TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkAskInfo(event.getPos().getX(),event.getPos().getY(),event.getPos().getZ()));
+            }
+            return;
+        }
 
         BlockPos blockPos = event.getPos().offset(event.getFace());
         BlockPos targetPos = event.getPos();

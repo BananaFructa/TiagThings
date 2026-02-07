@@ -14,8 +14,10 @@ public class ModularList {
         arr = new int[size];
     }
 
-    public void add(int val) {
-        arr[begin] += val;
+    public void set(int index, int val) {
+        index = index + begin;
+        index = index % size;
+        arr[index] = val;
     }
 
     public void nextFrame() {

@@ -7,36 +7,116 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class NetworkData {
 
     public HashMap<String,NetworkDeviceHistory> productionHistory = new HashMap<>();
     public HashMap<String,NetworkDeviceHistory> consumptionHistory = new HashMap<>();
 
-    public void registerTransfer(int delta, TileEntity interactor) {
+    private List<String> newProdEntries = new ArrayList<>();
+    private List<String> newConEntries = new ArrayList<>();
+
+    public void registerTransfer(int delta, boolean consumer, TileEntity interactor) {
         if (interactor instanceof TileEntityMultiblockMetal<?,?>) {
             interactor = ((TileEntityMultiblockMetal<?, ?>) interactor).master();
         }
         IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
         ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()),state.getBlock().getMetaFromState(state));
         String id = getId(deviceStack);
-        if (delta > 0) {
+        System.out.println("DELTA: " + delta);
+        System.out.println(id + " " + consumer);
+        if (!consumer) {
+            //boolean newe = false;
+            //if (!productionHistory.containsKey(id)) {
+            //    productionHistory.put(id,new NetworkDeviceHistory(deviceStack));
+            //    newe = true;
+            //}
+            productionHistory.get(id).addEntry(delta);
+            //if (newe) newProdEntries.add(id);
+        } else {
+            //boolean newe = false;
+            //if (!consumptionHistory.containsKey(id)) {
+            //    consumptionHistory.put(id,new NetworkDeviceHistory(deviceStack));
+            //    newe = true;
+            //}
+            consumptionHistory.get(id).addEntry(-delta);
+            //if (newe) newConEntries.add(id);
+        }
+    }
+
+    public void notifyLoad(boolean consumer, TileEntity interactor) {
+        if (interactor instanceof TileEntityMultiblockMetal<?,?>) {
+            interactor = ((TileEntityMultiblockMetal<?, ?>) interactor).master();
+        }
+        IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
+        ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()),state.getBlock().getMetaFromState(state));
+        String id = getId(deviceStack);
+        if (consumer) {
+            boolean newe = false;
             if (!productionHistory.containsKey(id)) {
                 productionHistory.put(id,new NetworkDeviceHistory(deviceStack));
+                newe = true;
             }
-            productionHistory.get(id).addEntry(delta);
-        } else if (delta < 0){
+            productionHistory.get(id).addCount();
+            if (newe) newProdEntries.add(id);
+        } else {
+            boolean newe = false;
             if (!consumptionHistory.containsKey(id)) {
                 consumptionHistory.put(id,new NetworkDeviceHistory(deviceStack));
+                newe = true;
             }
-            consumptionHistory.get(id).addEntry(-delta);
+            consumptionHistory.get(id).addCount();
+            if (newe) newConEntries.add(id);
+        }
+    }
+
+    public NBTTagCompound getUpdateDelta() {
+        NBTTagCompound tag = new NBTTagCompound();
+        int pCount = 0;
+        for (String p : productionHistory.keySet()) {
+            if (!newProdEntries.contains(p)) {
+                tag.setString("prod_delta_key_"+pCount,p);
+                tag.setTag("prod_delta_"+pCount,productionHistory.get(p).getUpdateDelta());
+                pCount++;
+            }
+        }
+        tag.setInteger("prod_delta_count",pCount);
+        int cCount = 0;
+        for (String c : consumptionHistory.keySet()) {
+            if (!newConEntries.contains(c)) {
+                tag.setString("cons_delta_key_"+cCount,c);
+                tag.setTag("cons_delta_"+cCount,consumptionHistory.get(c).getUpdateDelta());
+                cCount++;
+            }
+        }
+        tag.setInteger("cons_delta_count",cCount);
+        // TODO: Implement device additions or subtractions
+        return tag;
+    }
+
+    public void updateFromDelta(NBTTagCompound tag) {
+        int pCount = tag.getInteger("prod_delta_count");
+        for (int i = 0;i < pCount;i++) {
+            String key = tag.getString("prod_delta_key_"+i);
+            NBTTagCompound deltaTag = tag.getCompoundTag("prod_delta_"+i);
+            if (productionHistory.containsKey(key)) productionHistory.get(key).updateDelta(deltaTag);
+        }
+        int cCount = tag.getInteger("cons_delta_count");
+        for (int i = 0;i < cCount;i++) {
+            String key = tag.getString("cons_delta_key_"+i);
+            NBTTagCompound deltaTag = tag.getCompoundTag("cons_delta_"+i);
+            if (consumptionHistory.containsKey(key)) consumptionHistory.get(key).updateDelta(deltaTag);
         }
     }
 
     public void tick() {
-        for (String id : productionHistory.keySet()) productionHistory.get(id).tickClear();
-        for (String id : consumptionHistory.keySet()) consumptionHistory.get(id).tickClear();
+        for (String id : productionHistory.keySet()) productionHistory.get(id).next();
+        for (String id : consumptionHistory.keySet()) consumptionHistory.get(id).next();
+        newProdEntries.clear();
+        newConEntries.clear();
     }
 
     private String getId(ItemStack stack) {

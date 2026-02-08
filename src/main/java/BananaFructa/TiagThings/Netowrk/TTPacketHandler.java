@@ -16,6 +16,7 @@ public class TTPacketHandler {
         wrapper.registerMessage(MessageGuiEventHandler.class,MessageGuiEvent.class,2,Side.SERVER);
         wrapper.registerMessage(MessagePowerNetworkAskInfoHandler.class,MessagePowerNetworkAskInfo.class,3,Side.SERVER);
         wrapper.registerMessage(CMessageNetworkDataHandler.class, CMessageNetworkData.class,4,Side.CLIENT);
+        wrapper.registerMessage(CMessageUpdatePowerInfoHandler.class,CMessageUpdatePowerInfo.class,5,Side.CLIENT);
     }
 
 }

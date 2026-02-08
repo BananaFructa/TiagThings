@@ -45,13 +45,18 @@ public class NetworkDeviceHistory {
         addEntry(amount,0);
     }
 
+    public void addCount() {
+        deviceCount++;
+    }
+
     public void addEntry(int amount, int scale) {
-        if (needsToClear) {
+        /*if (needsToClear) {
             deviceCount = 0;
             needsToClear = false;
         }
-        deviceCount++;
-        timeScales[scale].set(0,timeScales[scale].get(0) + amount);
+        deviceCount++;*/
+        if (scale == 0) timeScales[scale].set(0,timeScales[scale].get(0) + amount);
+        else timeScales[scale].set(0,amount);
         updatePacket.setInteger("add_"+scale,timeScales[scale].get(0));
         counters[scale]++;
         if (counters[scale] == timeDivisions[scale]) {
@@ -65,6 +70,7 @@ public class NetworkDeviceHistory {
                 oneHour.add(avg);
             }
         }
+        if (scale != 0) timeScales[scale].nextFrame();
     }
 
     public int getSize(GraphScale scale) {
@@ -110,6 +116,7 @@ public class NetworkDeviceHistory {
     }
 
     public void updateDelta(NBTTagCompound tag) {
+        // TODO: update count
         for (int i = 0;i < timeScales.length;i++) {
             if (tag.hasKey("add_" + i)) {
                 timeScales[i].nextFrame();
@@ -119,13 +126,12 @@ public class NetworkDeviceHistory {
         if (tag.hasKey("add_hour")) oneHour.add(tag.getInteger("one_hour"));
     }
 
-    public void tickClear() {
-        needsToClear = true;
+    public void next() {
+        //needsToClear = true;
+        deviceCount = 0;
         updatePacket = new NBTTagCompound();
-        for (ModularList list : timeScales) {
-            list.nextFrame();
-            list.set(0,0);
-        }
+        timeScales[GraphScale.FIVE_SECONDS.ordinal()].nextFrame();
+        timeScales[GraphScale.FIVE_SECONDS.ordinal()].set(0,0);
     }
 
     public NBTTagCompound toNBT() {

@@ -67,8 +67,9 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
 
     public void onTick() {
         delta = Math.min(Math.max(currentDelta,-getMaxOutput()),getMaxInput());
-        System.out.println("SEND");
-        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,delta,world.getTileEntity(pos.offset(facing)));
+        //System.out.println("SEND");
+        GlobalNetworkInfoManager.notifyLoad(this,pos,world,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
+        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,delta,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
         currentDelta = 0;
         markDirty();
         IEUtils.notifyClientUpdate(world, pos);

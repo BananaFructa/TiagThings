@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.nbt.NBTTagCompound;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
@@ -30,6 +31,12 @@ public class PowerNetworkInfoGui extends GuiScreen {
         this.networkDataToDisplay = data;
     }
 
+    public void updateNetworkData(NBTTagCompound updateTag) {
+        if (this.networkDataToDisplay != null) {
+            this.networkDataToDisplay.updateFromDelta(updateTag);
+        }
+    }
+
     public void renderGraph(NetworkDeviceHistory history, int color,int x,int y) {
         float r = (color >> 16)/255.0f;
         float g = ((color & 0x00ff00) >> 8) / 255.0f;
@@ -37,10 +44,6 @@ public class PowerNetworkInfoGui extends GuiScreen {
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
-        /*GlStateManager.tryBlendFuncSeparate(
-                GL11.GL_SRC_ALPHA,
-                GL11.GL_ONE_MINUS_SRC_ALPHA,
-                1, 0);*/
 
         GL11.glLineWidth(2.0F); // thickness
 

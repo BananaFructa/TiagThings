@@ -54,7 +54,12 @@ public class GlobalNetworkInfoManager {
     }
 
     public static void addNetworkSubscriber(UUID player, UUID network) {
-        if (!playerUpdateSubscribers.containsKey(player)) playerUpdateSubscribers.put(player,network);
+        playerUpdateSubscribers.remove(player);
+        playerUpdateSubscribers.put(player,network);
+    }
+
+    public static void removeNetworkSubscriber(UUID player) {
+        playerUpdateSubscribers.remove(player);
     }
 
     public static void notifyLoad(NetworkElement element, BlockPos node, World world, boolean consumer, TileEntity interactor) {
@@ -72,20 +77,20 @@ public class GlobalNetworkInfoManager {
                 ids.add(((NetworkElement) connectable).getId());
             }
         }
-        System.out.println(ids);
-        System.out.println("DING");
+        //System.out.println(ids);
+        //System.out.println("DING");
         for (UUID uuid : registeredNetworks.keySet()) {
             List<Integer> network = registeredNetworks.get(uuid);
             // Unitary changes considered only
             if (ids.size() == network.size() && compareIds(ids,network) == ids.size()) {
-                System.out.println("NETWORK FOUND");
+                //System.out.println("NETWORK FOUND");
 
                 networkData.get(uuid).notifyLoad(consumer,interactor);
                 inactiveNetwork.remove(uuid);
 
                 return;
             } else if (ids.size() > network.size() && compareIds(ids,network) == network.size()) {
-                System.out.println("NETWORK MERGED");
+                //System.out.println("NETWORK MERGED");
                 // THE NETWORK HAS EXTENDED
                 List<Integer> other = subtractIds(ids,network);
                 for (UUID otherSet : registeredNetworks.keySet()) {
@@ -102,13 +107,13 @@ public class GlobalNetworkInfoManager {
                         }
                     }
                 }
-                System.out.println("NETWORK CHOOSE FIRST");
+                //System.out.println("NETWORK CHOOSE FIRST");
                 registeredNetworks.put(uuid,ids);
                 networkData.get(uuid).notifyLoad(consumer,interactor);
                 inactiveNetwork.remove(uuid);
                 addToCache(ids,uuid);
             } else if (ids.size() < network.size() && compareIds(ids,network) == ids.size()) {
-                System.out.println("NETWORK SPLIT");
+                //System.out.println("NETWORK SPLIT");
                 // THE NETWORK WAS SPLIT
                 registeredNetworks.put(uuid,ids);
                 networkData.get(uuid).notifyLoad(consumer,interactor);
@@ -117,7 +122,7 @@ public class GlobalNetworkInfoManager {
                 return;
             }
         }
-        System.out.println("NEW NETWORK");
+        //System.out.println("NEW NETWORK");
         UUID newUuid = UUID.randomUUID();
         registeredNetworks.put(newUuid,ids);
         inactiveNetwork.remove(newUuid);
@@ -225,8 +230,10 @@ public class GlobalNetworkInfoManager {
             if (playerMP == null) toBeRemoved.add(playerUuid);
             else {
                 NetworkData data = networkData.get(playerUpdateSubscribers.get(playerUuid));
-                System.out.println("SENT_DELTA");
-                TTPacketHandler.wrapper.sendTo(new CMessageUpdatePowerInfo(data.getUpdateDelta()),playerMP);
+                if (data != null) {
+                    System.out.println("SENT_DELTA");
+                    TTPacketHandler.wrapper.sendTo(new CMessageUpdatePowerInfo(data.getUpdateDelta()), playerMP);
+                }
             }
         }
         cache.clear();

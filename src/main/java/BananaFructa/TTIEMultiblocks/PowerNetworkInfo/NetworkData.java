@@ -24,10 +24,9 @@ public class NetworkData {
             interactor = ((TileEntityMultiblockMetal<?, ?>) interactor).master();
         }
         IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
-        ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()),state.getBlock().getMetaFromState(state));
+        ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
+        deviceStack.setItemDamage(state.getBlock().getMetaFromState(state));
         String id = getId(deviceStack);
-        System.out.println("DELTA: " + delta);
-        System.out.println(id + " " + consumer);
         if (!consumer) {
             //boolean newe = false;
             //if (!productionHistory.containsKey(id)) {
@@ -42,6 +41,9 @@ public class NetworkData {
             //    consumptionHistory.put(id,new NetworkDeviceHistory(deviceStack));
             //    newe = true;
             //}
+            System.out.println("DELTA: " + delta);
+            System.out.println(id + " " + consumer);
+
             consumptionHistory.get(id).addEntry(-delta);
             //if (newe) newConEntries.add(id);
         }
@@ -52,9 +54,10 @@ public class NetworkData {
             interactor = ((TileEntityMultiblockMetal<?, ?>) interactor).master();
         }
         IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
-        ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()),state.getBlock().getMetaFromState(state));
+        ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
+        deviceStack.setItemDamage(state.getBlock().getMetaFromState(state));
         String id = getId(deviceStack);
-        if (consumer) {
+        if (!consumer) {
             boolean newe = false;
             if (!productionHistory.containsKey(id)) {
                 productionHistory.put(id,new NetworkDeviceHistory(deviceStack));

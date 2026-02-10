@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ModularList {
 
-    int populatedLength = 0;
+    int populatedLength = 1;
     int size = 0;
     int begin = 0;
     int[] arr;

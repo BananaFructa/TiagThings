@@ -16,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -74,6 +75,16 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
         markDirty();
         IEUtils.notifyClientUpdate(world, pos);
         firstSimulate = true;
+    }
+
+    public boolean isEnergyOutput() {
+        BlockPos outPos = this.getPos().offset(this.facing);
+        if (this.isRelay()) {
+            return false;
+        } else {
+            TileEntity tile = Utils.getExistingTileEntity(this.world, outPos);
+            return BananaFructa.TiagThings.Utils.isFluxReceiverFixed(tile, this.facing.getOpposite());
+        }
     }
 
     public boolean isTargetInSimulation() {

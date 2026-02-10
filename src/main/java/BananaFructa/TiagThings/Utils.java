@@ -2,6 +2,10 @@ package BananaFructa.TiagThings;
 
 import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityRocketScaffold;
 import BananaFructa.Uem.DrainFluidPlacer;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorCreative;
+import blusunrize.immersiveengineering.common.util.EnergyHelper;
+import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityAlternatorSlave;
+import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -249,5 +253,15 @@ public class Utils {
         if (s1.getMetadata() != s2.getMetadata()) return false;
         if (s1.getItem() != s2.getItem()) return false;
         return true;
+    }
+
+    private static List<Class<?>> producerOverride = new ArrayList<Class<?>>(){{
+        add(TileEntityCapacitorCreative.class);
+        add(TileEntityAlternatorSlave.class);
+    }};
+
+    public static boolean isFluxReceiverFixed(TileEntity te,EnumFacing facing) {
+        if (producerOverride.contains(te.getClass())) return false;
+        return EnergyHelper.isFluxReceiver(te,facing);
     }
 }

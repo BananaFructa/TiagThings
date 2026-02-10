@@ -17,6 +17,7 @@ public class NetworkDeviceHistory {
     public Item deviceItem;
     public int deviceMetadata;
     public int deviceCount = 0;
+    public int tempDeviceCount = 0;
     public boolean needsToClear = false;
     ModularList[] timeScales = new ModularList[] {
             new ModularList(100),
@@ -46,7 +47,7 @@ public class NetworkDeviceHistory {
     }
 
     public void addCount() {
-        deviceCount++;
+        tempDeviceCount++;
     }
 
     public void addEntry(int amount, int scale) {
@@ -57,6 +58,7 @@ public class NetworkDeviceHistory {
         deviceCount++;*/
         if (scale == 0) timeScales[scale].set(0,timeScales[scale].get(0) + amount);
         else timeScales[scale].set(0,amount);
+
         updatePacket.setInteger("add_"+scale,timeScales[scale].get(0));
         counters[scale]++;
         if (counters[scale] == timeDivisions[scale]) {
@@ -71,6 +73,14 @@ public class NetworkDeviceHistory {
             }
         }
         if (scale != 0) timeScales[scale].nextFrame();
+    }
+
+    public int getAverage(GraphScale scale) {
+        if (scale.ordinal() < 3) {
+            ModularList list =
+        } else {
+            return 0; // TODO: implement this?
+        }
     }
 
     public int getSize(GraphScale scale) {
@@ -128,7 +138,8 @@ public class NetworkDeviceHistory {
 
     public void next() {
         //needsToClear = true;
-        deviceCount = 0;
+        deviceCount = tempDeviceCount;
+        tempDeviceCount = 0;
         updatePacket = new NBTTagCompound();
         timeScales[GraphScale.FIVE_SECONDS.ordinal()].nextFrame();
         timeScales[GraphScale.FIVE_SECONDS.ordinal()].set(0,0);

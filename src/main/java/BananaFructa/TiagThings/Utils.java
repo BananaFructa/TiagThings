@@ -1,5 +1,6 @@
 package BananaFructa.TiagThings;
 
+import BananaFructa.BCModifications.RFTileQuarry;
 import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityRocketScaffold;
 import BananaFructa.Uem.DrainFluidPlacer;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorCreative;
@@ -260,8 +261,13 @@ public class Utils {
         add(TileEntityAlternatorSlave.class);
     }};
 
+    private static List<Class<?>> consumerOverride = new ArrayList<Class<?>>(){{
+        add(RFTileQuarry.class);
+    }};
+
     public static boolean isFluxReceiverFixed(TileEntity te,EnumFacing facing) {
         if (producerOverride.contains(te.getClass())) return false;
+        if (consumerOverride.contains(te.getClass())) return true;
         return EnergyHelper.isFluxReceiver(te,facing);
     }
 }

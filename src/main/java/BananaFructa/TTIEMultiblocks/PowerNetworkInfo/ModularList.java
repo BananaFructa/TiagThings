@@ -15,7 +15,8 @@ public class ModularList {
     }
 
     public void set(int index, int val) {
-        index = index + begin;
+        index =  - index + begin;
+        while (index < 0) index += size;
         index = index % size;
         arr[index] = val;
     }
@@ -31,7 +32,8 @@ public class ModularList {
     }
 
     public int get(int i) {
-        int index = i+begin;
+        int index = -i+begin;
+        while (index < 0) index += size;
         index = index % size;
         return arr[index];
     }

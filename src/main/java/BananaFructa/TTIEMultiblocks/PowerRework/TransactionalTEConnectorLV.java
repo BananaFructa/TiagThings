@@ -40,7 +40,6 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
         this();
         this.facing = facing;
         netId = GlobalNetworkInfoManager.getNewId();
-        //MinecraftForge.EVENT_BUS.register(this);
     }
 
     public TransactionalTEConnectorLV() {

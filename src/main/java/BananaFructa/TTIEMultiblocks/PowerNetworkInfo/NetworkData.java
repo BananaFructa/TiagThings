@@ -25,7 +25,7 @@ public class NetworkData {
         }
         IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
         ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
-        deviceStack.setItemDamage(state.getBlock().getMetaFromState(state));
+        if (deviceStack.getItem().getHasSubtypes()) deviceStack.setItemDamage(state.getBlock().getMetaFromState(state));
         String id = getId(deviceStack);
         if (!consumer) {
             //boolean newe = false;
@@ -41,13 +41,16 @@ public class NetworkData {
             //    consumptionHistory.put(id,new NetworkDeviceHistory(deviceStack));
             //    newe = true;
             //}
-            System.out.println("DELTA: " + delta);
-            System.out.println(id + " " + consumer);
+            //System.out.println("DELTA: " + delta);
+            //System.out.println(id + " " + consumer);
 
             consumptionHistory.get(id).addEntry(-delta);
             //if (newe) newConEntries.add(id);
         }
     }
+
+    private List<TileEntity> uniqueProducers = new ArrayList<>();
+    private List<TileEntity> uniqueConsumers = new ArrayList<>();
 
     public void notifyLoad(boolean consumer, TileEntity interactor) {
         if (interactor instanceof TileEntityMultiblockMetal<?,?>) {
@@ -55,7 +58,7 @@ public class NetworkData {
         }
         IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
         ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
-        deviceStack.setItemDamage(state.getBlock().getMetaFromState(state));
+        if (deviceStack.getItem().getHasSubtypes()) deviceStack.setItemDamage(state.getBlock().getMetaFromState(state));
         String id = getId(deviceStack);
         if (!consumer) {
             boolean newe = false;
@@ -63,7 +66,10 @@ public class NetworkData {
                 productionHistory.put(id,new NetworkDeviceHistory(deviceStack));
                 newe = true;
             }
-            productionHistory.get(id).addCount();
+            if (!uniqueProducers.contains(interactor)) {
+                productionHistory.get(id).addCount();
+                uniqueProducers.add(interactor);
+            }
             if (newe) newProdEntries.add(id);
         } else {
             boolean newe = false;
@@ -71,7 +77,10 @@ public class NetworkData {
                 consumptionHistory.put(id,new NetworkDeviceHistory(deviceStack));
                 newe = true;
             }
-            consumptionHistory.get(id).addCount();
+            if(!uniqueConsumers.contains(interactor)) {
+                consumptionHistory.get(id).addCount();
+                uniqueConsumers.add(interactor);
+            }
             if (newe) newConEntries.add(id);
         }
     }
@@ -120,6 +129,8 @@ public class NetworkData {
         for (String id : consumptionHistory.keySet()) consumptionHistory.get(id).next();
         newProdEntries.clear();
         newConEntries.clear();
+        uniqueProducers.clear();
+        uniqueConsumers.clear();
     }
 
     private String getId(ItemStack stack) {

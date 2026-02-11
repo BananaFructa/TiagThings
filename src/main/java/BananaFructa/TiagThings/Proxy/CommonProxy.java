@@ -466,11 +466,11 @@ public class CommonProxy implements IGuiHandler {
                 if (entity instanceof TileEntityWheelSteel) {
                     event.getWorld().setTileEntity(entity.getPos(),new ModifiedWheelTileEntitySteel(((TileEntityWheelSteel)entity).facing));
                 }
-                if (entity instanceof TileEntityConnectorHV && !(entity instanceof TileEntityRelayHV)) {
+                if (entity instanceof TileEntityConnectorHV && !isRelay(entity)) {
                     event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorHV(((TileEntityConnectorHV) entity).facing));
-                } else if (entity instanceof TileEntityConnectorMV && !(entity instanceof TileEntityRelayMV)) {
+                } else if (entity instanceof TileEntityConnectorMV && !isRelay(entity)) {
                     event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorMV(((TileEntityConnectorMV) entity).facing));
-                } else if (entity instanceof TileEntityConnectorLV && !(entity instanceof TileEntityRelayLV)) {
+                } else if (entity instanceof TileEntityConnectorLV && !isRelay(entity)) {
                     event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorLV(((TileEntityConnectorLV) entity).facing));
                 }
                 /*if (entity instanceof TileEntityCapacitorLV) {
@@ -490,6 +490,10 @@ public class CommonProxy implements IGuiHandler {
                 //}
             }
         });
+    }
+
+    private boolean isRelay(TileEntity te) {
+        return te instanceof TileEntityRelayLV || te instanceof TileEntityRelayMV || te instanceof TileEntityRelayHV;
     }
 
     @SubscribeEvent

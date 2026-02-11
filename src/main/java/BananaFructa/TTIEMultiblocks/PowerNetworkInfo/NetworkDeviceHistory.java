@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,12 +76,34 @@ public class NetworkDeviceHistory {
         if (scale != 0) timeScales[scale].nextFrame();
     }
 
-    public int getAverage(GraphScale scale) {
-        if (scale.ordinal() < 3) {
-            ModularList list =
+    private HashMap<GraphScale,Float> averageCache = new HashMap<>();
+
+    public float getAverage(GraphScale scale) {
+        if (averageCache.containsKey(scale)) return averageCache.get(scale);
+        if (scale.ordinal() < timeScales.length) {
+            ModularList list = timeScales[scale.ordinal()];
+            int sum = 0;
+            for (int i = 0;i < list.length();i++) {
+                sum += list.get(i);
+            }
+            float avg = (float)sum/list.length();
+            averageCache.put(scale,avg);
+            return avg;
         } else {
             return 0; // TODO: implement this?
         }
+    }
+
+    public boolean emptyFor(GraphScale scale) {
+        if (scale.ordinal() < timeScales.length) {
+            ModularList list = timeScales[scale.ordinal()];
+            for (int i = 0;i < list.length();i++) {
+                if (list.get(i) != 0) return false;
+            }
+        } else {
+            return true; // TODO: implement this?
+        }
+        return true;
     }
 
     public int getSize(GraphScale scale) {
@@ -127,6 +150,7 @@ public class NetworkDeviceHistory {
 
     public void updateDelta(NBTTagCompound tag) {
         // TODO: update count
+        averageCache.clear();
         for (int i = 0;i < timeScales.length;i++) {
             if (tag.hasKey("add_" + i)) {
                 timeScales[i].nextFrame();
@@ -143,6 +167,7 @@ public class NetworkDeviceHistory {
         updatePacket = new NBTTagCompound();
         timeScales[GraphScale.FIVE_SECONDS.ordinal()].nextFrame();
         timeScales[GraphScale.FIVE_SECONDS.ordinal()].set(0,0);
+        averageCache.clear();
     }
 
     public NBTTagCompound toNBT() {

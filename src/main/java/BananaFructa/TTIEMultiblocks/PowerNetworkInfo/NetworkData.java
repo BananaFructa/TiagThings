@@ -1,15 +1,15 @@
 package BananaFructa.TTIEMultiblocks.PowerNetworkInfo;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import li.cil.oc.common.block.Item;
+import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityAlternatorMaster;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class NetworkData {
 
@@ -19,33 +19,30 @@ public class NetworkData {
     private List<String> newProdEntries = new ArrayList<>();
     private List<String> newConEntries = new ArrayList<>();
 
+
+    private Map<TileEntity,Integer> producerTrack = new IdentityHashMap<>();
+    private boolean isProducerRepeated(TileEntity interactor, int delta) {
+        if (interactor instanceof TileEntityAlternatorMaster) {
+            if (producerTrack.containsKey(interactor) && producerTrack.get(interactor) + delta > ((TileEntityAlternatorMaster) interactor).energyGenerated()) {
+                return true;
+            }
+        }
+        producerTrack.put(interactor,delta + (producerTrack.getOrDefault(interactor, 0)));
+        return false;
+    }
+
     public void registerTransfer(int delta, boolean consumer, TileEntity interactor) {
-        if (interactor instanceof TileEntityMultiblockMetal<?,?>) {
-            interactor = ((TileEntityMultiblockMetal<?, ?>) interactor).master();
+        if (interactor instanceof TileEntityMultiblockPart) {
+            interactor = ((TileEntityMultiblockPart) interactor).master();
         }
         IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
         ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
         if (deviceStack.getItem().getHasSubtypes()) deviceStack.setItemDamage(state.getBlock().getMetaFromState(state));
         String id = getId(deviceStack);
         if (!consumer) {
-            //boolean newe = false;
-            //if (!productionHistory.containsKey(id)) {
-            //    productionHistory.put(id,new NetworkDeviceHistory(deviceStack));
-            //    newe = true;
-            //}
-            productionHistory.get(id).addEntry(delta);
-            //if (newe) newProdEntries.add(id);
+            if (!isProducerRepeated(interactor,delta)) productionHistory.get(id).addEntry(delta);
         } else {
-            //boolean newe = false;
-            //if (!consumptionHistory.containsKey(id)) {
-            //    consumptionHistory.put(id,new NetworkDeviceHistory(deviceStack));
-            //    newe = true;
-            //}
-            //System.out.println("DELTA: " + delta);
-            //System.out.println(id + " " + consumer);
-
             consumptionHistory.get(id).addEntry(-delta);
-            //if (newe) newConEntries.add(id);
         }
     }
 
@@ -53,8 +50,8 @@ public class NetworkData {
     private List<TileEntity> uniqueConsumers = new ArrayList<>();
 
     public void notifyLoad(boolean consumer, TileEntity interactor) {
-        if (interactor instanceof TileEntityMultiblockMetal<?,?>) {
-            interactor = ((TileEntityMultiblockMetal<?, ?>) interactor).master();
+        if (interactor instanceof TileEntityMultiblockPart) {
+            interactor = ((TileEntityMultiblockPart) interactor).master();
         }
         IBlockState state = interactor.getWorld().getBlockState(interactor.getPos());
         ItemStack deviceStack = new ItemStack(Item.getItemFromBlock(state.getBlock()));
@@ -131,6 +128,7 @@ public class NetworkData {
         newConEntries.clear();
         uniqueProducers.clear();
         uniqueConsumers.clear();
+        producerTrack.clear();
     }
 
     private String getId(ItemStack stack) {

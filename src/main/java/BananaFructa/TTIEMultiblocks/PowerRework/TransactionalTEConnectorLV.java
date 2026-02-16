@@ -10,6 +10,7 @@ import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorCreative;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorLV;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorLV;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
@@ -106,7 +107,7 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
                 TileEntity capacitor = Utils.getExistingTileEntity(this.world, this.getPos().offset(this.facing));
                 int ret = EnergyHelper.insertFlux(capacitor, this.facing.getOpposite(), toAccept, simulate);
                 if (!simulate) {
-                    currentDelta = -ret;
+                    currentDelta += -ret;
                     this.currentTickToMachine += ret;
                 }
 
@@ -119,7 +120,17 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
     public int receiveEnergy(EnumFacing from, int energy, boolean simulate) {
         if (firstSimulate && energy > 0 && !(isTargetInSimulation() ^ simulate)) {
             firstSimulate = false;
-            currentDelta += energy;
+            TileEntity interactor = getInteractor();
+            int accepted = ActualPowerReader.getActualPower(interactor,getMaxInput(),true);
+            if (accepted != -1) {
+                if (accepted > energy) {
+                    currentDelta += energy;
+                    ActualPowerReader.substractAvalabiltiy(interactor,energy);
+                } else {
+                    currentDelta += ActualPowerReader.getActualPower(interactor,getMaxInput(),false);;
+                }
+            }
+            else currentDelta += energy;
         }
         return super.receiveEnergy(from, energy, simulate);
     }
@@ -127,6 +138,14 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
     @Override
     public int getId() {
         return netId;
+    }
+
+    @Override
+    public TileEntity getInteractor() {
+        BlockPos outPos = this.getPos().offset(this.facing);
+        TileEntity te =  Utils.getExistingTileEntity(this.world, outPos);
+        if (te instanceof TileEntityMultiblockMetal<?,?>) return ((TileEntityMultiblockMetal<?, ?>) te).master();
+        return te;
     }
 
     boolean firstTick = true;

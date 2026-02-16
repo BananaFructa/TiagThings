@@ -19,6 +19,7 @@ import BananaFructa.ImmersiveIntelligence.ModifiedWheelTileEntitySteel;
 import BananaFructa.ImmersiveIntelligence.TileEntityModifiedMechanicalPump;
 import BananaFructa.ImmersivePetroleum.ModifiedTileEntityPumpjack;
 import BananaFructa.ImmersivePetroleum.ModifiedTileEntityPumpjackParent;
+import BananaFructa.ImmersiveTech.AlternatorMultiblockMasterModified;
 import BananaFructa.RailcraftModifications.RFBlockRockCrusher;
 import BananaFructa.RailcraftModifications.TileRollingMachineManualChanged;
 import BananaFructa.RailcraftModifications.TileRollingMachinePoweredChanged;
@@ -31,6 +32,7 @@ import BananaFructa.TTIEMultiblocks.Gui.*;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
 import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.ContainerCokerUnit;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.ContainerElectricFoodOven;
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
@@ -60,6 +62,7 @@ import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.blocks.metal.*;
 import buildcraft.builders.BCBuildersBlocks;
 import buildcraft.builders.block.BlockQuarry;
@@ -277,6 +280,7 @@ public class CommonProxy implements IGuiHandler {
         GameRegistry.registerTileEntity(ModifiedTileEntityPowerLoom.class,new ResourceLocation(TTMain.modId, ModifiedTileEntityPowerLoom.class.getSimpleName()));
         GameRegistry.registerTileEntity(ModifiedTileEntityPowerLoomParent.class, new ResourceLocation(TTMain.modId, ModifiedTileEntityPowerLoomParent.class.getSimpleName()));
         GameRegistry.registerTileEntity(ModifiedCO2Filter.class, new ResourceLocation(TTMain.modId, ModifiedCO2Filter.class.getSimpleName()));
+        GameRegistry.registerTileEntity(AlternatorMultiblockMasterModified.class, new ResourceLocation(TTMain.modId, AlternatorMultiblockMasterModified.class.getSimpleName()));
 
         TTIEContent.init();
         RockUtils.init();
@@ -535,7 +539,9 @@ public class CommonProxy implements IGuiHandler {
         if (event.getWorld().isRemote) {
             if (event.getItemStack().getItem() == IEContent.itemTool) {
                 Minecraft.getMinecraft().displayGuiScreen(new PowerNetworkInfoGui());
-                TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkAskInfo(event.getPos().getX(),event.getPos().getY(),event.getPos().getZ()));
+                GlobalNetworkInfoManager.scheduleTask(()-> {
+                    TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkAskInfo(event.getPos().getX(),event.getPos().getY(),event.getPos().getZ()));
+                });
             }
             return;
         }
@@ -938,13 +944,13 @@ public class CommonProxy implements IGuiHandler {
                 43
         ));
         put("att:powerloom", new ModifiedMultiblockInfo(
-                new ModifiedMultiblockInfo.TEProvider<TileEntityMultiblockMetal>() {
+                new ModifiedMultiblockInfo.TEProvider<TileEntityMultiblockPart>() {
                     @Override
                     public TileEntityMultiblockMetal getTE(NBTTagCompound info) {
                         return null;
                     }
                 },
-                new ModifiedMultiblockInfo.TEProvider<TileEntityMultiblockMetal>() {
+                new ModifiedMultiblockInfo.TEProvider<TileEntityMultiblockPart>() {
                     @Override
                     public TileEntityMultiblockMetal getTE(NBTTagCompound info) {
                         return new ModifiedTileEntityPowerLoomParent();
@@ -952,6 +958,20 @@ public class CommonProxy implements IGuiHandler {
                 },
                 40
         ));
+        put("IT:Alternator", new ModifiedMultiblockInfo(
+                new ModifiedMultiblockInfo.TEProvider<TileEntityMultiblockPart>() {
+                    @Override
+                    public TileEntityMultiblockPart getTE(NBTTagCompound info) {
+                        return null;
+                    }
+                    },
+                new ModifiedMultiblockInfo.TEProvider<TileEntityMultiblockPart>() {
+                    @Override
+                    public TileEntityMultiblockPart getTE(NBTTagCompound info) {
+                        return new AlternatorMultiblockMasterModified();
+                    }
+                }
+        ,34));
 
     }};
 
@@ -972,13 +992,13 @@ public class CommonProxy implements IGuiHandler {
         if (modifiedMultiblocks.containsKey(name)) {
             ModifiedMultiblockInfo info = modifiedMultiblocks.get(name);
             if (world.isRemote) return;
-            TileEntityMultiblockMetal<?,?> metalPress = (TileEntityMultiblockMetal<?,?>) world.getTileEntity(source);
+            TileEntityMultiblockPart<?> metalPress = (TileEntityMultiblockPart<?>) world.getTileEntity(source);
             for (int i = info.maxPos; i >= 0; i--) {
                 //System.out.println(i + " ");
                 BlockPos pos = metalPress.getBlockPosForPos(i);
                 TileEntity te = world.getTileEntity(pos);
-                if (te != null && te instanceof TileEntityMultiblockMetal<?,?>) {
-                    TileEntityMultiblockMetal<?,?> comp = (TileEntityMultiblockMetal<?,?>) te;
+                if (te != null && te instanceof TileEntityMultiblockPart) {
+                    TileEntityMultiblockPart<?> comp = (TileEntityMultiblockPart<?>) te;
                     int[] lastOffset = comp.offset;
                     //System.out.println(lastOffset[0] + " " + lastOffset[1] + " " + lastOffset[2]);
                     boolean lastFormed = comp.formed;
@@ -988,7 +1008,7 @@ public class CommonProxy implements IGuiHandler {
                     TileEntity newTe = !source.equals(pos) ? info.childProvider.getTE(null) : info.parentProvider.getTE(null);
                     if (newTe == null) continue;
                     world.setTileEntity(pos, newTe);
-                    TileEntityMultiblockMetal<?,?> m = (TileEntityMultiblockMetal<?,?>) world.getTileEntity(pos);
+                    TileEntityMultiblockPart<?> m = (TileEntityMultiblockPart<?>) world.getTileEntity(pos);
                     m.formed = lastFormed;
                     m.field_174879_c = lastPos;
                     m.offset = lastOffset;

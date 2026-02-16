@@ -1,16 +1,13 @@
 package BananaFructa.TTIEMultiblocks.PowerNetworkInfo;
 
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
 import BananaFructa.TiagThings.Netowrk.CMessageUpdatePowerInfo;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
+import BananaFructa.TiagThings.TTMain;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
-import blusunrize.immersiveengineering.common.util.Utils;
-import nc.tile.energy.TileEnergy;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -18,7 +15,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import scala.Int;
 
 import java.util.*;
 
@@ -26,6 +22,8 @@ import java.util.*;
 public class GlobalNetworkInfoManager {
 
     public static int connectionId = 0;
+
+    private static List<Runnable> scheduledTasks = new ArrayList<>();
 
     public static HashMap<UUID,List<Integer>> registeredNetworks = new HashMap<>();
     public static HashMap<UUID, NetworkData> networkData = new HashMap<>();
@@ -35,7 +33,12 @@ public class GlobalNetworkInfoManager {
     // <Player UUID, Network UUID>
     public static HashMap<UUID,UUID> playerUpdateSubscribers = new HashMap<>();
 
+    public static void dirty() {
+        TTMain.INSTANCE.worldStorage.markDirty();
+    }
+
     public static int getNewId() {
+        dirty();
         return connectionId++;
     }
 
@@ -156,6 +159,10 @@ public class GlobalNetworkInfoManager {
         return dif;
     }
 
+    public static void scheduleTask(Runnable task) {
+        scheduledTasks.add(task);
+    }
+
     @SubscribeEvent
     public static void serverTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
@@ -166,7 +173,6 @@ public class GlobalNetworkInfoManager {
             else {
                 NetworkData data = networkData.get(playerUpdateSubscribers.get(playerUuid));
                 if (data != null) {
-                    System.out.println("SENT_DELTA");
                     TTPacketHandler.wrapper.sendTo(new CMessageUpdatePowerInfo(data.getUpdateDelta()), playerMP);
                 }
             }
@@ -177,11 +183,27 @@ public class GlobalNetworkInfoManager {
             networkData.remove(uuid);
             System.out.println("NETWORK REMOVED " + networkData.size() + " " +inactiveNetwork.size());
         }
+        for (Runnable r : scheduledTasks) r.run();
+        scheduledTasks.clear();
         for (UUID uuid : networkData.keySet()) {
             networkData.get(uuid).tick();
         }
         inactiveNetwork.clear();
         inactiveNetwork.addAll(registeredNetworks.keySet());
+    }
+
+    public static NBTTagCompound toNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("connection_id",connectionId);
+        return tag;
+    }
+
+    public static void readNBT(NBTTagCompound tag) {
+        if (tag == null) {
+            connectionId = 0;
+        } else {
+            connectionId = tag.getInteger("connection_id");
+        }
     }
 
 }

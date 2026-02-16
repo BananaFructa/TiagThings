@@ -1,5 +1,6 @@
 package BananaFructa.ImmersiveEngineering;
 
+import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -16,7 +17,7 @@ public class ModifiedMultiblockInfo {
         this.maxPos = maxPos;
     }
 
-    public interface TEProvider<T extends TileEntityMultiblockMetal> {
+    public interface TEProvider<T extends TileEntityMultiblockPart> {
         T getTE(NBTTagCompound info);
     }
 

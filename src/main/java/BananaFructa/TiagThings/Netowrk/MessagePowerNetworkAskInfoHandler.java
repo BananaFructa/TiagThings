@@ -25,7 +25,9 @@ public class MessagePowerNetworkAskInfoHandler implements IMessageHandler<Messag
                 GlobalNetworkInfoManager.addNetworkSubscriber(ctx.getServerHandler().player.getPersistentID(), network);
                 if (data != null) {
                     System.out.println("FOUND");
-                    TTPacketHandler.wrapper.sendTo(new CMessageNetworkData(data.toNBT()), ctx.getServerHandler().player);
+                    GlobalNetworkInfoManager.scheduleTask(()->{
+                        TTPacketHandler.wrapper.sendTo(new CMessageNetworkData(data.toNBT()), ctx.getServerHandler().player);
+                    });
                 } else {
                     // TODO: maybe send a not found message
                 }

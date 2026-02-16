@@ -4,6 +4,7 @@ package BananaFructa.TTIEMultiblocks.Commands;
 //import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityComputerClusterUnit_AE2;
 //import appeng.api.util.AEPartLocation;
 //import appeng.tile.networking.TileCableBus;
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
@@ -68,6 +69,10 @@ public class GetTEPos extends CommandBase {
         }
         if (te instanceof TransactionalTEConnectorHV) {
             sender.sendMessage(new TextComponentString("Delta: " + ((TransactionalTEConnectorHV) te).delta));
+        }
+
+        if (te instanceof NetworkElement) {
+            sender.sendMessage(new TextComponentString("Net ID: " + ((NetworkElement) te).getId()));
         }
     }
 

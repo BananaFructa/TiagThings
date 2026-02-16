@@ -1,5 +1,6 @@
 package BananaFructa.TiagThings;
 
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import nc.multiblock.qComputer.QuantumGate;
@@ -67,6 +68,7 @@ public class TiagThingWorldStorage extends WorldSavedData {
                 HashMap<ChunkPos,SRBlockPos> value = nbtToHashMap((NBTTagCompound) nbt.getTag("hm-"+i));
                 restrictedFluidPumps.put(key,value);
             }
+            GlobalNetworkInfoManager.readNBT(nbt.getCompoundTag("power_network_info"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,6 +85,7 @@ public class TiagThingWorldStorage extends WorldSavedData {
                 compound.setTag("hm-"+i,hashMapToNBT(restrictedFluidPumps.get(s)));
                 i++;
             }
+            compound.setTag("power_network_info", GlobalNetworkInfoManager.toNBT());
         } catch (Exception e) {
             e.printStackTrace();
         }

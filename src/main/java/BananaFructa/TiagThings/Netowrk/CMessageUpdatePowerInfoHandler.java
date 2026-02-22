@@ -14,8 +14,6 @@ public class CMessageUpdatePowerInfoHandler implements IMessageHandler<CMessageU
             @Override
             public void run() {
                 if (Minecraft.getMinecraft().currentScreen instanceof PowerNetworkInfoGui) {
-                    System.out.println("RECV_DELTA");
-                    System.out.println(message.deltaTag);
                     ((PowerNetworkInfoGui) Minecraft.getMinecraft().currentScreen).updateNetworkData(message.deltaTag);
                 }
             }

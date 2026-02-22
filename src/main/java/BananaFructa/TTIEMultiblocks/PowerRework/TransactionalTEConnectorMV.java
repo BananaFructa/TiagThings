@@ -78,7 +78,7 @@ public class TransactionalTEConnectorMV extends TileEntityConnectorMV implements
     public void onTick() {
         delta = Math.min(Math.max(currentDelta,-getMaxOutput()),getMaxInput());
         GlobalNetworkInfoManager.notifyLoad(this,pos,world,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
-        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,delta,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
+        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
         currentDelta = 0;
         markDirty();
         IEUtils.notifyClientUpdate(world, pos);
@@ -209,5 +209,15 @@ public class TransactionalTEConnectorMV extends TileEntityConnectorMV implements
     @Override
     public int getId() {
         return netId;
+    }
+
+    @Override
+    public int getDelta() {
+        return delta;
+    }
+
+    @Override
+    public int getLoss() {
+        return 0;
     }
 }

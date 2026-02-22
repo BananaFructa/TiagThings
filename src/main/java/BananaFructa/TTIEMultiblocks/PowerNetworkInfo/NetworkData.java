@@ -19,8 +19,11 @@ public class NetworkData {
     private List<String> newProdEntries = new ArrayList<>();
     private List<String> newConEntries = new ArrayList<>();
 
-
     private Map<TileEntity,Integer> producerTrack = new IdentityHashMap<>();
+
+    boolean anyNetworkInWorld = false;
+
+    private int currentLoss = 0;
     private boolean isProducerRepeated(TileEntity interactor, int delta) {
         if (interactor instanceof TileEntityAlternatorMaster) {
             if (producerTrack.containsKey(interactor) && producerTrack.get(interactor) + delta > ((TileEntityAlternatorMaster) interactor).energyGenerated()) {
@@ -31,7 +34,7 @@ public class NetworkData {
         return false;
     }
 
-    public void registerTransfer(int delta, boolean consumer, TileEntity interactor) {
+    public void registerTransfer(int delta, int loss, boolean consumer, TileEntity interactor) {
         if (interactor instanceof TileEntityMultiblockPart) {
             interactor = ((TileEntityMultiblockPart) interactor).master();
         }
@@ -44,6 +47,7 @@ public class NetworkData {
         } else {
             consumptionHistory.get(id).addEntry(-delta);
         }
+        currentLoss += loss;
     }
 
     private List<TileEntity> uniqueProducers = new ArrayList<>();
@@ -82,6 +86,22 @@ public class NetworkData {
         }
     }
 
+    public int getLoss() {
+        return currentLoss;
+    }
+
+    public int getProduction() {
+        int sum = 0;
+        for (String s : productionHistory.keySet()) sum+=productionHistory.get(s).getValue(0,GraphScale.FIVE_SECONDS);
+        return sum;
+    }
+
+    public int getConsumption() {
+        int sum = 0;
+        for (String s : consumptionHistory.keySet()) sum+=consumptionHistory.get(s).getValue(0,GraphScale.FIVE_SECONDS);
+        return sum;
+    }
+
     public NBTTagCompound getUpdateDelta() {
         NBTTagCompound tag = new NBTTagCompound();
         int pCount = 0;
@@ -101,6 +121,7 @@ public class NetworkData {
                 cCount++;
             }
         }
+        tag.setInteger("loss",currentLoss);
         tag.setInteger("cons_delta_count",cCount);
         // TODO: Implement device additions or subtractions
         return tag;
@@ -119,6 +140,7 @@ public class NetworkData {
             NBTTagCompound deltaTag = tag.getCompoundTag("cons_delta_"+i);
             if (consumptionHistory.containsKey(key)) consumptionHistory.get(key).updateDelta(deltaTag);
         }
+        currentLoss = tag.getInteger("loss");
     }
 
     public void tick() {
@@ -129,6 +151,7 @@ public class NetworkData {
         uniqueProducers.clear();
         uniqueConsumers.clear();
         producerTrack.clear();
+        currentLoss = 0;
     }
 
     private String getId(ItemStack stack) {
@@ -160,6 +183,7 @@ public class NetworkData {
             tag.setTag("cons_"+i,consumptionHistory.get(cons).toNBT());
             i++;
         }
+        tag.setInteger("loss",currentLoss);
         return tag;
     }
 
@@ -177,6 +201,7 @@ public class NetworkData {
             NetworkDeviceHistory history = NetworkDeviceHistory.read(tag.getCompoundTag("cons_"+i));
             data.consumptionHistory.put(key,history);
         }
+        data.currentLoss = tag.getInteger("loss");
         return data;
     }
 }

@@ -23,14 +23,23 @@ public class NetworkDeviceHistory {
     ModularList[] timeScales = new ModularList[] {
             new ModularList(100),
             new ModularList(100),
-            new ModularList(100)
+            new ModularList(100),
+            new ModularList(100),
+            new ModularList(100),
+            new ModularList(100),
+            new ModularList(100),
+            new ModularList(100),
     };
     static int[] timeDivisions = new int[] {
             12,
             10,
-            6
+            6,
+            10,
+            5,
+            5,
+            4
     };
-    int[] counters = new int[]{0,0,0};
+    int[] counters = new int[]{0,0,0,0,0,0,0};
     List<Integer> oneHour = new ArrayList<>();
 
     public NetworkDeviceHistory(ItemStack device) {
@@ -52,28 +61,25 @@ public class NetworkDeviceHistory {
     }
 
     public void addEntry(int amount, int scale) {
-        /*if (needsToClear) {
-            deviceCount = 0;
-            needsToClear = false;
+        if (timeScales[scale].length() >= 1) {
+            timeScales[scale].set(0, timeScales[scale].get(0) + amount);
         }
-        deviceCount++;*/
-        if (scale == 0) timeScales[scale].set(0,timeScales[scale].get(0) + amount);
-        else timeScales[scale].set(0,amount);
+    }
 
-        updatePacket.setInteger("add_"+scale,timeScales[scale].get(0));
-        counters[scale]++;
-        if (counters[scale] == timeDivisions[scale]) {
-            counters[scale] = 0;
-            int avg = 0;
-            for (int j = 0; j < timeDivisions[scale]; j++) avg += timeScales[scale].get(j);
-            avg /= timeDivisions[scale];
-            if (scale != timeScales.length - 1) addEntry(avg,scale+1);
-            else  {
-                updatePacket.setInteger("add_hour",avg);
-                oneHour.add(avg);
+    public void incrementCounter(int scale) {
+        if (scale != timeScales.length - 1) {
+            counters[scale]++;
+            if (counters[scale] >= timeDivisions[scale]) {
+                counters[scale] = 0;
+                int avg = 0;
+                for (int j = 0; j < timeDivisions[scale]; j++) avg += timeScales[scale].get(j);
+                avg /= timeDivisions[scale];
+                int sNext = scale+1;
+                timeScales[sNext].add(avg);
+                updatePacket.setInteger("add_" + sNext, timeScales[sNext].get(0));
+                incrementCounter(sNext);
             }
         }
-        if (scale != 0) timeScales[scale].nextFrame();
     }
 
     private HashMap<GraphScale,Float> averageCache = new HashMap<>();
@@ -95,46 +101,23 @@ public class NetworkDeviceHistory {
     }
 
     public boolean emptyFor(GraphScale scale) {
-        if (scale.ordinal() < timeScales.length) {
-            ModularList list = timeScales[scale.ordinal()];
-            for (int i = 0;i < list.length();i++) {
-                if (list.get(i) != 0) return false;
-            }
-        } else {
-            return true; // TODO: implement this?
+        ModularList list = timeScales[scale.ordinal()];
+        for (int i = 0; i < list.length(); i++) {
+            if (list.get(i) != 0) return false;
         }
         return true;
     }
 
     public int getSize(GraphScale scale) {
-        switch (scale) {
-            case FIVE_SECONDS:
-                return timeScales[0].populatedLength;
-            default:
-                return 0;
-        }
+        return timeScales[scale.ordinal()].populatedLength;
     }
 
     public int getValue(int index,GraphScale scale) {
-        switch (scale) {
-            case FIVE_SECONDS:
-                return timeScales[0].get(index);
-            default:
-                return 0;
-        }
+        return timeScales[scale.ordinal()].get(index);
     }
 
     public int getLength(GraphScale scale) {
-        switch (scale) {
-            case FIVE_SECONDS:
-            case ONE_MINUTE:
-            case TEN_MINUTES:
-                return timeScales[scale.ordinal()].length();
-            case ONE_HOUR:
-                return oneHour.size();
-            default:
-                return 0;
-        }
+        return timeScales[scale.ordinal()].length();
     }
 
     public int getTotalActivity() {
@@ -149,24 +132,22 @@ public class NetworkDeviceHistory {
     }
 
     public void updateDelta(NBTTagCompound tag) {
-        // TODO: update count
+        // TODO: update connected device count
         averageCache.clear();
         for (int i = 0;i < timeScales.length;i++) {
             if (tag.hasKey("add_" + i)) {
-                timeScales[i].nextFrame();
-                timeScales[i].set(0,tag.getInteger("add_"+i));
+                timeScales[i].add(tag.getInteger("add_"+i));
             }
         }
-        if (tag.hasKey("add_hour")) oneHour.add(tag.getInteger("one_hour"));
     }
 
     public void next() {
-        //needsToClear = true;
         deviceCount = tempDeviceCount;
         tempDeviceCount = 0;
         updatePacket = new NBTTagCompound();
-        timeScales[GraphScale.FIVE_SECONDS.ordinal()].nextFrame();
-        timeScales[GraphScale.FIVE_SECONDS.ordinal()].set(0,0);
+        updatePacket.setInteger("add_" + 0, timeScales[0].get(0));
+        incrementCounter(GraphScale.FIVE_SECONDS.ordinal());
+        timeScales[GraphScale.FIVE_SECONDS.ordinal()].add(0);
         averageCache.clear();
     }
 

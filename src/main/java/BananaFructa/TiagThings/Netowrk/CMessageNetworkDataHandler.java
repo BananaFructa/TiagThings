@@ -18,8 +18,8 @@ public class CMessageNetworkDataHandler implements IMessageHandler<CMessageNetwo
             @Override
             public void run() {
                 if (Minecraft.getMinecraft().currentScreen instanceof PowerNetworkInfoGui) {
-                    System.out.println("RECIEVED");
-                    System.out.println(message.networkData);
+                    //System.out.println("RECIEVED");
+                    //System.out.println(message.networkData);
                     ((PowerNetworkInfoGui) Minecraft.getMinecraft().currentScreen).setNetworkData(NetworkData.fromNBT(message.networkData));
                 } else {
                     TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkUnsubscribe());

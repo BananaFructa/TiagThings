@@ -1,7 +1,9 @@
 package BananaFructa.TTIEMultiblocks.PowerNetworkInfo;
 
+import BananaFructa.TTIEMultiblocks.Gui.GuiElementSlider;
 import BananaFructa.TiagThings.TTMain;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -40,8 +42,30 @@ public class PowerNetworkInfoGui extends GuiScreen {
 
     NetworkData networkDataToDisplay;
 
+    @Override
+    public void initGui() {
+        super.initGui();
+        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+        int xLeft = sr.getScaledWidth() / 2 - 512 / 2;
+        int yTop = sr.getScaledHeight() / 2 - 295 / 2;
+        for (int i = 0; i < GraphScale.values().length;i++) {
+            GraphScale s = GraphScale.values()[i];
+            this.buttonList.add(new PowerNetworkGuiButton(i,xLeft+49+52*i,yTop+273,s));
+        }
+        setScale(scale);
+    }
+
+    public void setScale(GraphScale scale) {
+        for (GuiButton button : buttonList) {
+            if (button instanceof PowerNetworkGuiButton) {
+                PowerNetworkGuiButton networkGuiButton = (PowerNetworkGuiButton) button;
+                networkGuiButton.enabled = networkGuiButton.scale != scale;
+            }
+        }
+    }
+
     public void setNetworkData(NetworkData data) {
-        System.out.println(data);
+        //System.out.println(data);
         this.networkDataToDisplay = data;
     }
 
@@ -109,8 +133,6 @@ public class PowerNetworkInfoGui extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-
         if (networkDataToDisplay != null) {
 
             List<NetworkDeviceHistory> cons = getSortedHistoryList(networkDataToDisplay,true);
@@ -130,23 +152,18 @@ public class PowerNetworkInfoGui extends GuiScreen {
             GlStateManager.popMatrix();
             drawGraph(30,scrollLeft,cons);
             drawGraph(281,scrollRight,prod);
-
             GlStateManager.pushMatrix();
-            int totalC = 0;
-            for (NetworkDeviceHistory h : cons) {
-                if (!h.emptyFor(scale) && h.deviceCount > 0) {
-                    totalC += h.getValue(0, scale);
-                }
-            }
-            int totalP = 0;
-            for (NetworkDeviceHistory h : prod) {
-                if (!h.emptyFor(scale) && h.deviceCount > 0) {
-                    totalP += h.getValue(0, scale);
-                }
-            }
-            mc.fontRenderer.drawStringWithShadow("Consumption: " + formatPower(totalC),xLeft + 30, yTop + 15,  0xffdd6c00);
-            mc.fontRenderer.drawStringWithShadow("Production: " + formatPower(totalP),xLeft + 281, yTop + 15,  0xff0066af);
+
+            mc.fontRenderer.drawStringWithShadow("Consumption: " + formatPower(networkDataToDisplay.getConsumption()),xLeft + 30, yTop + 15,  0xffdd6c00);
+            mc.fontRenderer.drawStringWithShadow("Production: " + formatPower(networkDataToDisplay.getProduction()),xLeft + 281, yTop + 15,  0xff0066af);
+            int wLoss = mc.fontRenderer.getStringWidth("Losses");
+            mc.fontRenderer.drawStringWithShadow("Losses",xLeft + 255 - wLoss/2.0f,yTop + 160,0xffffffff);
+            String lossesNum = formatPower(networkDataToDisplay.getLoss());
+            int wNumber = mc.fontRenderer.getStringWidth(lossesNum);
+            mc.fontRenderer.drawStringWithShadow(lossesNum,xLeft + 255 - wNumber/2.0f,yTop + 171,0xffe01a00);
             GlStateManager.popMatrix();
+
+            super.drawScreen(mouseX, mouseY, partialTicks);
         }
     }
 
@@ -155,14 +172,10 @@ public class PowerNetworkInfoGui extends GuiScreen {
         if (consumer) historyHashMap = data.consumptionHistory;
         else historyHashMap = data.productionHistory;
         List<NetworkDeviceHistory> histories = new ArrayList<>();
-        int maxRF = 0;
         for (String s : historyHashMap.keySet()) {
             NetworkDeviceHistory h = historyHashMap.get(s);
             if (!h.emptyFor(scale) && h.deviceCount > 0) {
                 histories.add(historyHashMap.get(s));
-            }
-            for (int i = 0; i < h.getLength(scale) && i < 100; i++) {
-                if (maxRF < h.getValue(i, scale)) maxRF = h.getValue(i, scale);
             }
         }
         histories = histories.stream().sorted((a, b) -> Float.compare(b.getAverage(scale), a.getAverage(scale))).collect(Collectors.toList());
@@ -180,8 +193,8 @@ public class PowerNetworkInfoGui extends GuiScreen {
 
         float totalPower = 0;
         for (NetworkDeviceHistory h : histories) {
-            if (!h.emptyFor(scale) && h.deviceCount > 0) {
-                totalPower += h.getValue(0, scale);
+            if (!h.emptyFor(GraphScale.FIVE_SECONDS) && h.deviceCount > 0) {
+                totalPower += h.getValue(0, GraphScale.FIVE_SECONDS);
             }
         }
 
@@ -202,7 +215,7 @@ public class PowerNetworkInfoGui extends GuiScreen {
 
                 GlStateManager.popMatrix();
                 setColor(colorPalette[i]);
-                float val = history.getValue(0, scale) / totalPower;
+                float val = history.getValue(0, GraphScale.FIVE_SECONDS) / totalPower;
                 drawTexturedModalRect512(xLeft + posX + 27 - 1, y + 11 - 1, 202, 430, (int) (103 * val), 4);
                 GlStateManager.pushMatrix();
 
@@ -237,7 +250,7 @@ public class PowerNetworkInfoGui extends GuiScreen {
             int y = yTop + 136 + 24 * i - scroll;
             if (y < yTop + 267 && y > yTop - 40) {
                 NetworkDeviceHistory history = histories.get(i);
-                String t = formatPower(history.getValue(0, scale));
+                String t = formatPower(history.getValue(0, GraphScale.FIVE_SECONDS));
                 int x = xLeft + posX + 200 - 4 - mc.fontRenderer.getStringWidth(t);
                 mc.fontRenderer.drawStringWithShadow(t, x, y + 7, 0xffffffff);
 
@@ -292,6 +305,15 @@ public class PowerNetworkInfoGui extends GuiScreen {
                     scrollRight -= 15;
                 }
             }
+        }
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+        if (button instanceof PowerNetworkGuiButton) {
+            this.scale = ((PowerNetworkGuiButton) button).scale;
+            setScale(scale);
         }
     }
 

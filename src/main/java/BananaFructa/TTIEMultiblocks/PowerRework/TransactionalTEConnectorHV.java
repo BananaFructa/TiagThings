@@ -69,7 +69,7 @@ public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements
 
     public void onTick() {
         GlobalNetworkInfoManager.notifyLoad(this,pos,world,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
-        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,delta,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
+        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
         delta = Math.min(Math.max(currentDelta,-getMaxOutput()),getMaxInput());
         currentDelta = 0;
         markDirty();
@@ -146,6 +146,16 @@ public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements
     @Override
     public int getId() {
         return netId;
+    }
+
+    @Override
+    public int getDelta() {
+        return delta;
+    }
+
+    @Override
+    public int getLoss() {
+        return 0;
     }
 
     boolean firstTick = true;

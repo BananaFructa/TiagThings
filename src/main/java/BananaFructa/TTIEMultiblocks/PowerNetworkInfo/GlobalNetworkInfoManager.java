@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber
 public class GlobalNetworkInfoManager {
@@ -27,7 +28,6 @@ public class GlobalNetworkInfoManager {
 
     public static HashMap<UUID,List<Integer>> registeredNetworks = new HashMap<>();
     public static HashMap<UUID, NetworkData> networkData = new HashMap<>();
-    public static List<UUID> inactiveNetwork = new ArrayList<>();
     public static HashMap<Integer,UUID> cache = new HashMap<>();
 
     // <Player UUID, Network UUID>
@@ -80,63 +80,52 @@ public class GlobalNetworkInfoManager {
                 ids.add(((NetworkElement) connectable).getId());
             }
         }
-        //System.out.println(ids);
-        //System.out.println("DING");
         for (UUID uuid : registeredNetworks.keySet()) {
             List<Integer> network = registeredNetworks.get(uuid);
             // Unitary changes considered only
             if (ids.size() == network.size() && compareIds(ids,network) == ids.size()) {
-                //System.out.println("NETWORK FOUND");
-
+                // NETWORK FOUND
                 networkData.get(uuid).notifyLoad(consumer,interactor);
-                inactiveNetwork.remove(uuid);
 
                 return;
             } else if (ids.size() > network.size() && compareIds(ids,network) == network.size()) {
-                //System.out.println("NETWORK MERGED");
-                // THE NETWORK HAS EXTENDED
+                // THE NETWORK HAS MERGED
                 List<Integer> other = subtractIds(ids,network);
                 for (UUID otherSet : registeredNetworks.keySet()) {
                     if (registeredNetworks.get(otherSet).size() == other.size() && compareIds(other,registeredNetworks.get(otherSet)) == other.size() ) {
                         NetworkData data1 = networkData.get(uuid);
                         NetworkData data2 = networkData.get(otherSet);
                         if (data1.getActivityScore() < data2.getActivityScore()) {
-                            //System.out.println("NETWORK CHOOSE OTHER");
                             registeredNetworks.put(otherSet,ids);
                             networkData.get(otherSet).notifyLoad(consumer,interactor);
-                            inactiveNetwork.remove(otherSet);
                             addToCache(ids,uuid);
                             return;
                         }
                     }
                 }
-                //System.out.println("NETWORK CHOOSE FIRST");
                 registeredNetworks.put(uuid,ids);
                 networkData.get(uuid).notifyLoad(consumer,interactor);
-                inactiveNetwork.remove(uuid);
                 addToCache(ids,uuid);
             } else if (ids.size() < network.size() && compareIds(ids,network) == ids.size()) {
-                //System.out.println("NETWORK SPLIT");
                 // THE NETWORK WAS SPLIT
                 registeredNetworks.put(uuid,ids);
                 networkData.get(uuid).notifyLoad(consumer,interactor);
-                inactiveNetwork.remove(uuid);
                 addToCache(ids,uuid);
                 return;
             }
         }
-        //System.out.println("NEW NETWORK");
+        // NEW NETWORK
+        if (ids.size() <= 1) return; // One connection does not make a network
         UUID newUuid = UUID.randomUUID();
         registeredNetworks.put(newUuid,ids);
-        inactiveNetwork.remove(newUuid);
         networkData.put(newUuid,new NetworkData());
         networkData.get(newUuid).notifyLoad(consumer,interactor);
         addToCache(ids,newUuid);
     }
 
-    public static void registerNetworkTransaction(NetworkElement element, BlockPos node, World world, int delta, boolean consumer, TileEntity interactor) {
+    public static void registerNetworkTransaction(NetworkElement element, BlockPos node, World world, boolean consumer, TileEntity interactor) {
         if (interactor == null) return;
-        getNetworkFromUUID(getNetworkFor(element)).registerTransfer(delta,consumer,interactor);
+        getNetworkFromUUID(getNetworkFor(element)).registerTransfer(element.getDelta(), element.getLoss(), consumer,interactor);
     }
 
     public static void addToCache(List<Integer> ids, UUID network) {
@@ -178,23 +167,35 @@ public class GlobalNetworkInfoManager {
             }
         }
         cache.clear();
-        for (UUID uuid : inactiveNetwork) {
+        List<UUID> toRemove = new ArrayList<>();
+        for (UUID uuid : registeredNetworks.keySet()) {
+            if (registeredNetworks.get(uuid).size() == 1) toRemove.add(uuid);
+        }
+        // Remove all single port networks, this happens when a network was reduced to only one connection
+        for (UUID uuid : toRemove) {
             registeredNetworks.remove(uuid);
             networkData.remove(uuid);
-            System.out.println("NETWORK REMOVED " + networkData.size() + " " +inactiveNetwork.size());
+            System.out.println("NETWORK REMOVED " + networkData.size());
         }
         for (Runnable r : scheduledTasks) r.run();
         scheduledTasks.clear();
         for (UUID uuid : networkData.keySet()) {
             networkData.get(uuid).tick();
         }
-        inactiveNetwork.clear();
-        inactiveNetwork.addAll(registeredNetworks.keySet());
+        if (!networkData.isEmpty()) dirty();
     }
 
     public static NBTTagCompound toNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("connection_id",connectionId);
+        int i = 0;
+        tag.setInteger("network_count",registeredNetworks.size());
+        for (UUID uuid : registeredNetworks.keySet()) {
+            tag.setIntArray("network_fingerprint_"+i,registeredNetworks.get(uuid).stream().mapToInt(Integer::intValue).toArray());
+            tag.setTag("network_info_"+i,networkData.get(uuid).toNBT());
+            tag.setUniqueId("network_uuid_" + i, uuid);
+            i++;
+        }
         return tag;
     }
 
@@ -203,6 +204,20 @@ public class GlobalNetworkInfoManager {
             connectionId = 0;
         } else {
             connectionId = tag.getInteger("connection_id");
+            registeredNetworks.clear();
+            networkData.clear();
+            cache.clear();
+            int size = tag.getInteger("network_count");
+            for (int i = 0;i < size;i++) {
+                UUID netId = tag.getUniqueId("network_uuid_"+i);
+                List<Integer> fingerprint = Arrays.stream(tag.getIntArray("network_fingerprint_"+i)).boxed().collect(Collectors.toCollection(ArrayList::new));
+                //System.out.println("FINGERPRINT " + fingerprint);
+                NetworkData data = NetworkData.fromNBT(tag.getCompoundTag("network_info_"+i));
+                registeredNetworks.put(netId,fingerprint);
+                networkData.put(netId,data);
+                //System.out.println(tag.getCompoundTag("network_info_"+i));
+                //System.out.println("SIZE: " + data.consumptionHistory.size());
+            }
         }
     }
 

@@ -352,12 +352,12 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             if (recipe != null && canDoRecipe(recipe)) {
                 resetPortCounters();
                 if (enoughSpaceForRecipe(recipe)) {
-                    System.out.println("HHGHG");
+                    //System.out.println("HHGHG");
                     MultiblockProcessInMachine<R> process = new MultiblockProcessInMachine<R>(recipe);
                     if (process.recipe.consumeFirst) onProcessFinishNoCheck(process);
                     this.processQueue.add(process);
                 } else {
-                    System.out.println("WAAA");
+                    //System.out.println("WAAA");
                 }
                 resetPortCounters();
             }

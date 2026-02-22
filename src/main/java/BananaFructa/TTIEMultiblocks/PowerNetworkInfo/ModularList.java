@@ -4,14 +4,19 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ModularList {
 
-    int populatedLength = 1;
+    int populatedLength = 0;
     int size = 0;
-    int begin = 0;
+    int begin = -1;
     int[] arr;
 
     public ModularList(int size) {
         this.size = size;
         arr = new int[size];
+    }
+
+    public void add(int val) {
+        nextFrame();
+        set(0,val);
     }
 
     public void set(int index, int val) {

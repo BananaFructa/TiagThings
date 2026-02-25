@@ -2,6 +2,7 @@ package BananaFructa.TTIEMultiblocks.PowerNetworkInfo;
 
 import BananaFructa.TTIEMultiblocks.Gui.GuiElementSlider;
 import BananaFructa.TiagThings.TTMain;
+import BananaFructa.TiagThings.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -75,24 +76,6 @@ public class PowerNetworkInfoGui extends GuiScreen {
         }
     }
 
-    private String formatPower(int amount) {
-
-        // Could set up an enum but for three divisions thats just more work
-        if (amount > 1e+3) {
-            float v = amount/(float)1e+3;
-            return String.format("%.1f",v) + " kRF/t";
-        }
-        if (amount > 1e+6) {
-            float v = amount/(float)1e+6;
-            return  String.format("%.1f",v) + " MRF/t";
-        }
-        if (amount > 1e+9) {
-            float v = amount/(float)1e+9;
-            return  String.format("%.1f",v) + " GRF/t";
-        }
-        return amount + " RF/t";
-    }
-
     private void setColor (int color) {
         float r = (color >> 16)/255.0f;
         float g = ((color & 0x00ff00) >> 8) / 255.0f;
@@ -154,11 +137,11 @@ public class PowerNetworkInfoGui extends GuiScreen {
             drawGraph(281,scrollRight,prod);
             GlStateManager.pushMatrix();
 
-            mc.fontRenderer.drawStringWithShadow("Consumption: " + formatPower(networkDataToDisplay.getConsumption()),xLeft + 30, yTop + 15,  0xffdd6c00);
-            mc.fontRenderer.drawStringWithShadow("Production: " + formatPower(networkDataToDisplay.getProduction()),xLeft + 281, yTop + 15,  0xff0066af);
+            mc.fontRenderer.drawStringWithShadow("Consumption: " + Utils.formatPower(networkDataToDisplay.getConsumption()),xLeft + 30, yTop + 15,  0xffdd6c00);
+            mc.fontRenderer.drawStringWithShadow("Production: " + Utils.formatPower(networkDataToDisplay.getProduction()),xLeft + 281, yTop + 15,  0xff0066af);
             int wLoss = mc.fontRenderer.getStringWidth("Losses");
             mc.fontRenderer.drawStringWithShadow("Losses",xLeft + 255 - wLoss/2.0f,yTop + 160,0xffffffff);
-            String lossesNum = formatPower(networkDataToDisplay.getLoss());
+            String lossesNum = Utils.formatPower(networkDataToDisplay.getLoss());
             int wNumber = mc.fontRenderer.getStringWidth(lossesNum);
             mc.fontRenderer.drawStringWithShadow(lossesNum,xLeft + 255 - wNumber/2.0f,yTop + 171,0xffe01a00);
             GlStateManager.popMatrix();
@@ -250,7 +233,7 @@ public class PowerNetworkInfoGui extends GuiScreen {
             int y = yTop + 136 + 24 * i - scroll;
             if (y < yTop + 267 && y > yTop - 40) {
                 NetworkDeviceHistory history = histories.get(i);
-                String t = formatPower(history.getValue(0, GraphScale.FIVE_SECONDS));
+                String t = Utils.formatPower(history.getValue(0, GraphScale.FIVE_SECONDS));
                 int x = xLeft + posX + 200 - 4 - mc.fontRenderer.getStringWidth(t);
                 mc.fontRenderer.drawStringWithShadow(t, x, y + 7, 0xffffffff);
 

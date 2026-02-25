@@ -198,7 +198,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
         } else integral = 0;
         float out = error * p + integral + (error-lastDerivativeIn) * d;
         out = Math.min(Math.max(out,0),15);
-        lastDerivativeIn = out;
+        lastDerivativeIn = error;
         inputHistory.add(sens);
         outputHistory.add((int)(out*1000));
         if (playerSubscribers.containsKey(pos)) {

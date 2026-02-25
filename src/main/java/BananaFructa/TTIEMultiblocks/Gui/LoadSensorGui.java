@@ -5,6 +5,7 @@ import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
 import BananaFructa.TiagThings.Netowrk.MessageGuiEvent;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
+import BananaFructa.TiagThings.Utils;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import net.minecraft.client.gui.GuiButton;
@@ -22,6 +23,9 @@ public class LoadSensorGui extends GuiIEContainerBase {
     GuiElementSlider offsetSlider;
     GuiElementSlider magnitudeSlider;
 
+    ScalingButton scalingButton;
+    int scaling;
+
     public LoadSensorGui(InventoryPlayer inventoryPlayer, LoadSensorTileEntity tile) {
         super(new ContainerLoadSensor(inventoryPlayer,tile));
         this.tile = tile;
@@ -32,12 +36,15 @@ public class LoadSensorGui extends GuiIEContainerBase {
         super.initGui();
         GuiElementSlider offset = new GuiElementSlider(0,guiLeft+25,guiTop+23,126,4,"Redstone Offset");
         GuiElementSlider scale = new GuiElementSlider(1,guiLeft+25,guiTop+44,126,4,"Power Scale");
+        this.scalingButton = new ScalingButton(2,guiLeft+6,guiTop+32,16,16);
         this.offsetSlider = offset;
         this.magnitudeSlider = scale;
+        this.scaling = tile.scale;
         offset.val = (float)tile.redstoneOffset/15;
-        scale.val = (float)tile.magnitude/ LoadSensorTileEntity.maxRF;
+        scale.val = (float)(tile.magnitude/ (LoadSensorTileEntity.maxRF * Math.pow(10,scaling)));
         addButton(offset);
         addButton(scale);
+        addButton(scalingButton);
     }
 
     @Override
@@ -52,7 +59,7 @@ public class LoadSensorGui extends GuiIEContainerBase {
             }
         }
         mc.fontRenderer.drawString("Offset Strength: " + (int)(offsetSlider.val * 15),guiLeft+25,guiTop+30,0xff000000);
-        mc.fontRenderer.drawString("Power Scale: " + (int)(magnitudeSlider.val * LoadSensorTileEntity.maxRF + 1) + " RF/t",guiLeft+25,guiTop+51,0xff000000);
+        mc.fontRenderer.drawString("Power Scale: " + Utils.formatPower((int)(magnitudeSlider.val * LoadSensorTileEntity.maxRF * Math.pow(10, scaling) + 1)),guiLeft+25,guiTop+51,0xff000000);
         if(!tooltip.isEmpty()) {
             ClientUtils.drawHoveringText(tooltip, mouseX, mouseY, fontRenderer, guiLeft + xSize, - 1);
         }
@@ -75,6 +82,11 @@ public class LoadSensorGui extends GuiIEContainerBase {
         super.actionPerformed(button);
         if (button instanceof GuiElementSlider) {
             ((GuiElementSlider)(button)).buttonHeld = true;
+        } else if (button instanceof ScalingButton) {
+            if (isShiftKeyDown()) scaling--;
+            else scaling++;
+            scaling = Math.min(Math.max(-2,scaling),2);
+            updateInfo();
         }
     }
 
@@ -85,13 +97,18 @@ public class LoadSensorGui extends GuiIEContainerBase {
             if (button instanceof GuiElementSlider) {
                 GuiElementSlider buttonElectricMotorSlider = ((GuiElementSlider)(button));
                 if (buttonElectricMotorSlider.buttonHeld) {
-                    NBTTagCompound tagCompound = new NBTTagCompound();
-                    tagCompound.setFloat("offset", offsetSlider.val);
-                    tagCompound.setFloat("magnitude", magnitudeSlider.val);
-                    TTPacketHandler.wrapper.sendToServer(new MessageGuiEvent(0,tagCompound));
+                    updateInfo();
                     buttonElectricMotorSlider.buttonHeld = false;
                 }
             }
         }
+    }
+
+    private void updateInfo() {
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        tagCompound.setFloat("offset", offsetSlider.val);
+        tagCompound.setFloat("magnitude", magnitudeSlider.val);
+        tagCompound.setInteger("scaling",scaling);
+        TTPacketHandler.wrapper.sendToServer(new MessageGuiEvent(0,tagCompound));
     }
 }

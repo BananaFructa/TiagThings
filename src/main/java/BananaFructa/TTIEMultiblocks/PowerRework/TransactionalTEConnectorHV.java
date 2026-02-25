@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -29,15 +30,23 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements NetworkElement {
 
     public int delta = 0;
     public int currentDelta = 0;
+
+    public int loss = 0;
+    public int currentLoss = 0;
+
     private boolean firstSimulate = true;
     public int netId = 0;
+
 
     public TransactionalTEConnectorHV() {
         super();
@@ -53,6 +62,7 @@ public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements
     public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket) {
         super.writeCustomNBT(nbt, descPacket);
         nbt.setInteger("delta",delta);
+        nbt.setInteger("loss",loss);
         nbt.setInteger("current_delta",currentDelta);
         nbt.setBoolean("first_simulate",firstSimulate);
         nbt.setInteger("net_id",netId);
@@ -62,27 +72,38 @@ public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements
     public void readCustomNBT(NBTTagCompound nbt, boolean descPacket) {
         super.readCustomNBT(nbt, descPacket);
         delta = nbt.getInteger("delta");
+        loss = nbt.getInteger("loss");
         currentDelta = nbt.getInteger("current_delta");
         firstSimulate = nbt.getBoolean("first_simulate");
         netId = nbt.getInteger("net_id");
     }
 
     public void onTick() {
-        GlobalNetworkInfoManager.notifyLoad(this,pos,world,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
-        GlobalNetworkInfoManager.registerNetworkTransaction(this,pos,world,isEnergyOutput(),world.getTileEntity(pos.offset(facing)));
-        delta = Math.min(Math.max(currentDelta,-getMaxOutput()),getMaxInput());
-        currentDelta = 0;
-        markDirty();
-        IEUtils.notifyClientUpdate(world, pos);
-        firstSimulate = true;
+        try {
+            loss = currentLoss;//
+            delta = Math.min(Math.max(currentDelta, -getMaxOutput()), getMaxInput());//
+            //System.out.println("SEND");
+            GlobalNetworkInfoManager.notifyLoad(this, pos, world, isEnergyOutput(), world.getTileEntity(pos.offset(facing)));
+            GlobalNetworkInfoManager.registerNetworkTransaction(this, pos, world, isEnergyOutput(), world.getTileEntity(pos.offset(facing)));
+            currentDelta = 0; //
+            currentLoss = 0;//
+            markDirty();//
+            IEUtils.notifyClientUpdate(world, pos);//
+            firstSimulate = true;//
+        } catch (Exception err) {
+            err.printStackTrace(); // TODO: check this
+        }
     }
 
-    @Override
-    public TileEntity getInteractor() {
+    public boolean isEnergyOutput() {
         BlockPos outPos = this.getPos().offset(this.facing);
-        TileEntity te =  Utils.getExistingTileEntity(this.world, outPos);
-        if (te instanceof TileEntityMultiblockMetal<?,?>) return ((TileEntityMultiblockMetal<?, ?>) te).master();
-        return te;
+        if (this.isRelay()) {
+            return false;
+        } else {
+            TileEntity tile = Utils.getExistingTileEntity(this.world, outPos);
+            if (tile == null) return false;
+            return BananaFructa.TiagThings.Utils.isFluxReceiverFixed(tile, this.facing.getOpposite());
+        }
     }
 
     public boolean isTargetInSimulation() {
@@ -114,19 +135,86 @@ public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements
         }
     }
 
-    public boolean isEnergyOutput() {
-        BlockPos outPos = this.getPos().offset(this.facing);
-        if (this.isRelay()) {
-            return false;
-        } else {
-            TileEntity tile = Utils.getExistingTileEntity(this.world, outPos);
-            return BananaFructa.TiagThings.Utils.isFluxReceiverFixed(tile, this.facing.getOpposite());
+    public int transferEnergy(int energy, boolean simulate, int energyType) {
+        int received = 0;
+        if (!this.world.isRemote) {
+            Set<ImmersiveNetHandler.AbstractConnection> outputs = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(Utils.toCC(this), this.world, true);
+            int powerLeft = Math.min(Math.min(this.getMaxOutput(), this.getMaxInput()), energy);
+            int powerForSort = powerLeft;
+            if (outputs.isEmpty()) {
+                return 0;
+            }
+
+            int sum = 0;
+            Map<ImmersiveNetHandler.AbstractConnection, Integer> powerSorting = new TreeMap();
+
+            for(ImmersiveNetHandler.AbstractConnection con : outputs) {
+                if (con.isEnergyOutput) {
+                    IImmersiveConnectable end = ApiUtils.toIIC(con.end, this.world);
+                    if (con.cableType != null && end != null) {
+                        int atmOut = Math.min(powerForSort, con.cableType.getTransferRate());
+                        int tempR = end.outputEnergy(atmOut, true, energyType);
+                        if (tempR > 0) {
+                            powerSorting.put(con, tempR);
+                            sum += tempR;
+                        }
+                    }
+                }
+            }
+
+            if (sum > 0) {
+                for(ImmersiveNetHandler.AbstractConnection con : powerSorting.keySet()) {
+                    IImmersiveConnectable end = ApiUtils.toIIC(con.end, this.world);
+                    if (con.cableType != null && end != null) {
+                        float prio = (float)(Integer)powerSorting.get(con) / (float)sum;
+                        int output = Math.min(MathHelper.ceil((float)powerForSort * prio), powerLeft);
+                        int tempR = end.outputEnergy(Math.min(output, con.cableType.getTransferRate()), true, energyType);
+                        int r = tempR;
+                        int maxInput = this.getMaxInput();
+                        int lAmount = (int)Math.max((double)0.0F, Math.floor((double)((float)tempR * con.getPreciseLossRate(tempR, maxInput))));;
+                        if (!simulate) currentLoss = lAmount;
+                        tempR -= lAmount;
+                        end.outputEnergy(tempR, simulate, energyType);
+                        HashSet<IImmersiveConnectable> passedConnectors = new HashSet();
+                        float intermediaryLoss = 0.0F;
+
+                        for(ImmersiveNetHandler.Connection sub : con.subConnections) {
+                            float length = (float)sub.length / (float)sub.cableType.getMaxLength();
+                            float baseLoss = (float)sub.cableType.getLossRatio();
+                            float mod = (float)(maxInput - tempR) / (float)maxInput / 0.25F * 0.1F;
+                            intermediaryLoss = MathHelper.clamp(intermediaryLoss + length * (baseLoss + baseLoss * mod), 0.0F, 1.0F);
+                            int transferredPerCon = (Integer)ImmersiveNetHandler.INSTANCE.getTransferedRates(this.world.provider.getDimension()).getOrDefault(sub, 0);
+                            transferredPerCon += r;
+                            if (!simulate) {
+                                ImmersiveNetHandler.INSTANCE.getTransferedRates(this.world.provider.getDimension()).put(sub, transferredPerCon);
+                                IImmersiveConnectable subStart = ApiUtils.toIIC(sub.start, this.world);
+                                IImmersiveConnectable subEnd = ApiUtils.toIIC(sub.end, this.world);
+                                if (subStart != null && passedConnectors.add(subStart)) {
+                                    subStart.onEnergyPassthrough((double)((float)r - (float)r * intermediaryLoss));
+                                }
+
+                                if (subEnd != null && passedConnectors.add(subEnd)) {
+                                    subEnd.onEnergyPassthrough((double)((float)r - (float)r * intermediaryLoss));
+                                }
+                            }
+                        }
+
+                        received += r;
+                        powerLeft -= r;
+                        if (powerLeft <= 0) {
+                            break;
+                        }
+                    }
+                }
+            }
         }
+
+        return received;
     }
 
     @Override
     public int receiveEnergy(EnumFacing from, int energy, boolean simulate) {
-        if (firstSimulate && energy > 0 && isTargetInSimulation() == simulate) {
+        if (firstSimulate && energy > 0 && !(isTargetInSimulation() ^ simulate)) {
             firstSimulate = false;
             TileEntity interactor = getInteractor();
             int accepted = ActualPowerReader.getActualPower(interactor,getMaxInput(),true);
@@ -155,7 +243,15 @@ public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements
 
     @Override
     public int getLoss() {
-        return 0;
+        return loss;
+    }
+
+    @Override
+    public TileEntity getInteractor() {
+        BlockPos outPos = this.getPos().offset(this.facing);
+        TileEntity te =  Utils.getExistingTileEntity(this.world, outPos);
+        if (te instanceof TileEntityMultiblockMetal<?,?>) return ((TileEntityMultiblockMetal<?, ?>) te).master();
+        return te;
     }
 
     boolean firstTick = true;
@@ -209,7 +305,41 @@ public class TransactionalTEConnectorHV extends TileEntityConnectorHV implements
     private Pair<Float, Consumer<Float>> getEnergyForConnection(@Nullable ImmersiveNetHandler.AbstractConnection c) {
         float loss = c != null ? c.getAverageLossRate() : 0.0F;
         float max = (1.0F - loss) * (float)getFluxStorage().getEnergyStored();
-        Consumer<Float> extract = (energy) -> getFluxStorage().modifyEnergyStored((int)(-energy / (1.0F - loss)));
+        Consumer<Float> extract = (energy) -> {
+            getFluxStorage().modifyEnergyStored((int)(-energy / (1.0F - loss)));
+        };
         return new ImmutablePair(max, extract);
+    }
+
+    protected boolean canTakeHV() {
+        return true;
+    }
+
+    protected boolean canTakeMV() {
+        return false;
+    }
+
+    public Vec3d getConnectionOffset(ImmersiveNetHandler.Connection con) {
+        EnumFacing side = this.facing.getOpposite();
+        double conRadius = con.cableType.getRenderDiameter() / (double)2.0F;
+        return new Vec3d((double)0.5F + (double)side.getFrontOffsetX() * ((double)0.25F - conRadius), (double)0.5F + (double)side.getFrontOffsetY() * ((double)0.25F - conRadius), (double)0.5F + (double)side.getFrontOffsetZ() * ((double)0.25F - conRadius));
+    }
+
+    int getRenderRadiusIncrease() {
+        return WireType.STEEL.getMaxLength();
+    }
+
+    public int getMaxInput() {
+        return connectorInputValues[2];
+    }
+
+    public int getMaxOutput() {
+        return connectorInputValues[2];
+    }
+
+    @Override
+    public int getWantedLoad() {
+        if (!isEnergyOutput()) return 0;
+        return Math.min(BananaFructa.TiagThings.Utils.getProcessLoad(getInteractor()),getMaxOutput());
     }
 }

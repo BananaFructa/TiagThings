@@ -53,7 +53,6 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
 
     public TransactionalTEConnectorLV() {
         super();
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -240,6 +239,12 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
     }
 
     @Override
+    public int getWantedLoad() {
+        if (!isEnergyOutput()) return 0;
+        return Math.min(BananaFructa.TiagThings.Utils.getProcessLoad(getInteractor()),getMaxOutput());
+    }
+
+    @Override
     public int getLoss() {
         return loss;
     }
@@ -271,6 +276,10 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
 
             this.currentTickToMachine = 0;
             this.currentTickToNet = 0;
+
+            if (isEnergyOutput()) {
+
+            }
         } else if (this.firstTick) {
             Set<ImmersiveNetHandler.Connection> conns = ImmersiveNetHandler.INSTANCE.getConnections(this.world, this.pos);
             if (conns != null) {

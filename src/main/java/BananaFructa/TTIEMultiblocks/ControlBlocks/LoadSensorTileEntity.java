@@ -1,5 +1,6 @@
 package BananaFructa.TTIEMultiblocks.ControlBlocks;
 
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
@@ -40,6 +41,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
     public int redstoneOffset = 7;
     public int magnitude = 16384;
     public int redstoneStrenght = 0;
+    public int scale = 0;
 
     public static final int maxRF = 131072;
 
@@ -83,6 +85,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
         redstoneOffset = nbtTagCompound.getInteger("redstone_offset");
         magnitude = nbtTagCompound.getInteger("power_magnitude");
         redstoneStrenght = nbtTagCompound.getInteger("redstone_strength");
+        scale = nbtTagCompound.getInteger("scale");
         if (nbtTagCompound.hasKey("virt_AF_in")) {
             //virtualAFInput = new VirtualConnector(true);
             //virtualAFInput.readCustomNBT(nbtTagCompound.getCompoundTag("virt_AF_in"),false);
@@ -96,6 +99,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
         nbtTagCompound.setInteger("redstone_offset",redstoneOffset);
         nbtTagCompound.setInteger("power_magnitude", magnitude);
         nbtTagCompound.setInteger("redstone_strength",redstoneStrenght);
+        nbtTagCompound.setInteger("scale",scale);
         if (virtualAFInput != null) {
             NBTTagCompound virtualIn = new NBTTagCompound();
             virtualAFInput.writeCustomNBT(virtualIn, false);
@@ -188,15 +192,29 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
             VirtualConnector conn = new VirtualConnector(true);
             conn.facing = ((TileEntityRelayAF) te).facing;
             world.setTileEntity(in, conn);
+            conn.markDirty();
         }
+
+        BlockPos out = getPos().offset(IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST));
+        TileEntity teOut = getWorld().getTileEntity(out);
+        if (world != null && teOut instanceof TileEntityRelayAF) {
+            VirtualConnector conn = new VirtualConnector(false);
+            conn.facing = ((TileEntityRelayAF) teOut).facing;
+            world.setTileEntity(out, conn);
+            conn.markDirty();
+        }
+
         int avalabile = 0;
         if (world != null && te instanceof TileEntityConnectorLV) {
             TileEntityConnectorLV connector = (TileEntityConnectorLV) te;
-            Set<ImmersiveNetHandler.AbstractConnection> cons = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(Utils.toCC(connector),this.world,true);
+            Set<ImmersiveNetHandler.AbstractConnection> cons = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(Utils.toCC(connector), this.world, true);
             for (ImmersiveNetHandler.AbstractConnection con : cons) {
-                IImmersiveConnectable connectable = ApiUtils.toIIC(con.end,this.world);
+                IImmersiveConnectable connectable = ApiUtils.toIIC(con.end, this.world);
                 //if (!con.isEnergyOutput) {
-                    if (connectable instanceof TransactionalTEConnectorLV) {
+                if (connectable instanceof NetworkElement) {
+                    avalabile += ((NetworkElement) connectable).getDelta();
+                }
+                    /*if (connectable instanceof TransactionalTEConnectorLV) {
                         TransactionalTEConnectorLV teConnector = (TransactionalTEConnectorLV) connectable;
                         avalabile += teConnector.delta;
                     }
@@ -207,11 +225,23 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
                     if (connectable instanceof TransactionalTEConnectorHV) {
                         TransactionalTEConnectorHV teConnector = (TransactionalTEConnectorHV) connectable;
                         avalabile += teConnector.delta;
-                    }
+                    }*/
                 //}
             }
         }
-        delta = avalabile - needed;
+        int wantedPower = 0;
+        if (world != null && teOut instanceof TileEntityConnectorLV) {
+            TileEntityConnectorLV connector = (TileEntityConnectorLV) teOut;
+            Set<ImmersiveNetHandler.AbstractConnection> cons = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(Utils.toCC(connector), this.world, true);
+            for (ImmersiveNetHandler.AbstractConnection con : cons) {
+                IImmersiveConnectable connectable = ApiUtils.toIIC(con.end, this.world);
+                //if (!con.isEnergyOutput) {
+                if (connectable instanceof NetworkElement) {
+                    wantedPower += ((NetworkElement) connectable).getWantedLoad();
+                }
+            }
+        }
+        delta = avalabile - wantedPower;
         redstoneStrenght = (int)Math.max(Math.min(15,((float)delta / magnitude) * 15 + redstoneOffset),0);
         world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
 

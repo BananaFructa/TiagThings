@@ -4,9 +4,12 @@ import BananaFructa.BCModifications.RFTileQuarry;
 import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityRocketScaffold;
 import BananaFructa.Uem.DrainFluidPlacer;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorCreative;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityAlternatorSlave;
+import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityTrashEnergy;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,10 +25,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Utils {
 
@@ -270,4 +270,42 @@ public class Utils {
         if (consumerOverride.contains(te.getClass())) return true;
         return EnergyHelper.isFluxReceiver(te,facing);
     }
+
+    public static String formatPower(int amount) {
+
+        // Could set up an enum but for three divisions thats just more work
+        if (amount > 1e+3) {
+            float v = amount/(float)1e+3;
+            return String.format("%.1f",v) + " kRF/t";
+        }
+        if (amount > 1e+6) {
+            float v = amount/(float)1e+6;
+            return  String.format("%.1f",v) + " MRF/t";
+        }
+        if (amount > 1e+9) {
+            float v = amount/(float)1e+9;
+            return  String.format("%.1f",v) + " GRF/t";
+        }
+        return amount + " RF/t";
+    }
+
+    public static int getProcessLoad(TileEntity te) {
+        if (te instanceof TileEntityMultiblockMetal<?,?>) {
+            TileEntityMultiblockMetal<?,?> teMB = (TileEntityMultiblockMetal<?, ?>) te;
+            int max = teMB.getMaxProcessPerTick();
+
+            int total = 0;
+            for (int i = 0;i < teMB.processQueue.size() && i < max;i++) {
+                TileEntityMultiblockMetal.MultiblockProcess<?> process = teMB.processQueue.get(i);
+                total = process.energyPerTick;
+            }
+
+            return total;
+        }
+        if (te instanceof TileEntityTrashEnergy) {
+            return 2147483647;
+        }
+        return 0;
+    }
+
 }

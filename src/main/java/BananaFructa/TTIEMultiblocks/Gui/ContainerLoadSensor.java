@@ -74,8 +74,10 @@ public class ContainerLoadSensor extends ContainerIEBase<LoadSensorTileEntity> i
     public void onEvent(int id, NBTTagCompound data) {
         float offset= Math.min(1,Math.max(0,data.getFloat("offset")));
         float mag = Math.min(1,Math.max(0,data.getFloat("magnitude")));
+        int scale = data.getInteger("scaling");
         tile.redstoneOffset = (int)(offset * 15);
-        tile.magnitude = (int)(mag * LoadSensorTileEntity.maxRF) + 1;
+        tile.magnitude = (int)((mag * LoadSensorTileEntity.maxRF) * Math.pow(10, scale)) + 1;
+        tile.scale = scale;
         tile.markDirty();
         IEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
     }

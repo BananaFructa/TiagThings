@@ -27,6 +27,7 @@ import BananaFructa.TFC.TEBlastFurnaceModified;
 import BananaFructa.TFC.TECrucibleCAP;
 import BananaFructa.TFC.TEInductionCrucibleCAP;
 import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.PIDControllerTileEntity;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
 import BananaFructa.TTIEMultiblocks.Gui.*;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
@@ -1025,6 +1026,7 @@ public class CommonProxy implements IGuiHandler {
     @Nullable
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if (player.isSneaking()) return null;
         TileEntity te = world.getTileEntity(new BlockPos(x,y,z));
         switch (ID) {
             case 0:
@@ -1108,6 +1110,11 @@ public class CommonProxy implements IGuiHandler {
             case 13:
                 if (te instanceof LoadSensorTileEntity) {
                     return new ContainerLoadSensor(player.inventory,(LoadSensorTileEntity) te);
+                }
+                break;
+            case 14:
+                if (te instanceof PIDControllerTileEntity) {
+                    return new ContainerPIDController(player.inventory,(PIDControllerTileEntity) te);
                 }
                 break;
         }

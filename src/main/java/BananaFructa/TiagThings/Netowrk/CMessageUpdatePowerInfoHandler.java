@@ -1,5 +1,6 @@
 package BananaFructa.TiagThings.Netowrk;
 
+import BananaFructa.TTIEMultiblocks.Gui.PIDControllerGui;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkData;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,9 @@ public class CMessageUpdatePowerInfoHandler implements IMessageHandler<CMessageU
             public void run() {
                 if (Minecraft.getMinecraft().currentScreen instanceof PowerNetworkInfoGui) {
                     ((PowerNetworkInfoGui) Minecraft.getMinecraft().currentScreen).updateNetworkData(message.deltaTag);
-                }
+                } else if (Minecraft.getMinecraft().currentScreen instanceof PIDControllerGui) {
+                    ((PIDControllerGui) Minecraft.getMinecraft().currentScreen).updateGraph(message.deltaTag);
+                } else TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkUnsubscribe());
             }
         });
         return null;

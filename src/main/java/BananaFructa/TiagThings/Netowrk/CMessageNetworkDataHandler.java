@@ -1,5 +1,7 @@
 package BananaFructa.TiagThings.Netowrk;
 
+import BananaFructa.TTIEMultiblocks.Gui.PIDControllerGui;
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.ModularList;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkData;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import io.netty.buffer.ByteBuf;
@@ -21,6 +23,11 @@ public class CMessageNetworkDataHandler implements IMessageHandler<CMessageNetwo
                     //System.out.println("RECIEVED");
                     //System.out.println(message.networkData);
                     ((PowerNetworkInfoGui) Minecraft.getMinecraft().currentScreen).setNetworkData(NetworkData.fromNBT(message.networkData));
+                } else if (Minecraft.getMinecraft().currentScreen instanceof PIDControllerGui) {
+                    NBTTagCompound tag = message.networkData;
+                    ModularList in = ModularList.fromNBT(tag.getCompoundTag("in"));
+                    ModularList out = ModularList.fromNBT(tag.getCompoundTag("out"));
+                    ((PIDControllerGui) Minecraft.getMinecraft().currentScreen).setInputOutput(in,out);
                 } else {
                     TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkUnsubscribe());
                 }

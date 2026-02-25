@@ -1,7 +1,7 @@
 package BananaFructa.TTIEMultiblocks.ControlBlocks;
 
-import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
-import BananaFructa.TTIEMultiblocks.SignalSourceTileEntity;
+import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.TTMain;
 import blusunrize.immersiveengineering.api.IEProperties;
 import net.minecraft.block.Block;
@@ -20,8 +20,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class LoadSensor extends Block {
-    public LoadSensor() {
+public class PIDControllerBlock extends Block {
+    public PIDControllerBlock() {
         super(Material.IRON);
         this.setDefaultState(blockState.getBaseState().withProperty(IEProperties.FACING_HORIZONTAL, EnumFacing.NORTH));
     }
@@ -39,7 +39,7 @@ public class LoadSensor extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
-        return new LoadSensorTileEntity(state.getValue(IEProperties.FACING_HORIZONTAL));
+        return new PIDControllerTileEntity(state.getValue(IEProperties.FACING_HORIZONTAL));
     }
 
     @Override
@@ -57,12 +57,16 @@ public class LoadSensor extends Block {
         return getDefaultState().withProperty(IEProperties.FACING_HORIZONTAL, placer.getHorizontalFacing().getOpposite());
     }
 
-    public int getWeakPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing p_180656_4_) {
-        return ((LoadSensorTileEntity)access.getTileEntity(pos)).redstoneStrenght;
+    public int getWeakPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing f) {
+        if (IEUtils.shiftRelativeToNorth(state.getValue(IEProperties.FACING_HORIZONTAL),true,EnumFacing.EAST) == f) {
+            return ((PIDControllerTileEntity) access.getTileEntity(pos)).redstoneStrenght;
+        } else return 0;
     }
 
-    public int getStrongPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing p_176211_4_) {
-        return ((LoadSensorTileEntity)access.getTileEntity(pos)).redstoneStrenght;
+    public int getStrongPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing f) {
+        if (IEUtils.shiftRelativeToNorth(state.getValue(IEProperties.FACING_HORIZONTAL),true,EnumFacing.EAST) == f) {
+            return ((PIDControllerTileEntity) access.getTileEntity(pos)).redstoneStrenght;
+        } else return 0;
     }
 
     @Deprecated
@@ -83,7 +87,7 @@ public class LoadSensor extends Block {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        LoadSensorTileEntity te = (LoadSensorTileEntity) worldIn.getTileEntity(pos);
+        PIDControllerTileEntity te = (PIDControllerTileEntity) worldIn.getTileEntity(pos);
         return super.getActualState(state, worldIn, pos).withProperty(IEProperties.FACING_HORIZONTAL,te.facing);
     }
 
@@ -92,7 +96,7 @@ public class LoadSensor extends Block {
         if(!world.isRemote)
         {
             if (player.isSneaking()) return false;
-            player.openGui(TTMain.INSTANCE, 13, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(TTMain.INSTANCE, 14, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
 

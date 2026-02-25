@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube_all",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "tiagthings:blocks/pid_controller_bottom",
+    "down": "tiagthings:blocks/pid_controller_bottom",
+    "up": "tiagthings:blocks/pid_controller_top",
+    "north": "tiagthings:blocks/pid_controller_north",
+    "east": "tiagthings:blocks/pid_controller_east",
+    "south": "tiagthings:blocks/pid_controller_south",
+    "west": "tiagthings:blocks/pid_controller_west"
+  }
+}

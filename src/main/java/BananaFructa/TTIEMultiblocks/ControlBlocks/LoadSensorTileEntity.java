@@ -61,7 +61,6 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY && facing == IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.WEST)) {
-            System.out.println(facing);
             return true;
         }
         return super.hasCapability(capability, facing);

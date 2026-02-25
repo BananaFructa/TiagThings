@@ -78,16 +78,16 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
 
     public void onTick() {
         try {
-            loss = currentLoss;
-            delta = Math.min(Math.max(currentDelta, -getMaxOutput()), getMaxInput());
+            loss = currentLoss;//
+            delta = Math.min(Math.max(currentDelta, -getMaxOutput()), getMaxInput());//
             //System.out.println("SEND");
             GlobalNetworkInfoManager.notifyLoad(this, pos, world, isEnergyOutput(), world.getTileEntity(pos.offset(facing)));
             GlobalNetworkInfoManager.registerNetworkTransaction(this, pos, world, isEnergyOutput(), world.getTileEntity(pos.offset(facing)));
-            currentDelta = 0;
-            currentLoss = 0;
-            markDirty();
-            IEUtils.notifyClientUpdate(world, pos);
-            firstSimulate = true;
+            currentDelta = 0; //
+            currentLoss = 0;//
+            markDirty();//
+            IEUtils.notifyClientUpdate(world, pos);//
+            firstSimulate = true;//
         } catch (Exception err) {
             err.printStackTrace(); // TODO: check this
         }
@@ -99,6 +99,7 @@ public class TransactionalTEConnectorLV extends TileEntityConnectorLV implements
             return false;
         } else {
             TileEntity tile = Utils.getExistingTileEntity(this.world, outPos);
+            if (tile == null) return false;
             return BananaFructa.TiagThings.Utils.isFluxReceiverFixed(tile, this.facing.getOpposite());
         }
     }

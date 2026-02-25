@@ -1,5 +1,6 @@
 package BananaFructa.TiagThings.Netowrk;
 
+import BananaFructa.TTIEMultiblocks.ControlBlocks.PIDControllerTileEntity;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkData;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
@@ -17,6 +18,7 @@ public class MessagePowerNetworkUnsubscribeHandler implements IMessageHandler<Me
         FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
             System.out.println("UNSUB");
             GlobalNetworkInfoManager.removeNetworkSubscriber(ctx.getServerHandler().player.getPersistentID());
+            PIDControllerTileEntity.unsubPlayer(ctx.getServerHandler().player.getPersistentID());
         });
         return null;
     }

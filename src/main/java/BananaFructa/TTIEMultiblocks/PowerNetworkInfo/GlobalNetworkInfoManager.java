@@ -53,6 +53,7 @@ public class GlobalNetworkInfoManager {
                 if (registeredNetworks.get(uuid).contains(id)) return uuid;
             }
         }
+        System.out.println("ID: " + node.getId());
         return null;
     }
 
@@ -80,6 +81,7 @@ public class GlobalNetworkInfoManager {
                 ids.add(((NetworkElement) connectable).getId());
             }
         }
+        if (ids.size() <= 1) return; // One connection does not make a network
         for (UUID uuid : registeredNetworks.keySet()) {
             List<Integer> network = registeredNetworks.get(uuid);
             // Unitary changes considered only
@@ -115,7 +117,6 @@ public class GlobalNetworkInfoManager {
             }
         }
         // NEW NETWORK
-        if (ids.size() <= 1) return; // One connection does not make a network
         UUID newUuid = UUID.randomUUID();
         registeredNetworks.put(newUuid,ids);
         networkData.put(newUuid,new NetworkData());

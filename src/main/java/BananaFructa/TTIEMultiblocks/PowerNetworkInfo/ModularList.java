@@ -36,6 +36,10 @@ public class ModularList {
         return populatedLength;
     }
 
+    public int maxSize() {
+        return size;
+    }
+
     public int get(int i) {
         int index = -i+begin;
         while (index < 0) index += size;

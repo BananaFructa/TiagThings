@@ -4,6 +4,7 @@ import BananaFructa.ImmersiveEngineering.ModifiedGuiModWorkbench;
 import BananaFructa.THAHModifications.TTChooseClimateGUi;
 import BananaFructa.TTIEMultiblocks.Commands.AdjustOBJAnimatedPivot;
 import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.PIDControllerTileEntity;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
 import BananaFructa.TTIEMultiblocks.Gui.*;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
@@ -15,6 +16,8 @@ import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.TileEntityElectricFood
 import BananaFructa.TTIEMultiblocks.TTIEContent;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import BananaFructa.TiagThings.MainMenu.TTMainMenuGui;
+import BananaFructa.TiagThings.Netowrk.MessagePowerNetworkAskInfo;
+import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.RockTraces;
 import BananaFructa.TiagThings.Utils;
 import BananaFructa.thah.gui.ChooseClimateGui;
@@ -182,6 +185,7 @@ public class ClientProxy extends CommonProxy {
     @Nullable
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if (player.isSneaking()) return null;
         TileEntity te = Minecraft.getMinecraft().world.getTileEntity(new BlockPos(x,y,z));
         switch (ID) {
             case 0:
@@ -276,6 +280,14 @@ public class ClientProxy extends CommonProxy {
             case 13:
                 if (te instanceof LoadSensorTileEntity) {
                     return new LoadSensorGui(player.inventory,(LoadSensorTileEntity) te);
+                }
+                break;
+            case 14:
+                if (te instanceof PIDControllerTileEntity) {
+                    Minecraft.getMinecraft().addScheduledTask(()-> {
+                        TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkAskInfo(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
+                    });
+                    return new PIDControllerGui(player.inventory,(PIDControllerTileEntity) te);
                 }
                 break;
         }

@@ -1,8 +1,6 @@
 package BananaFructa.TTIEMultiblocks;
 
-import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensor;
-import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
-import BananaFructa.TTIEMultiblocks.ControlBlocks.VirtualConnector;
+import BananaFructa.TTIEMultiblocks.ControlBlocks.*;
 import BananaFructa.TTIEMultiblocks.IECopy.BlockTTBase;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
@@ -30,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.DefaultStateMapper;
 import net.minecraft.creativetab.CreativeTabs;
@@ -79,6 +78,7 @@ public class TTIEContent {
         signalSourceBlock = (SignalSourceBlock) new SignalSourceBlock().setRegistryName("signal_source_tt").setUnlocalizedName("signal_source_tt").setCreativeTab(CreativeTabs.MISC);
         magnetizedSteelSheetmetal = new Block(Material.IRON).setRegistryName("magnetized_steel_sm").setUnlocalizedName("magnetized_steel_sm").setCreativeTab(CreativeTabs.MISC);
         loadSensor = new LoadSensor().setRegistryName("load_sensor").setUnlocalizedName("load_sensor").setCreativeTab(CreativeTabs.MISC);
+        pidController = new PIDControllerBlock().setRegistryName("pid_controller").setUnlocalizedName("pid_controller").setCreativeTab(CreativeTabs.MISC);
 
         ttBlockMetalMultiblock = new TTBlockMetalMultiblocks();
         ttBlockMetalMultiblock_1 = new TTBlockMetalMultiblocks_1();
@@ -142,6 +142,9 @@ public class TTIEContent {
 
     public static Block loadSensor;
     public static Item loadSensorItem;
+
+    public static Block pidController;
+    public static Item pidControllerItem;
 
     @SideOnly(Side.CLIENT)
     public static void clientInit() {
@@ -280,6 +283,7 @@ public class TTIEContent {
         GameRegistry.registerTileEntity(TransactionalTEConnectorLV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorLV.class.getSimpleName()));
         GameRegistry.registerTileEntity(TransactionalTEConnectorMV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorMV.class.getSimpleName()));
         GameRegistry.registerTileEntity(TransactionalTEConnectorHV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorHV.class.getSimpleName()));
+        GameRegistry.registerTileEntity(PIDControllerTileEntity.class,new ResourceLocation(TTMain.modId,PIDControllerTileEntity.class.getSimpleName()));
 
         electricHeaterMultiblock = new SimplifiedMultiblockClass(
                 "TT:ElectricHeater",
@@ -698,6 +702,7 @@ public class TTIEContent {
         event.getRegistry().register(magnetizedNickelSheetMetalItem = (new ItemBlock(magnetizedNickelSheetMetal)).setRegistryName("magnetized_nickel_sm"));
         event.getRegistry().register(electricMotorBlockItem = (new ItemBlock(electricMotorBlock)).setRegistryName("electric_motor_tt"));
         event.getRegistry().register(loadSensorItem = (new ItemBlock(loadSensor)).setRegistryName("load_sensor"));
+        event.getRegistry().register(pidControllerItem = (new ItemBlock(pidController)).setRegistryName("pid_controller"));
         event.getRegistry().register(signalSourceBlockItem = (new ItemBlock(signalSourceBlock)).setRegistryName("signal_source_tt"));
         event.getRegistry().register(magnetizedSteelSheetmetalItem = (new ItemBlock(magnetizedSteelSheetmetal)).setRegistryName("magnetized_steel_sm"));
     }
@@ -712,6 +717,7 @@ public class TTIEContent {
         event.getRegistry().register(magnetizedNickelSheetMetal);
         event.getRegistry().register(electricMotorBlock);
         event.getRegistry().register(loadSensor);
+        event.getRegistry().register(pidController);
         event.getRegistry().register(signalSourceBlock);
         event.getRegistry().register(magnetizedSteelSheetmetal);
     }
@@ -731,9 +737,11 @@ public class TTIEContent {
         ModelLoader.setCustomStateMapper(magnetizedNickelSheetMetal, new DefaultStateMapper());
         ModelLoader.setCustomModelResourceLocation(electricMotorBlockItem, 0, new ModelResourceLocation(electricMotorBlockItem.getRegistryName(), "normal"));
         ModelLoader.setCustomModelResourceLocation(loadSensorItem, 0, new ModelResourceLocation(loadSensorItem.getRegistryName(), "normal"));
+        ModelLoader.setCustomModelResourceLocation(pidControllerItem, 0, new ModelResourceLocation(pidControllerItem.getRegistryName(), "normal"));
         ModelLoader.setCustomModelResourceLocation(signalSourceBlockItem, 0, new ModelResourceLocation(signalSourceBlockItem.getRegistryName(), "normal"));
         ModelLoader.setCustomStateMapper(electricMotorBlock, new DefaultStateMapper());
         ModelLoader.setCustomStateMapper(loadSensor, new DefaultStateMapper());
+        ModelLoader.setCustomStateMapper(pidController,new DefaultStateMapper());
         ModelLoader.setCustomStateMapper(signalSourceBlock, new DefaultStateMapper());
         ModelLoader.setCustomStateMapper(magnetizedSteelSheetmetal, new DefaultStateMapper());
 

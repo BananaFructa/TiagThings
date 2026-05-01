@@ -28,7 +28,7 @@ public class ContainerCokeOvenBattery extends ContainerIEBase<TileEntityCokeOven
 
 
         for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-            System.out.println(ste + "\n");
+            //System.out.println(ste + "\n");
         }
         this.addSlotToContainer(new Slot(tile.inventoryHandlers.get(0), 0, 36, 50) {
             @Override

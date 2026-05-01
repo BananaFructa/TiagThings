@@ -45,7 +45,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
     public float d = 0;
     public int redstoneStrenght = 6;
     public int energy = 0;
-    public int maxEnergy = 2;
+    public int maxEnergy = 1;
 
     public int scalingP = 0;
     public int scalingI = 0;
@@ -89,7 +89,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY && (facing == EnumFacing.DOWN || facing == null)) {
+        if (capability == CapabilityEnergy.ENERGY && (facing == EnumFacing.UP || facing == null)) {
             return true;
         }
         return super.hasCapability(capability, facing);
@@ -98,7 +98,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY && (facing == EnumFacing.DOWN || facing == null)) {
+        if (capability == CapabilityEnergy.ENERGY && (facing == EnumFacing.UP || facing == null)) {
             return (T)this;
         }
         return super.getCapability(capability, facing);
@@ -198,6 +198,8 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
         } else integral = 0;
         float out = error * p + integral + (error-lastDerivativeIn) * d;
         out = Math.min(Math.max(out,0),15);
+        if (energy == 0) out = 0;
+        else energy--;
         lastDerivativeIn = error;
         inputHistory.add(sens);
         outputHistory.add((int)(out*1000));

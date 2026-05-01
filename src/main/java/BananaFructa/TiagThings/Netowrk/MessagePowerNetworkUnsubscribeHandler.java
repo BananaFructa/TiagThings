@@ -16,7 +16,7 @@ public class MessagePowerNetworkUnsubscribeHandler implements IMessageHandler<Me
     @Override
     public IMessage onMessage(MessagePowerNetworkUnsubscribe message, MessageContext ctx) {
         FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-            System.out.println("UNSUB");
+            //System.out.println("UNSUB");
             GlobalNetworkInfoManager.removeNetworkSubscriber(ctx.getServerHandler().player.getPersistentID());
             PIDControllerTileEntity.unsubPlayer(ctx.getServerHandler().player.getPersistentID());
         });

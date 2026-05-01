@@ -36,7 +36,7 @@ public class LoadSensorGui extends GuiIEContainerBase {
         super.initGui();
         GuiElementSlider offset = new GuiElementSlider(0,guiLeft+25,guiTop+23,126,4,"Redstone Offset");
         GuiElementSlider scale = new GuiElementSlider(1,guiLeft+25,guiTop+44,126,4,"Power Scale");
-        this.scalingButton = new ScalingButton(2,guiLeft+6,guiTop+32,16,16);
+        this.scalingButton = new ScalingButton(2,guiLeft+6,guiTop+32+14,16,16);
         this.offsetSlider = offset;
         this.magnitudeSlider = scale;
         this.scaling = tile.scale;

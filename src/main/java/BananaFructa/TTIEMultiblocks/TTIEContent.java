@@ -85,7 +85,6 @@ public class TTIEContent {
         ttBlockMetalMultiblock_2 = new TTBlockMetalMultiblocks_2();
         ttBlockMetalMultiblock_3 = new TTBlockMetalMultiblocks_3();
         ttBlockMetalMultiblock_4 = new TTBlockMetalMultiblocks_4();
-        OBJLoader.INSTANCE.addDomain(TTMain.modId);
     }
 
     public static SimplifiedMultiblockClass electricHeaterMultiblock;

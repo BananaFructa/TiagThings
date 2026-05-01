@@ -21,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import tfctech.TechConfig;
+import tfctech.objects.tileentities.TEFridge;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -304,6 +306,16 @@ public class Utils {
         }
         if (te instanceof TileEntityTrashEnergy) {
             return 2147483647;
+        }
+        if (te instanceof RFTileQuarry) {
+            return ((RFTileQuarry) te).getWantedEnergy();
+        }
+        if (te instanceof TEFridge) {
+            int consumption = (int)Math.max((double)1.0F, TechConfig.DEVICES.fridgeEnergyConsumption * (double)10.0F);
+            if ((float)Utils.readDeclaredField(TEFridge.class,te,"efficiency") >= 75.0F) {
+                consumption = (int)Math.max((double)1.0F, (double)consumption / (double)4.0F);
+            }
+            return consumption;
         }
         return 0;
     }

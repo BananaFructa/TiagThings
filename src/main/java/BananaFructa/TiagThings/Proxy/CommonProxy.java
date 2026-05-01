@@ -34,6 +34,7 @@ import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery
 import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.ContainerCokerUnit;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.ContainerElectricFoodOven;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
@@ -291,10 +292,10 @@ public class CommonProxy implements IGuiHandler {
         Utils.writeDeclaredField(Recipes$.class,Recipes$.MODULE$,"hadErrors",false,false); // supresses open computer recipe error message
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         event.player.sendMessage(new TextComponentString("To open the \u00a7equest menu\u00a7r press [\u00a7b" + BQ_Keybindings.openQuests.getDisplayName() + "\u00a7r]."));
-    }
+    }*/
 
     // Replace FL climate stations
     public void registry(RegistryEvent.Register<Block> event) {
@@ -537,15 +538,7 @@ public class CommonProxy implements IGuiHandler {
 
     @SubscribeEvent
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getWorld().isRemote) {
-            if (event.getItemStack().getItem() == IEContent.itemTool) {
-                Minecraft.getMinecraft().displayGuiScreen(new PowerNetworkInfoGui());
-                GlobalNetworkInfoManager.scheduleTask(()-> {
-                    TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkAskInfo(event.getPos().getX(),event.getPos().getY(),event.getPos().getZ()));
-                });
-            }
-            return;
-        }
+        if (event.getWorld().isRemote) return;
 
         BlockPos blockPos = event.getPos().offset(event.getFace());
         BlockPos targetPos = event.getPos();
@@ -554,7 +547,7 @@ public class CommonProxy implements IGuiHandler {
             if (cte.isInstance(teT)) {
                 for (String isname : forbiddenBlocks) {
                     ItemStack is = Utils.itemStackFromCTId(isname);
-                    System.out.println(is);
+                    //System.out.println(is);
                     if (event.getItemStack().getItem() == is.getItem() && (is.getMetadata() == event.getItemStack().getMetadata())) {
                         event.setCanceled(true);
                     }

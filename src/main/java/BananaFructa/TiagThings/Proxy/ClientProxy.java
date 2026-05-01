@@ -13,18 +13,26 @@ import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.ContainerCokerUnit;
 import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.TileEntityCokerUnitGui;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.ContainerElectricFoodOven;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.TileEntityElectricFoodOvenGui;
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
+import BananaFructa.TTIEMultiblocks.Renderers.*;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import BananaFructa.TiagThings.MainMenu.TTMainMenuGui;
 import BananaFructa.TiagThings.Netowrk.MessagePowerNetworkAskInfo;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.RockTraces;
+import BananaFructa.TiagThings.TTMain;
 import BananaFructa.TiagThings.Utils;
 import BananaFructa.thah.gui.ChooseClimateGui;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.GuiModWorkbench;
 import blusunrize.immersiveengineering.common.IEContent;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorLV;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCrusher;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
+import crafttweaker.api.event.PlayerInteractEntityEvent;
+import crafttweaker.api.event.PlayerRightClickBlockEvent;
 import mcp.mobius.waila.api.event.WailaTooltipEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -40,8 +48,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -89,6 +99,10 @@ public class ClientProxy extends CommonProxy {
         }
     }*/
 
+    static {
+        OBJLoader.INSTANCE.addDomain(TTMain.modId);
+    }
+
     public ClientProxy() {
         super();
     }
@@ -110,6 +124,14 @@ public class ClientProxy extends CommonProxy {
     public void postInit() {
         super.postInit();
         TTIEContent.clientInit();
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityClarifier.class, new ClarifierRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteamEngine.class, new SteamEngineRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySiliconCrucible.class, new SiliconCrucibleRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLathe.class, new LatheRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMetalPress.class,new NewMetalPressRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMetalRoller.class, new MetalRollerRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMagneticSeparator.class, new MagneticSeparatorRenderer());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRocketScaffold.class, new ScaffoldRenderer());
     }
 
     @SubscribeEvent
@@ -177,6 +199,21 @@ public class ClientProxy extends CommonProxy {
                 List<String> list = event.getToolTip();
                 list.add(2,TextFormatting.DARK_GRAY + "Contains traces of " + RockTraces.values()[nbtTagCompound.getInteger("trace")].getName() + TextFormatting.DARK_GRAY + ".");
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onRightClickBlockClient(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getWorld().isRemote && event.getEntityPlayer().isSneaking()) {
+            // Opens the power network info menu
+            if (event.getItemStack().getItem() == IEContent.itemTool) {
+                TileEntity te = event.getWorld().getTileEntity(event.getPos());
+                if (te instanceof TileEntityConnectorLV) {
+                    Minecraft.getMinecraft().displayGuiScreen(new PowerNetworkInfoGui());
+                    TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkAskInfo(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ()));
+                }
+            }
+            return;
         }
     }
 

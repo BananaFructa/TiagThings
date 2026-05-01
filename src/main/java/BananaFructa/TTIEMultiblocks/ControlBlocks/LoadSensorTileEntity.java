@@ -1,5 +1,6 @@
 package BananaFructa.TTIEMultiblocks.ControlBlocks;
 
+import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.ModularList;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
@@ -13,7 +14,9 @@ import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorHV;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorLV;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorMV;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
@@ -39,11 +42,18 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
     public int delta = 0;
 
     public int redstoneOffset = 7;
-    public int magnitude = 16384;
+    public int magnitude = 1000;
     public int redstoneStrenght = 0;
-    public int scale = 0;
+    public int scale = -1;
 
     public static final int maxRF = 131072;
+    public boolean autoSale = true;
+    public boolean wrongPower = false;
+
+    public int energy = 0;
+    public int maxEnergy = 1;
+
+    ModularList deltaHistory = new ModularList(200);
 
     public LoadSensorTileEntity() {
         super();
@@ -62,7 +72,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY && facing == IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.WEST)) {
+        if (capability == CapabilityEnergy.ENERGY && (facing == IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST) || facing == null)) {
             return true;
         }
         return super.hasCapability(capability, facing);
@@ -71,7 +81,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY && facing == IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.WEST)) {
+        if (capability == CapabilityEnergy.ENERGY && (facing == IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST) || facing == null)) {
             return (T)this;
         }
         return super.getCapability(capability, facing);
@@ -86,10 +96,9 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
         magnitude = nbtTagCompound.getInteger("power_magnitude");
         redstoneStrenght = nbtTagCompound.getInteger("redstone_strength");
         scale = nbtTagCompound.getInteger("scale");
-        if (nbtTagCompound.hasKey("virt_AF_in")) {
-            //virtualAFInput = new VirtualConnector(true);
-            //virtualAFInput.readCustomNBT(nbtTagCompound.getCompoundTag("virt_AF_in"),false);
-        }
+        autoSale = nbtTagCompound.getBoolean("auto_scale");
+        energy = nbtTagCompound.getInteger("energy");
+        maxEnergy = nbtTagCompound.getInteger("max_energy");
     }
 
     @Override
@@ -100,14 +109,10 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
         nbtTagCompound.setInteger("power_magnitude", magnitude);
         nbtTagCompound.setInteger("redstone_strength",redstoneStrenght);
         nbtTagCompound.setInteger("scale",scale);
-        if (virtualAFInput != null) {
-            NBTTagCompound virtualIn = new NBTTagCompound();
-            virtualAFInput.writeCustomNBT(virtualIn, false);
-            nbtTagCompound.setTag("virt_AF_in", virtualIn);
-        }
+        nbtTagCompound.setBoolean("auto_scale",autoSale);
+        nbtTagCompound.setInteger("energy",energy);
+        nbtTagCompound.setInteger("max_energy",maxEnergy);
     }
-
-    int needed = 0;
 
 
     // IE wire connectors perform two simulation passes
@@ -116,42 +121,15 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
+        if (!canReceive())
+            return 0;
 
-        EnumFacing face = IEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST);
-        BlockPos pos = getPos().offset(face);
-        TileEntity te = this.world.getTileEntity(pos);
-        if (te != null) {
-            if (te.hasCapability(CapabilityEnergy.ENERGY,face.getOpposite())) {
-                if (te instanceof IEnergyStorage) {
-                    IEnergyStorage energyStorage = (IEnergyStorage) te;
-                    if (simulate && selectFirstFlag) {
-                        // Testing with 10 million RF/t
-                        int maxOut = energyStorage.receiveEnergy(10000000,true);
-                        if (firstSim) needed = maxOut;
-                        markDirty();
-                        IEUtils.notifyClientUpdate(world, pos);
-                        firstSim = false;
-                    }
-                    selectFirstFlag = !selectFirstFlag;
-                    return energyStorage.receiveEnergy(maxReceive, simulate);
-                } else if (te instanceof IFluxReceiver) {
-                    IFluxReceiver receiver = (IFluxReceiver) te;
-                    if (receiver.canConnectEnergy(face.getOpposite())) {
-                        if (simulate && selectFirstFlag) {
-                            int maxOut = receiver.receiveEnergy(face.getOpposite(),10000000,true);
-                            if (firstSim) needed = maxOut;
-                            markDirty();
-                            IEUtils.notifyClientUpdate(world, pos);
-                            firstSim = false;
-                        }
-                        selectFirstFlag = !selectFirstFlag;
-                        return receiver.receiveEnergy(face.getOpposite(),maxReceive,simulate);
-                    }
-                }
-            }
+        int energyReceived = Math.min(maxEnergy - energy, maxReceive);
+        if (!simulate) {
+            IEUtils.notifyClientUpdate(world,pos);
+            energy += energyReceived;
         }
-
-        return 0;
+        return energyReceived;
     }
 
     @Override
@@ -161,12 +139,12 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
 
     @Override
     public int getEnergyStored() {
-        return 0;
+        return energy;
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return 1024;
+        return maxEnergy;
     }
 
     @Override
@@ -179,75 +157,37 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
         return true;
     }
 
-    public VirtualConnector virtualAFInput;
-
     @Override
     public void update() {
         if (world.isRemote) return;
         selectFirstFlag = true;
         firstSim = true;
-        BlockPos in = getPos().offset(IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.WEST));
-        TileEntity te = getWorld().getTileEntity(in);
-        if (world != null && te instanceof TileEntityRelayAF) {
-            VirtualConnector conn = new VirtualConnector(true);
-            conn.facing = ((TileEntityRelayAF) te).facing;
-            world.setTileEntity(in, conn);
-            conn.markDirty();
-        }
 
         BlockPos out = getPos().offset(IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST));
         TileEntity teOut = getWorld().getTileEntity(out);
-        if (world != null && teOut instanceof TileEntityRelayAF) {
-            VirtualConnector conn = new VirtualConnector(false);
-            conn.facing = ((TileEntityRelayAF) teOut).facing;
-            world.setTileEntity(out, conn);
-            conn.markDirty();
-        }
-
+        wrongPower = false;
         int avalabile = 0;
-        if (world != null && te instanceof TileEntityConnectorLV) {
-            TileEntityConnectorLV connector = (TileEntityConnectorLV) te;
-            Set<ImmersiveNetHandler.AbstractConnection> cons = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(Utils.toCC(connector), this.world, true);
-            for (ImmersiveNetHandler.AbstractConnection con : cons) {
-                IImmersiveConnectable connectable = ApiUtils.toIIC(con.end, this.world);
-                //if (!con.isEnergyOutput) {
-                if (connectable instanceof NetworkElement) {
-                    avalabile += ((NetworkElement) connectable).getDelta();
-                }
-                    /*if (connectable instanceof TransactionalTEConnectorLV) {
-                        TransactionalTEConnectorLV teConnector = (TransactionalTEConnectorLV) connectable;
-                        avalabile += teConnector.delta;
-                    }
-                    if (connectable instanceof TransactionalTEConnectorMV) {
-                        TransactionalTEConnectorMV teConnector = (TransactionalTEConnectorMV) connectable;
-                        avalabile += teConnector.delta;
-                    }
-                    if (connectable instanceof TransactionalTEConnectorHV) {
-                        TransactionalTEConnectorHV teConnector = (TransactionalTEConnectorHV) connectable;
-                        avalabile += teConnector.delta;
-                    }*/
-                //}
-            }
-        }
         int wantedPower = 0;
         if (world != null && teOut instanceof TileEntityConnectorLV) {
             TileEntityConnectorLV connector = (TileEntityConnectorLV) teOut;
+            if (connector instanceof TileEntityConnectorMV & connector instanceof TileEntityConnectorHV) wrongPower = true;
             Set<ImmersiveNetHandler.AbstractConnection> cons = ImmersiveNetHandler.INSTANCE.getIndirectEnergyConnections(Utils.toCC(connector), this.world, true);
             for (ImmersiveNetHandler.AbstractConnection con : cons) {
                 IImmersiveConnectable connectable = ApiUtils.toIIC(con.end, this.world);
-                //if (!con.isEnergyOutput) {
                 if (connectable instanceof NetworkElement) {
-                    wantedPower += ((NetworkElement) connectable).getWantedLoad();
+                    if (connectable.isEnergyOutput()) {
+                        wantedPower += ((NetworkElement) connectable).getWantedLoad();
+                    } else {
+                        avalabile += ((NetworkElement) connectable).getDelta();
+                    }
                 }
             }
         }
+
         delta = avalabile - wantedPower;
         redstoneStrenght = (int)Math.max(Math.min(15,((float)delta / magnitude) * 15 + redstoneOffset),0);
         world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
 
-        if (virtualAFInput != null) {
-            virtualAFInput.func_73660_a();
-        }
         markDirty();
         IEUtils.notifyClientUpdate(world, pos);
     }

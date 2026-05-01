@@ -6,6 +6,7 @@ import BananaFructa.TiagThings.TTMain;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
+import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -53,7 +54,6 @@ public class GlobalNetworkInfoManager {
                 if (registeredNetworks.get(uuid).contains(id)) return uuid;
             }
         }
-        System.out.println("ID: " + node.getId());
         return null;
     }
 
@@ -126,7 +126,8 @@ public class GlobalNetworkInfoManager {
 
     public static void registerNetworkTransaction(NetworkElement element, BlockPos node, World world, boolean consumer, TileEntity interactor) {
         if (interactor == null) return;
-        getNetworkFromUUID(getNetworkFor(element)).registerTransfer(element.getDelta(), element.getLoss(), consumer,interactor);
+        UUID netID = getNetworkFor(element);
+        if (netID != null) getNetworkFromUUID(netID).registerTransfer(element.getDelta(), element.getLoss(), consumer,interactor);
     }
 
     public static void addToCache(List<Integer> ids, UUID network) {
@@ -176,7 +177,7 @@ public class GlobalNetworkInfoManager {
         for (UUID uuid : toRemove) {
             registeredNetworks.remove(uuid);
             networkData.remove(uuid);
-            System.out.println("NETWORK REMOVED " + networkData.size());
+            //System.out.println("NETWORK REMOVED " + networkData.size());
         }
         for (Runnable r : scheduledTasks) r.run();
         scheduledTasks.clear();

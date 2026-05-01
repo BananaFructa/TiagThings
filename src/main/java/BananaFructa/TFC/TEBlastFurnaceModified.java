@@ -67,7 +67,7 @@ public class TEBlastFurnaceModified extends TEBlastFurnace {
             int oldFuel = fuelCount.get();
 
             chimney.set(getChimneyLevels(world, pos));
-            System.out.println(chimney.get());
+            //System.out.println(chimney.get());
             int newMaxItems = chimney.get() * 4;
             maxFuel.set(newMaxItems);
             maxOre.set(newMaxItems);

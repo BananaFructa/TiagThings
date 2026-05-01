@@ -72,7 +72,7 @@ public class TTMain {
 
     public static final String modId = "tiagthings";
     public static final String name = "Tiag Things";
-    public static final String version = "1.4.0";
+    public static final String version = "1.4.1";
 
     public static TTMain INSTANCE;
 
@@ -312,14 +312,6 @@ public class TTMain {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityClarifier.class, new ClarifierRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteamEngine.class, new SteamEngineRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySiliconCrucible.class, new SiliconCrucibleRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLathe.class, new LatheRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMetalPress.class,new NewMetalPressRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMetalRoller.class, new MetalRollerRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMagneticSeparator.class, new MagneticSeparatorRenderer());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRocketScaffold.class, new ScaffoldRenderer());
         VenusBlocks.crashedProbe = Blocks.AIR;
         //IIPotions.infrared_vision = Potion.getPotionById(16);
         //BottlingMachineRecipe.removeRecipes(Utils.getStackWithMetaName(IIContent.itemMaterial, "pulp_wood"));

@@ -106,6 +106,8 @@ public class PIDControllerGui extends GuiIEContainerBase {
         mc.fontRenderer.drawString("Proportional Gain: " + String.format("%.2f",(pSlider.val * 40 - 20) * Math.pow(10,scalingP)),guiLeft+25,guiTop+44-12,0xff000000);
         mc.fontRenderer.drawString("Integral Gain: " + String.format("%.2f",(iSlider.val * 40 - 20)* Math.pow(10,scalingI)),guiLeft+25,guiTop+65-12,0xff000000);
         mc.fontRenderer.drawString("Derivative Gain: " + String.format("%.2f",(dSlider.val * 40 - 20)* Math.pow(10,scalingD)),guiLeft+25,guiTop+86-12,0xff000000);
+        mc.fontRenderer.drawString("Input",guiLeft+28,guiTop+97,0xff000000);
+        mc.fontRenderer.drawString("Output",guiLeft+100,guiTop+97,0xff000000);
         if(!tooltip.isEmpty()) {
             ClientUtils.drawHoveringText(tooltip, mouseX, mouseY, fontRenderer, guiLeft + xSize, - 1);
         }

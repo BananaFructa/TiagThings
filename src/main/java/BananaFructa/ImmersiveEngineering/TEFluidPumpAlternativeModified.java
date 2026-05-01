@@ -78,7 +78,7 @@ public class TEFluidPumpAlternativeModified extends TileEntityFluidPumpAlternati
             }
 
             if (occupied) {
-                System.out.println("Occupied at " + pos.getX() + " " + pos.getY() + " " + pos.getZ());
+                //System.out.println("Occupied at " + pos.getX() + " " + pos.getY() + " " + pos.getZ());
                 fluidsBlackListCache.add(fluid);
             }
             else if (reserverEntity != this){
@@ -93,7 +93,7 @@ public class TEFluidPumpAlternativeModified extends TileEntityFluidPumpAlternati
     }
 
     private void reserveFluidChunk(String fluid) {
-        System.out.println("Reserved at " + pos.getX() + " " + pos.getY() + " " + pos.getZ());
+        //System.out.println("Reserved at " + pos.getX() + " " + pos.getY() + " " + pos.getZ());
         TTMain.INSTANCE.worldStorage.addReserver(fluid,new ChunkPos(world.getChunkFromBlockCoords(pos).x, world.getChunkFromBlockCoords(pos).z),pos);
     }
 

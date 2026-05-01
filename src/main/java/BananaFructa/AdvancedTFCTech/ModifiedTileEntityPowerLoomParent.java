@@ -216,7 +216,7 @@ public class ModifiedTileEntityPowerLoomParent extends TileEntityPowerLoom.TileE
         for (PowerLoomRecipe r : PowerLoomRecipe.recipeList) {
             if (Utils.ItemStacksEqualNoCount(r.input.stack,input) && Utils.ItemStacksEqualNoCount(r.secondaryInput.stack,secondary)) return true;
         }
-        System.out.println("AAAAAAAAAAAAAAAA");
+        //System.out.println("AAAAAAAAAAAAAAAA");
         return false;
     }
 }

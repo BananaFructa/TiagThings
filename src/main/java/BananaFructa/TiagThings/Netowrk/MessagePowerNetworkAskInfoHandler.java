@@ -19,19 +19,15 @@ public class MessagePowerNetworkAskInfoHandler implements IMessageHandler<Messag
     @Override
     public IMessage onMessage(MessagePowerNetworkAskInfo message, MessageContext ctx) {
         FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-            System.out.println("ASKED");
             BlockPos pos = new BlockPos(message.x,message.y,message.z);
             if (ctx.getServerHandler().player.world.getTileEntity(pos) instanceof NetworkElement) {
                 UUID network = GlobalNetworkInfoManager.getNetworkFor((NetworkElement) ctx.getServerHandler().player.world.getTileEntity(pos));
                 NetworkData data = GlobalNetworkInfoManager.getNetworkFromUUID(network);
                 GlobalNetworkInfoManager.addNetworkSubscriber(ctx.getServerHandler().player.getPersistentID(), network);
                 if (data != null) {
-                    System.out.println("FOUND");
                     GlobalNetworkInfoManager.scheduleTask(()->{
                         TTPacketHandler.wrapper.sendTo(new CMessageNetworkData(data.toNBT()), ctx.getServerHandler().player);
                     });
-                } else {
-                    // TODO: maybe send a not found message
                 }
             }
             if (ctx.getServerHandler().player.world.getTileEntity(pos) instanceof PIDControllerTileEntity) {
@@ -39,7 +35,6 @@ public class MessagePowerNetworkAskInfoHandler implements IMessageHandler<Messag
                 NBTTagCompound graphs = new NBTTagCompound();
                 graphs.setTag("in",tile.inputHistory.toNBT());
                 graphs.setTag("out",tile.outputHistory.toNBT());
-                System.out.println("FOUND_PID");
                 GlobalNetworkInfoManager.scheduleTask(()->{
                     tile.subscribePlayer(ctx.getServerHandler().player.getPersistentID());
                     TTPacketHandler.wrapper.sendTo(new CMessageNetworkData(graphs), ctx.getServerHandler().player);

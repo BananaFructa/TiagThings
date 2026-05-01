@@ -11,24 +11,17 @@ import buildcraft.lib.misc.data.AxisOrder;
 import buildcraft.lib.misc.data.Box;
 import buildcraft.lib.misc.data.BoxIterator;
 import buildcraft.lib.misc.data.EnumAxisOrder;
-import buildcraft.lib.net.PacketBufferBC;
 import com.google.common.collect.ImmutableList;
 import net.dries007.tfc.objects.blocks.BlockSnowTFC;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.Fluid;
-import org.lwjgl.Sys;
-import scala.collection.immutable.Stream;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
@@ -113,9 +106,13 @@ public class RFTileQuarry extends TileQuarry implements IEnergyStorage {
     private static final Method clientTick = Utils.getDeclaredMethod(task,"clientTick");
     private static final Method getRequiredPowerThisTick = Utils.getDeclaredMethod(task,"getRequiredPowerThisTick");
     private static final Method addPower = Utils.getDeclaredMethod(task,"addPower",long.class);
+
+    private static int wamtedMJ = 0;
+
     @Override
     public void update() {
         try {
+            if (!world.isRemote) wamtedMJ = 0;
             // thank god for obfed names
             if (this.drillPos == null) {
                 this.collisionBoxes.set(ImmutableList.of());
@@ -163,6 +160,7 @@ public class RFTileQuarry extends TileQuarry implements IEnergyStorage {
                     for (int i = 0; i < maxTasks; ++i) {
                         if (this.currentTask != null) {
                             long needed = (long)getRequiredPowerThisTick.invoke(this.currentTask);
+                            if (!world.isRemote) wamtedMJ += needed;
                             int mult = BCBuildersConfig.quarryTaskPowerDivisor;
                             long added;
                             if (mult > 0) {
@@ -264,6 +262,10 @@ public class RFTileQuarry extends TileQuarry implements IEnergyStorage {
         }
     }
 
+
+    public int getWantedEnergy() {
+        return MJ2RF(wamtedMJ);
+    }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {

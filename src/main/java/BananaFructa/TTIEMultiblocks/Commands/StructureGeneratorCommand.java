@@ -51,9 +51,9 @@ public class StructureGeneratorCommand extends CommandBase {
         int sizeW = distance(hadamard(pos1,unitW),hadamard(pos2,unitW)) + 1;
         int originH = 0,originL = 0,originW = 0;
 
-        System.out.println("SIZE H " + sizeH);
-        System.out.println("SIZE L" + sizeL);
-        System.out.println("SIZE W" + sizeW);
+        //System.out.println("SIZE H " + sizeH);
+        //System.out.println("SIZE L" + sizeL);
+        //System.out.println("SIZE W" + sizeW);
 
         ItemStack structure[][][] = new ItemStack[sizeH][sizeL][sizeW];
 
@@ -68,7 +68,7 @@ public class StructureGeneratorCommand extends CommandBase {
                     }
                     IBlockState state = sender.getEntityWorld().getBlockState(current);
                     structure[h][l][w] = state.getBlock().getItem(sender.getEntityWorld(),current,state);
-                    System.out.println(current.getX() + " " + current.getY() + " " + current.getZ() + " " + structure[h][l][w].getItem());
+                    //System.out.println(current.getX() + " " + current.getY() + " " + current.getZ() + " " + structure[h][l][w].getItem());
                 }
             }
         }

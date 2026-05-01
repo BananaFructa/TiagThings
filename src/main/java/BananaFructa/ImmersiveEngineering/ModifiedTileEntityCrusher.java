@@ -150,7 +150,7 @@ public class ModifiedTileEntityCrusher extends TileEntityCrusher {
                     master.addProcessToQueue(process, false, true);
                     if (RockUtils.isRock(stack)) {
                         ((ModifiedTileEntityCrusher)master).nbtQueue.add(stack.getTagCompound());
-                        System.out.println("Added " + ((ModifiedTileEntityCrusher)master()).nbtQueue.size());
+                        //System.out.println("Added " + ((ModifiedTileEntityCrusher)master()).nbtQueue.size());
                         master.markDirty();
                     }
                     stack.shrink(displayStack.getCount());
@@ -178,13 +178,13 @@ public class ModifiedTileEntityCrusher extends TileEntityCrusher {
         ModifiedTileEntityCrusher master = ((ModifiedTileEntityCrusher)master());
         if (master() != null && !master.nbtQueue.isEmpty() && (master.nbtQueue.peek() == null || !master.nbtQueue.peek().hasKey("trace"))) {
             master.nbtQueue.poll();
-            System.out.println("Removed " + master.nbtQueue.size());
+            //System.out.println("Removed " + master.nbtQueue.size());
             master.markDirty();
         }
         else if (output.getItem() == crushedRock.getItem() && master() != null && !master.nbtQueue.isEmpty()) {
             output.setTagCompound(master.nbtQueue.poll());
             master().markDirty();
-            System.out.println("Removed " + master.nbtQueue.size());
+            //System.out.println("Removed " + master.nbtQueue.size());
             markDirty();
         }
         if (inventoryTile != null) {

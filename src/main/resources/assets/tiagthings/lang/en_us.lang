@@ -534,3 +534,6 @@ item.material_component_tungsten_1.name=Very Imprecise Tungsten Mechanical Compo
 item.material_component_tungsten_2.name=Imprecise Tungsten Mechanical Component
 item.material_component_tungsten_3.name=Precise Tungsten Mechanical Component
 item.material_component_tungsten_4.name=Very Precise Tungsten Mechanical Component
+
+tile.load_sensor.name=Load Sensor
+tile.pid_controller.name=Signal Controller

@@ -114,15 +114,19 @@ public class PowerNetworkInfoGui extends GuiScreen {
         GlStateManager.popMatrix();
     }
 
+    private ItemStack hoveringItem = null;
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (networkDataToDisplay != null) {
 
+            hoveringItem = null;
+
             List<NetworkDeviceHistory> cons = getSortedHistoryList(networkDataToDisplay,true);
             List<NetworkDeviceHistory> prod = getSortedHistoryList(networkDataToDisplay, false);
 
-            scrollLeft = drawGraphList(30, scrollLeft, cons);
-            scrollRight = drawGraphList(281, scrollRight, prod);
+            scrollLeft = drawGraphList(mouseX,mouseY,30, scrollLeft, cons);
+            scrollRight = drawGraphList(mouseX,mouseY,281, scrollRight, prod);
             GlStateManager.pushMatrix();
             GlStateManager.disableDepth();
             GL11.glColor4f(1, 1, 1, 1);
@@ -147,6 +151,14 @@ public class PowerNetworkInfoGui extends GuiScreen {
             GlStateManager.popMatrix();
 
             super.drawScreen(mouseX, mouseY, partialTicks);
+
+            GlStateManager.pushMatrix();
+
+            if (hoveringItem != null) {
+                renderToolTip(hoveringItem,mouseX,mouseY);
+            }
+
+            GlStateManager.popMatrix();
         }
     }
 
@@ -165,7 +177,7 @@ public class PowerNetworkInfoGui extends GuiScreen {
         return histories;
     }
 
-    private int drawGraphList(int posX, int scroll, List<NetworkDeviceHistory> histories) {
+    private int drawGraphList(int mX,int mY, int posX, int scroll, List<NetworkDeviceHistory> histories) {
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
 
         mc.renderEngine.bindTexture(new ResourceLocation(TTMain.modId, "textures/gui/electric_network.png"));
@@ -217,6 +229,10 @@ public class PowerNetworkInfoGui extends GuiScreen {
                 display.setItemDamage(history.deviceMetadata);
                 display.setCount(history.deviceCount);
                 Minecraft.getMinecraft().getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, display, xLeft + posX + 8 - 4, y + 8 - 4, null);
+                if (mX > xLeft + posX + 8 - 4 && mX < xLeft + posX + 8 - 4 + 16 && mY > y + 8 - 4 && mY < y + 8 - 4 + 16) {
+                    hoveringItem = display;
+                    this.drawGradientRect(xLeft + posX + 8 - 4, y + 8 - 4, xLeft + posX + 8 - 4 + 16, y + 8 - 4 + 16, -2130706433, -2130706433);
+                }
             }
         }
         GlStateManager.pushMatrix();

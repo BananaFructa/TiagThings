@@ -21,6 +21,7 @@ import BananaFructa.TiagThings.Proxy.CommonProxy;
 import blusunrize.immersiveengineering.api.crafting.BottlingMachineRecipe;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
+import com.lumintorious.ambiental.api.IBlockTemperatureProvider;
 import com.lumintorious.ambiental.api.TemperatureRegistry;
 import com.lumintorious.ambiental.capability.TemperatureCapability;
 import com.lumintorious.ambiental.modifiers.*;
@@ -49,6 +50,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -72,7 +74,7 @@ public class TTMain {
 
     public static final String modId = "tiagthings";
     public static final String name = "Tiag Things";
-    public static final String version = "1.4.1";
+    public static final String version = "1.4.2";
 
     public static TTMain INSTANCE;
 
@@ -154,6 +156,10 @@ public class TTMain {
         });
 
         BananaFructa.TiagThings.Utils.writeDeclaredField(CTRemoveRecipe.class, null, "errored", true, false); // annoying ass error
+
+        // -1.5
+        // Loweres the effect of snow on temperature
+        TemperatureRegistry.BLOCKS.register((IBlockTemperatureProvider)(state, pos, player) -> state.getBlock() == Blocks.SNOW_LAYER && player.world.getLightFor(EnumSkyBlock.SKY, pos) == 15 ? new BlockModifier("snow_counter", 1.3F, 0.2F, false) : null);
     }
 
     static public TileEntityModifier tempHeater(Class<?extends SimplifiedTileEntityMultiblockMetal> teClass, IBlockState state, BlockPos pos, EntityPlayer player,String registryName,float temp,float potency) {

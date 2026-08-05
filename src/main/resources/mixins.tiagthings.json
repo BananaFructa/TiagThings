@@ -1,0 +1,23 @@
+{
+  "required": false,
+  "minVersion": "0.7",
+  "package": "BananaFructa.TiagThings.mixin",
+  "refmap": "mixins.tiagthings.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ArchitectureCrationTier",
+    "AssemblerTechCheck",
+    "Disk",
+    "LuaClosureThrottle",
+    "LuaValueInvokeDelay",
+    "Test"
+  ],
+  "client": [
+    "JEIHide",
+    "SplashScreen",
+    "TryCatchAMTQuads"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -125,6 +125,8 @@ public class TTIEContent {
     public static SimplifiedMultiblockClass magnetizer;
     public static SimplifiedMultiblockClass cokerUnit;
 
+    public static SimplifiedMultiblockClass plc;
+
     public static Block advancedComputerBlock;
     public static Block magnetizedNickelSheetMetal;
     public static ElectricMotorBlock electricMotorBlock;
@@ -283,6 +285,7 @@ public class TTIEContent {
         GameRegistry.registerTileEntity(TransactionalTEConnectorMV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorMV.class.getSimpleName()));
         GameRegistry.registerTileEntity(TransactionalTEConnectorHV.class, new ResourceLocation(TTMain.modId,TransactionalTEConnectorHV.class.getSimpleName()));
         GameRegistry.registerTileEntity(PIDControllerTileEntity.class,new ResourceLocation(TTMain.modId,PIDControllerTileEntity.class.getSimpleName()));
+        GameRegistry.registerTileEntity(TileEntityPLC.class, new ResourceLocation(TTMain.modId,TileEntityPLC.class.getSimpleName()));
 
         electricHeaterMultiblock = new SimplifiedMultiblockClass(
                 "TT:ElectricHeater",
@@ -646,6 +649,18 @@ public class TTIEContent {
             }
         };
 
+        plc = new SimplifiedMultiblockClass(
+                    "TT:PLC",
+                    "plc.tgz",
+                    TTIEContent.ttBlockMetalMultiblock_4.getStateFromMeta(TTBlockTypes_MetalMultiblock_4.PLC.getMeta()),
+                    TTIEContent.ttBlockMetalMultiblock_4.getStateFromMeta(TTBlockTypes_MetalMultiblock_4.PLC_CHILD.getMeta())
+        ) {
+            @Override
+            public boolean allowNonMirrored() {
+                return false;
+            }
+        };
+
         MultiblockHandler.registerMultiblock(electricHeaterMultiblock); //
         MultiblockHandler.registerMultiblock(flareStackMultiblock);
         MultiblockHandler.registerMultiblock(coalBoilerMultiblock); //
@@ -684,6 +699,8 @@ public class TTIEContent {
         MultiblockHandler.registerMultiblock(electricFoodOven);
         MultiblockHandler.registerMultiblock(magnetizer);
         MultiblockHandler.registerMultiblock(cokerUnit);
+
+        MultiblockHandler.registerMultiblock(plc);
     }
 
     /**

@@ -1,0 +1,5 @@
+item.appliedenergistics2.material.purified_nether_quartz_crystal.name=Pure Quartz Crystal
+item.appliedenergistics2.crystal_seed.nether.name=Quartz Seed
+item.appliedenergistics2.material.nether_quartz_dust.name=Quartz Dust
+gui.appliedenergistics2.inWorldFluix=Drop 1 Charged Certus Quartz + 1 Quartz + Californium-249 into a puddle next to one another and wait a moment to receive 2 Fluix Crystals.
+gui.appliedenergistics2.inWorldPurificationNether=Drop a Quartz Seed made from Quartz Dust and Sand into a puddle of water; to make the process faster add Crystal Growth Accelerators.

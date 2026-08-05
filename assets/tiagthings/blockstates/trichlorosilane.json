@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "btrichlorosilane"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "trichlorosilane"
+        }
+      }
+    ]
+  }
+}

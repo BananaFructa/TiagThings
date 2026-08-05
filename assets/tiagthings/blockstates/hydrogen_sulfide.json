@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "bhydrogen_sulfide"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "hydrogen_sulfide"
+        }
+      }
+    ]
+  }
+}

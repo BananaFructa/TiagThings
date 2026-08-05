@@ -1,15 +1,17 @@
 package BananaFructa.TiagThings;
 
 import BananaFructa.BCModifications.RFTileQuarry;
+import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityPLC;
 import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityRocketScaffold;
 import BananaFructa.Uem.DrainFluidPlacer;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCapacitorCreative;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
-import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityAlternatorSlave;
 import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityTrashEnergy;
+import mctmods.immersivetechnology.common.multiblocks.metal.tileentities.TileEntityAlternatorSlave;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -292,7 +294,9 @@ public class Utils {
     }
 
     public static int getProcessLoad(TileEntity te) {
-        if (te instanceof TileEntityMultiblockMetal<?,?>) {
+        if (te instanceof TileEntityPLC) {
+            return (int)((TileEntityPLC) te).energyDraw;
+        } else if (te instanceof TileEntityMultiblockMetal<?,?>) {
             TileEntityMultiblockMetal<?,?> teMB = (TileEntityMultiblockMetal<?, ?>) te;
             int max = teMB.getMaxProcessPerTick();
 
@@ -318,6 +322,32 @@ public class Utils {
             return consumption;
         }
         return 0;
+    }
+
+    public static List<String> wrappStringToWidth(Minecraft mc, String s, int widthToWrap) {
+        List<String> lines = new ArrayList<String>();
+        if (s.equals("")) {
+            lines.add("");
+            return lines;
+        }
+        String[] words = s.split(" ");
+        String currentSentence = "";
+        for (String word : words) {
+            if (mc.fontRenderer.getStringWidth(currentSentence + word) < widthToWrap) {
+                if (currentSentence.equals("")) {
+                    currentSentence = word;
+                } else {
+                    currentSentence += " " + word;
+                }
+            } else {
+                lines.add(currentSentence);
+                currentSentence = word;
+            }
+        }
+        if (!currentSentence.equals("")) {
+            lines.add(currentSentence);
+        }
+        return lines;
     }
 
 }

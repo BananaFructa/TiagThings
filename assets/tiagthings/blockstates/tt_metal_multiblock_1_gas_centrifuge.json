@@ -1,0 +1,92 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=gas_centrifuge": [{
+      "model": "tiagthings:gas_centrifuge.obj",
+      "transform": {
+        "scale": 0.16,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -45
+          }
+        ],
+        "translation": [
+          0,
+          -0.40,
+          0
+        ]
+      }
+    }],
+    "type": {
+      "gas_centrifuge": {
+
+      }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {}
+    },
+    "boolean0": {
+      "false": {
+        "model": "tiagthings:gas_centrifuge_mirrored.obj",
+        "custom": { "flip-v": true }
+      },
+      "true": {
+        "model": "tiagthings:gas_centrifuge.obj",
+        "custom": { "flip-v": true }
+      }
+    },
+    "anim_id": {
+      "0": {},
+      "1": {}
+    }
+  }
+}

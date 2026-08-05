@@ -10,6 +10,7 @@ import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TiagThings.TTMain;
 import BananaFructa.TiagThings.Utils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
@@ -63,5 +64,17 @@ public class TileEntitySteamEngine extends AnimatedOBJTileEntity<TileEntitySteam
         }
         setAnimation("running_mirrored");
         setAnimationSpeed(speed);
+    }
+
+    @Override
+    public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket) {
+        super.writeCustomNBT(nbt, descPacket);
+        nbt.setFloat("speed",speed);
+    }
+
+    @Override
+    public void readCustomNBT(NBTTagCompound nbt, boolean descPacket) {
+        super.readCustomNBT(nbt, descPacket);
+        speed = nbt.getFloat("speed");
     }
 }

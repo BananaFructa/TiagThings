@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "bphosphoric_acid"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "phosphoric_acid"
+        }
+      }
+    ]
+  }
+}

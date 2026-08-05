@@ -1,5 +1,6 @@
 package BananaFructa.TiagThings;
 
+import BananaFructa.OpenComputers.ResearchManager;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -69,6 +70,7 @@ public class TiagThingWorldStorage extends WorldSavedData {
                 restrictedFluidPumps.put(key,value);
             }
             GlobalNetworkInfoManager.readNBT(nbt.getCompoundTag("power_network_info"));
+            ResearchManager.readNBT(nbt.getCompoundTag("research"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +88,7 @@ public class TiagThingWorldStorage extends WorldSavedData {
                 i++;
             }
             compound.setTag("power_network_info", GlobalNetworkInfoManager.toNBT());
+            compound.setTag("research", ResearchManager.toNBT());
         } catch (Exception e) {
             e.printStackTrace();
         }

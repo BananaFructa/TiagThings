@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "tiagthings:signal_source_tt"
+      }
+    ],
+    "powered=false": {
+      "model": "tiagthings:signal_source_tt"
+    },
+    "powered=true": {
+      "model": "tiagthings:signal_source_tt"
+    }
+  }
+}

@@ -10,12 +10,7 @@ import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.BlockTypes_MetalsAll;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalDecoration0;
-import blusunrize.immersiveengineering.common.blocks.metal.BlockTypes_MetalMultiblock;
 import blusunrize.immersiveengineering.common.util.Utils;
-import com.sun.org.apache.xalan.internal.res.XSLTErrorResources_zh_TW;
 import net.mcft.copy.backpacks.client.RendererBackpack;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -127,6 +122,8 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
 
         boolean mirrored = result.getSecond();
 
+        if (!mirrored && !allowNonMirrored()) return false;
+
         IEUtils.populateMultiblock(
                 world,
                 blockPos,
@@ -203,5 +200,9 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         GlStateManager.disableCull();
         ClientUtils.mc().getRenderItem().renderItem(renderStack, ItemCameraTransforms.TransformType.GUI);
         GlStateManager.enableCull();
+    }
+
+    public boolean allowNonMirrored() {
+        return true;
     }
 }

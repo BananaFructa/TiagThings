@@ -2,6 +2,10 @@ package BananaFructa.TiagThings.Items;
 
 import BananaFructa.Galacticraft.ItemTritiumCanister;
 import BananaFructa.TiagThings.TTMain;
+import li.cil.oc.api.API;
+import li.cil.oc.api.network.ManagedEnvironment;
+import li.cil.oc.common.item.Delegator;
+import li.cil.oc.common.item.FloppyDisk;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
@@ -41,6 +45,19 @@ public class ItemLoaderHandler {
     public static BasicItem icChip2;
     public static BasicItem icChip3;
     public static BasicItem rockTest;
+
+    public static BasicItem rpAdvMech;
+    public static BasicItem rpAdvSolar;
+    public static BasicItem rpDigitalRf;
+    public static BasicItem rpDistComp;
+    public static BasicItem rpDynMem;
+    public static BasicItem rpEubLith;
+    public static BasicItem rpHydroponics;
+    public static BasicItem rpMeteorology;
+    public static BasicItem rpNetworking;
+    public static BasicItem rpNm4;
+    public static BasicItem rpOfdm;
+    public static BasicItem rpVlsi;
 
     public static void preInit() {
        tritiumCanister = new ItemTritiumCanister("tritium_canister_partial");
@@ -225,6 +242,22 @@ public class ItemLoaderHandler {
         BasicItems.add(new BasicItem("crushed_rock"));
         BasicItems.add(new BasicItem("amon_hexcl"));
         BasicItems.add(new BasicItem("nick_hydr"));
+
+        BasicItems.add(rpAdvMech = new BasicItem("rp_adv_mech"));
+        BasicItems.add(rpAdvSolar = new BasicItem("rp_adv_solar"));
+        BasicItems.add(rpDigitalRf = new BasicItem("rp_digital_rf"));
+        BasicItems.add(rpDistComp = new BasicItem("rp_dist_comp"));
+        BasicItems.add(rpDynMem = new BasicItem("rp_dyn_mem"));
+        BasicItems.add(rpEubLith = new BasicItem("rp_euv_lith"));
+        BasicItems.add(rpHydroponics = new BasicItem("rp_hydroponics"));
+        BasicItems.add(rpMeteorology = new BasicItem("rp_meteorology"));
+        BasicItems.add(rpNetworking = new BasicItem("rp_networking"));
+        BasicItems.add(rpNm4 = new BasicItem("rp_nm4"));
+        BasicItems.add(rpOfdm = new BasicItem("rp_ofdm"));
+        BasicItems.add(rpVlsi = new BasicItem("rp_vlsi"));
+        BasicItems.add(new BasicItem("unfinished_iron_component"));
+        BasicItems.add(new BasicItem("unfinished_steel_component"));
+
         rockTest = new BasicItem("rock_test");
         rockTest.setMaxStackSize(1);
         BasicItems.add(rockTest);

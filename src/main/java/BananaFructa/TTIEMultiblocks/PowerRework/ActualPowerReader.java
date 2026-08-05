@@ -1,7 +1,5 @@
 package BananaFructa.TTIEMultiblocks.PowerRework;
 
-import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityAlternatorMaster;
-import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityAlternatorSlave;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

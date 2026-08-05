@@ -30,6 +30,7 @@ import mcp.mobius.waila.api.IWailaRegistrar;
 import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityFluidPumpAlternative;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidTank;
@@ -406,6 +407,15 @@ public class TTWailaProvider implements IWailaDataProvider {
             TileEntityModifiedMechanicalPump te = (TileEntityModifiedMechanicalPump)(accessor.getTileEntity());
             if (te.blocked) {
                 tooltip.add("\u00a7c There is another pump in this chuck pumping from the same body of water!\u00a7r");
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof TileEntityPLC) {
+            TileEntityPLC te = ((TileEntityPLC) accessor.getTileEntity()).master();
+            if (te != null) {
+                int complexity = te.designComplexity;
+                int avComplexity = te.availableComplexity;
+                tooltip.add((complexity <= avComplexity ? "\u00a7a" : "\u00a7c") + I18n.translateToLocalFormatted("tiag.complexity_budget") + ": " + complexity + "/" + avComplexity);
             }
         }
 

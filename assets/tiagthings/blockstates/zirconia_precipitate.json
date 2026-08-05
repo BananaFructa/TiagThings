@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "zirconia_precipitate"
+        }
+      }
+    ]
+  }
+}

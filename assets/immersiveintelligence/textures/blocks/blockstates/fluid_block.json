@@ -1,0 +1,142 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "forge:fluid",
+        "transform": "forge:default-item"
+    },
+    "variants": {
+        "ink": [
+            {
+                "custom": {
+                    "fluid": "ink"
+                }
+            }
+        ],
+        "ink_cyan": [
+            {
+                "custom": {
+                    "fluid": "ink_cyan"
+                }
+            }
+        ],
+        "ink_magenta": [
+            {
+                "custom": {
+                    "fluid": "ink_magenta"
+                }
+            }
+        ],
+        "ink_yellow": [
+            {
+                "custom": {
+                    "fluid": "ink_yellow"
+                }
+            }
+        ],
+      "etching_acid": [
+        {
+          "custom": {
+            "fluid": "etching_acid"
+          }
+        }
+      ],
+      "brine": [
+        {
+          "custom": {
+            "fluid": "brine"
+          }
+        }
+      ],
+      "hydrogen": [
+        {
+          "custom": {
+            "fluid": "hydrogen"
+          }
+        }
+      ],
+      "oxygen": [
+        {
+          "custom": {
+            "fluid": "oxygen"
+          }
+        }
+      ],
+      "chlorine": [
+        {
+          "custom": {
+            "fluid": "chlorine"
+          }
+        }
+      ],
+      "hydrofluoric_acid": [
+        {
+          "custom": {
+            "fluid": "hydrofluoric_acid"
+          }
+        }
+      ],
+      "sulfuric_acid": [
+        {
+          "custom": {
+            "fluid": "sulfuric_acid"
+          }
+        }
+      ],
+      "ammonia": [
+        {
+          "custom": {
+            "fluid": "ammonia"
+          }
+        }
+      ],
+      "methanol": [
+        {
+          "custom": {
+            "fluid": "methanol"
+          }
+        }
+      ],
+      "nitric_acid": [
+        {
+          "custom": {
+            "fluid": "nitric_acid"
+          }
+        }
+      ],
+      "latex": [
+        {
+          "custom": {
+            "fluid": "latex"
+          }
+        }
+      ],
+      "carbon_dioxide": [
+        {
+          "custom": {
+            "fluid": "carbon_dioxide"
+          }
+        }
+      ],
+      "carbon_monoxide": [
+        {
+          "custom": {
+            "fluid": "carbon_monoxide"
+          }
+        }
+      ],
+      "formic_acid": [
+        {
+          "custom": {
+            "fluid": "formic_acid"
+          }
+        }
+      ],
+      "mustard_gas": [
+        {
+          "custom": {
+            "fluid": "mustard_gas"
+          }
+        }
+      ]
+    }
+}

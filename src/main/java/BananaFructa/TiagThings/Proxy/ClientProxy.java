@@ -7,13 +7,9 @@ import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
 import BananaFructa.TTIEMultiblocks.ControlBlocks.PIDControllerTileEntity;
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
 import BananaFructa.TTIEMultiblocks.Gui.*;
-import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.TileEntityCokeOvenBatteryGui;
-import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.ContainerCokerUnit;
 import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.TileEntityCokerUnitGui;
-import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.ContainerElectricFoodOven;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.TileEntityElectricFoodOvenGui;
-import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import BananaFructa.TTIEMultiblocks.Renderers.*;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
@@ -24,20 +20,18 @@ import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.RockTraces;
 import BananaFructa.TiagThings.TTMain;
 import BananaFructa.TiagThings.Utils;
+import BananaFructa.TiagThings.JEIContainerTogglable;
 import BananaFructa.thah.gui.ChooseClimateGui;
+import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
 import blusunrize.immersiveengineering.client.gui.GuiModWorkbench;
 import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorLV;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCrusher;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
-import crafttweaker.api.event.PlayerInteractEntityEvent;
-import crafttweaker.api.event.PlayerRightClickBlockEvent;
+import blusunrize.immersiveengineering.common.blocks.metal.*;
 import mcp.mobius.waila.api.event.WailaTooltipEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,10 +41,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -70,35 +66,6 @@ public class ClientProxy extends CommonProxy {
     @SideOnly(Side.CLIENT)
     public static KeyBinding exoSkeleton = new KeyBinding("Exo Skeleton Settings", Keyboard.KEY_G, "Immersive Intelligence");
 
-    /*static {
-        // one of the deadly sins below
-        try {
-            String options = "resourcePacks:[\"Tiag.zip\"]";
-            File f = new File(Minecraft.getMinecraft().mcDataDir, "options.txt");
-            String text = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
-            if (!text.contains("Tiag.zip")) {
-                if (!text.contains("resourcePacks")) {
-                    FileWriter w = new FileWriter(f,true);
-                    w.write(options);
-                    w.close();
-                } else {
-                    if (text.split("resourcePacks:")[1].toCharArray()[1] != ']') {
-                        text.replace("resourcePacks:[","resourcePacks:[\"Tiag.zip\",");
-                    } else {
-                        text.replace("resourcePacks:[","resourcePacks:[\"Tiag.zip\"");
-                    }
-                    f.delete();
-                    f.createNewFile();
-                    FileWriter w = new FileWriter(f);
-                    w.write(text);
-                    w.close();
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
-
     static {
         OBJLoader.INSTANCE.addDomain(TTMain.modId);
     }
@@ -107,14 +74,9 @@ public class ClientProxy extends CommonProxy {
         super();
     }
 
-    //        super.preInit();
-    //        if (!Minecraft.getMinecraft().gameSettings.resourcePacks.contains("Tiag.zip")) {
-    //            Minecraft.getMinecraft().gameSettings.resourcePacks.add("Tiag.zip");
-    //        }
     @Override
     public void init() {
         super.init();
-        //BlockRendererDispatcher blockRendererDispatcher = BananaFructa.TiagThings.Utils.readDeclaredField(Minecraft.class,Minecraft.getMinecraft(),"blockRenderDispatcher");
         ClientRegistry.registerKeyBinding(irHeadset);
         ClientRegistry.registerKeyBinding(exoSkeleton);
         ClientCommandHandler.instance.registerCommand(new AdjustOBJAnimatedPivot());
@@ -127,6 +89,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityClarifier.class, new ClarifierRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteamEngine.class, new SteamEngineRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySiliconCrucible.class, new SiliconCrucibleRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPLC.class,new PLCRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLathe.class, new LatheRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMetalPress.class,new NewMetalPressRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMetalRoller.class, new MetalRollerRenderer());
@@ -327,7 +290,31 @@ public class ClientProxy extends CommonProxy {
                     return new PIDControllerGui(player.inventory,(PIDControllerTileEntity) te);
                 }
                 break;
+            case 20:
+                if (te instanceof TileEntityPLC) {
+                    Minecraft.getMinecraft().addScheduledTask(()-> {
+                        TTPacketHandler.wrapper.sendToServer(new MessagePowerNetworkAskInfo(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
+                    });
+                    return new PLCGui(player.inventory,((TileEntityPLC) te).master());
+                }
+                break;
         }
         return null;
+    }
+
+    @SubscribeEvent
+    public void guiDraw(RenderGameOverlayEvent.Post event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        ScaledResolution sr = new ScaledResolution(mc);
+        if (mc.player != null && mc.player.getHeldItemMainhand().getItem() == IEContent.itemTool) {
+            BlockPos pos = mc.objectMouseOver.getBlockPos();
+            TileEntity te = mc.world.getTileEntity(pos);
+            if (te instanceof TileEntityConnectorRedstone) {
+                int s = Utils.readDeclaredField(TileEntityConnectorRedstone.class,te,"outputClient");
+                String m = "Strength: " + s;
+                if (!(te instanceof TileEntityConnectorProbe) && ((TileEntityConnectorRedstone) te).isRSInput()) m = "\u00a7m" + m + "\u00a7r" + " (Output Only)";
+                mc.fontRenderer.drawStringWithShadow(m,sr.getScaledWidth()/2-mc.fontRenderer.getStringWidth(m)/2,sr.getScaledHeight()/2-16,0xffffff);
+            }
+        }
     }
 }

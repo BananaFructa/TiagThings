@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "tiagthings:load_sensor"
+      }
+    ],
+    "facing=north": {
+      "model": "tiagthings:load_sensor",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "tiagthings:load_sensor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tiagthings:load_sensor",
+      "y": -90
+    },
+    "facing=east": {
+      "model": "tiagthings:load_sensor",
+      "y": 90
+    }
+  }
+}

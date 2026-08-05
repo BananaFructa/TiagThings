@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "bhot_fluoromethane"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "hot_fluoromethane"
+        }
+      }
+    ]
+  }
+}

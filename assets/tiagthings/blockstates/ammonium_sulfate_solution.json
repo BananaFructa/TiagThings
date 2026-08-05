@@ -1,0 +1,128 @@
+{
+  "just_a_small_note": "I have no idea what I am doing here",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:fluid"
+  },
+  "variants": {
+    "fluid": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=15": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=14": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=13": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=12": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=11": [
+      {
+        "custom": {
+          "fluid": "bammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=10": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=9": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=8": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=7": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=6": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=5": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=4": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=3": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=2": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=1": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ],
+    "level=0": [
+      {
+        "custom": {
+          "fluid": "ammonium_sulfate_solution"
+        }
+      }
+    ]
+  }
+}

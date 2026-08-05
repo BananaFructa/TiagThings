@@ -13,13 +13,11 @@ import BananaFructa.FLModifications.BlockClimateStationM;
 import BananaFructa.Galacticraft.MapGenDungeonEmpty;
 import BananaFructa.Galacticraft.MapGenDungeonEmptyVenus;
 import BananaFructa.ImmersiveEngineering.*;
-import BananaFructa.ImmersiveIntelligence.ModifiedCO2Filter;
-import BananaFructa.ImmersiveIntelligence.ModifiedWheelTileEntityIron;
-import BananaFructa.ImmersiveIntelligence.ModifiedWheelTileEntitySteel;
-import BananaFructa.ImmersiveIntelligence.TileEntityModifiedMechanicalPump;
+import BananaFructa.ImmersiveIntelligence.*;
 import BananaFructa.ImmersivePetroleum.ModifiedTileEntityPumpjack;
 import BananaFructa.ImmersivePetroleum.ModifiedTileEntityPumpjackParent;
 import BananaFructa.ImmersiveTech.AlternatorMultiblockMasterModified;
+import BananaFructa.OpenComputers.luac.TiagNativeLuaArchitecture;
 import BananaFructa.RailcraftModifications.RFBlockRockCrusher;
 import BananaFructa.RailcraftModifications.TileRollingMachineManualChanged;
 import BananaFructa.RailcraftModifications.TileRollingMachinePoweredChanged;
@@ -33,9 +31,6 @@ import BananaFructa.TTIEMultiblocks.Gui.*;
 import BananaFructa.TTIEMultiblocks.Gui.CokeOvenBattery.ContainerCokeOvenBattery;
 import BananaFructa.TTIEMultiblocks.Gui.CokerUnit.ContainerCokerUnit;
 import BananaFructa.TTIEMultiblocks.Gui.ElectricfFoodOven.ContainerElectricFoodOven;
-import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.GlobalNetworkInfoManager;
-import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
-import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
 import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
@@ -46,8 +41,6 @@ import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TerraFirmaCraft.TECropBaseHydroponic;
 import BananaFructa.TiagThings.Items.ItemLoaderHandler;
-import BananaFructa.TiagThings.Netowrk.MessagePowerNetworkAskInfo;
-import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import BananaFructa.TiagThings.RockTraces;
 import BananaFructa.TiagThings.RockUtils;
 import BananaFructa.TiagThings.TTMain;
@@ -58,8 +51,6 @@ import BananaFructa.UnecologicalMethods.DrainBlock;
 import BananaFructa.UnecologicalMethods.DrainTileEntity;
 //import appeng.tile.AEBaseTile;
 //import appeng.tile.misc.TileInscriber;
-import betterquesting.client.BQ_Keybindings;
-import betterquesting.core.BetterQuesting;
 import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.api.tool.ExcavatorHandler;
@@ -81,9 +72,10 @@ import io.moonman.emergingtechnology.config.EmergingTechnologyConfig;
 import io.moonman.emergingtechnology.machines.hydroponic.Hydroponic;
 import io.moonman.emergingtechnology.providers.ModMediumProvider;
 import io.moonman.emergingtechnology.providers.classes.ModMedium;
-import journeymap.client.model.SplashPerson;
-import li.cil.oc.common.recipe.Recipes;
+import li.cil.oc.api.API;
+import li.cil.oc.api.Machine;
 import li.cil.oc.common.recipe.Recipes$;
+import li.cil.oc.server.machine.Machine$;
 import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityFluidPumpAlternative;
 import micdoodle8.mods.galacticraft.api.recipe.ISchematicPage;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
@@ -99,9 +91,6 @@ import mods.railcraft.common.blocks.machine.equipment.EquipmentVariant;
 import mods.railcraft.common.blocks.multi.MultiBlockPattern;
 import mods.railcraft.common.blocks.multi.TileFluxTransformer;
 import mods.railcraft.common.fluids.Fluids;
-import mods.railcraft.common.util.misc.Game;
-import nc.tile.IMultitoolLogic;
-import nc.util.NBTHelper;
 import net.dries007.tfc.api.types.ICrop;
 import net.dries007.tfc.objects.CreativeTabsTFC;
 import net.dries007.tfc.objects.blocks.agriculture.BlockCropTFC;
@@ -110,15 +99,14 @@ import net.dries007.tfc.objects.fluids.FluidsTFC;
 import net.dries007.tfc.objects.items.ItemSeedsTFC;
 import net.dries007.tfc.objects.te.TEBlastFurnace;
 import net.dries007.tfc.objects.te.TECrucible;
-import net.dries007.tfc.world.classic.worldgen.vein.VeinRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -130,8 +118,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.gen.IChunkGenerator;
@@ -141,21 +127,23 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.terraingen.ChunkGeneratorEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.lwjgl.Sys;
+import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
+import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
+import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityCO2Filter;
@@ -167,7 +155,6 @@ import tfctech.objects.tileentities.TEInductionCrucible;
 import wile.engineersdecor.blocks.BlockDecorLabeledCrate;
 
 import javax.annotation.Nullable;
-import javax.vecmath.Vector3f;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -252,6 +239,12 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public void init() {
+        Utils.writeDeclaredField(Machine$.class, API.machine,"checked",new scala.collection.mutable.LinkedHashSet<>(),true);
+
+        Machine.add(TiagNativeLuaArchitecture.class);
+        //Machine.add(TiagLuaJLuaArchitecture.class);
+        Machine.LuaArchitecture = TiagNativeLuaArchitecture.class;
+
         EmergingTechnologyConfig.HYDROPONICS_MODULE.GROWBED.growBedWaterUsePerCycle = 0;
         ExcavatorHandler.mineralList.clear();
         RegistrationHelper HELPER = Utils.readDeclaredField(BCBuildersBlocks.class,null,"HELPER");
@@ -283,6 +276,7 @@ public class CommonProxy implements IGuiHandler {
         GameRegistry.registerTileEntity(ModifiedTileEntityPowerLoomParent.class, new ResourceLocation(TTMain.modId, ModifiedTileEntityPowerLoomParent.class.getSimpleName()));
         GameRegistry.registerTileEntity(ModifiedCO2Filter.class, new ResourceLocation(TTMain.modId, ModifiedCO2Filter.class.getSimpleName()));
         GameRegistry.registerTileEntity(AlternatorMultiblockMasterModified.class, new ResourceLocation(TTMain.modId, AlternatorMultiblockMasterModified.class.getSimpleName()));
+        GameRegistry.registerTileEntity(ModifiedRedstoneConnector.class,new ResourceLocation(TTMain.modId,ModifiedRedstoneConnector.class.getSimpleName()));
 
         TTIEContent.init();
         RockUtils.init();
@@ -479,6 +473,9 @@ public class CommonProxy implements IGuiHandler {
                 } else if (entity instanceof TileEntityConnectorLV && !isRelay(entity)) {
                     event.getWorld().setTileEntity(entity.getPos(),new TransactionalTEConnectorLV(((TileEntityConnectorLV) entity).facing));
                 }
+                /*if (entity instanceof TileEntityConnectorRedstone) {
+                    event.getWorld().setTileEntity(entity.getPos(),new ModifiedRedstoneConnector((TileEntityConnectorRedstone) entity));
+                }*/
                 /*if (entity instanceof TileEntityCapacitorLV) {
                     event.getWorld().setTileEntity(entity.getPos(),new TileEntityCapacitorLVModified());
                 }*/
@@ -538,6 +535,7 @@ public class CommonProxy implements IGuiHandler {
 
     @SubscribeEvent
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+
         if (event.getWorld().isRemote) return;
 
         BlockPos blockPos = event.getPos().offset(event.getFace());
@@ -561,9 +559,24 @@ public class CommonProxy implements IGuiHandler {
             event.getWorld().notifyBlockUpdate(masterPos,event.getWorld().getBlockState(masterPos),event.getWorld().getBlockState(masterPos),2);
         }
 
+        TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());
+
+        /*if (tileEntity instanceof TileEntityPLC) {
+            if (event.getEntityPlayer().isSneaking()) {
+                ((TileEntityPLC) tileEntity).addBoard();
+            } else ((TileEntityPLC) tileEntity).removeBoard();
+        }*/
+
+        if (!event.getWorld().isRemote && event.getEntityPlayer().isSneaking()) {
+            TileEntity te = event.getWorld().getTileEntity(event.getPos());
+            if (te instanceof TileEntityPLC) {
+                TileEntityPLC master = ((TileEntityPLC) te).master();
+                if (master != null && master.addTimer == 0) master.handleInteract(event.getEntityPlayer());
+            }
+        }
+
         // IEHAMMER LOGIC ON MUTLTBLOCKS AND PUMP
         if (event.getItemStack().getItem() == IEContent.itemTool) {
-            TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());
             if (tileEntity instanceof SignalSourceTileEntity) {
                 SignalSourceTileEntity te = (SignalSourceTileEntity) tileEntity;
                 if (event.getEntityPlayer().isSneaking()) te.signalLevel++;
@@ -671,7 +684,29 @@ public class CommonProxy implements IGuiHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-        ElectrolyzerRecipe.recipeList.clear();
+        IIMultiblockRecipe.removeRecipesByFilter(ElectrolyzerRecipe.class,e->true); // Remove All electrolyzer recipes
+        Fluid vanillaWater = Utils.fluidFromCTId("<liquid:water>");
+        String[] waterLiquids = new String[] {
+            "<liquid:fresh_water>",
+            "<liquid:clarified_water>",
+            "<liquid:treated_water_nn>",
+            "<liquid:treated_water>"
+        };
+        Fluid[] waterFluids = new Fluid[waterLiquids.length];
+        for (int i = 0;i < waterLiquids.length;i++) waterFluids[i] = Utils.fluidFromCTId(waterLiquids[i]);
+        List<BathingRecipe> removed = new ArrayList<>();
+        IIMultiblockRecipe.removeRecipesByFilter(BathingRecipe.class,br->{
+            if (br.fluidInput.getFluid() == FluidRegistry.WATER) {
+                removed.add(br);
+                return true;
+            }
+            return false;
+        });
+        for (BathingRecipe br : removed) {
+            for (Fluid f : waterFluids) {
+                new BathingRecipe(br.itemOutput,br.itemInput,new FluidStack(f,br.fluidInput.amount),br.getTotalProcessEnergy(),br.getTotalProcessTime(),br.isWashing);
+            }
+        }
         PowerLoomRecipe.addRecipe(Utils.itemStackFromCTId("<tfcflorae:crop/product/sisal_cloth>",4),new IngredientStack(Utils.itemStackFromCTId("<tiagthings:sisal_woven_pirn>",1)),new IngredientStack(Utils.itemStackFromCTId("<tfcflorae:crop/product/sisal_string>",40)),Utils.itemStackFromCTId("<att:pirn>",1),500,256);
         PowerLoomRecipe.addRecipe(
                 Utils.itemStackFromCTId("<tfcflorae:crop/product/cotton_cloth>",4),
@@ -1110,6 +1145,10 @@ public class CommonProxy implements IGuiHandler {
                     return new ContainerPIDController(player.inventory,(PIDControllerTileEntity) te);
                 }
                 break;
+            case 20:
+                if (te instanceof TileEntityPLC) {
+                    return new ContainerPLC(player.inventory,((TileEntityPLC) te).master());
+                }
         }
         return null;
     }
@@ -1142,4 +1181,5 @@ public class CommonProxy implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return null;
     }
+
 }

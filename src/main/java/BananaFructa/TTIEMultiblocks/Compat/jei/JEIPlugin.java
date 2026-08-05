@@ -3,6 +3,7 @@ package BananaFructa.TTIEMultiblocks.Compat.jei;
 import BananaFructa.TTIEMultiblocks.*;
 import BananaFructa.TTIEMultiblocks.Gui.LatheAction;
 import BananaFructa.TTIEMultiblocks.Gui.LatheActionFlag;
+import BananaFructa.TTIEMultiblocks.Gui.PLCGui;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import blusunrize.immersiveengineering.api.crafting.MetalPressRecipe;
@@ -14,10 +15,7 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import nc.multiblock.qComputer.QuantumGate;
@@ -25,6 +23,8 @@ import net.dries007.tfc.api.types.Metal;
 import net.dries007.tfc.objects.fluids.FluidsTFC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -37,7 +37,10 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import javax.swing.tree.TreeCellEditor;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -838,6 +841,40 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void register(IModRegistry registry) {
+
+        /*registry.addAdvancedGuiHandlers(new IAdvancedGuiHandler<PLCGui>() {
+
+            @Override
+            public Class<PLCGui> getGuiContainerClass() {
+                return PLCGui.class;
+            }
+
+            @Override
+            public List<Rectangle> getGuiExtraAreas(PLCGui gui) {
+                ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+                return Collections.singletonList(
+                        new Rectangle(0, 0, res.getScaledWidth(), res.getScaledHeight())
+                );
+            }
+
+            @Override
+            public Object getIngredientUnderMouse(PLCGui gui, int mouseX, int mouseY) {
+                return null;
+            }
+        });*/
+
+        /*registry.addGlobalGuiHandlers(new IGlobalGuiHandler() {
+            @Override
+            public Collection<Rectangle> getGuiExtraAreas() {
+                GuiScreen current = Minecraft.getMinecraft().currentScreen;
+                if (current instanceof PLCGui) {
+                    return Collections.singletonList(
+                            new Rectangle(0, 0, current.mc.displayWidth, current.mc.displayHeight)
+                    );
+                }
+                return Collections.emptyList();
+            }
+        });*/
 
         for (Tuple<List<SimplifiedMultiblockRecipe>,TTJEICategory> recipesInCategory : recipesToRegister) {
 

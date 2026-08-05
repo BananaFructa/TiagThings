@@ -100,6 +100,7 @@ public class TileEntityMetalRoller extends AnimatedOBJTileEntity<TileEntityMetal
 
     public static List<SimplifiedMultiblockRecipe> recipes = new ArrayList<SimplifiedMultiblockRecipe>() {{
         add(new SimplifiedMultiblockRecipe(new ItemStack[]{Utils.itemStackFromCTId("<immersiveengineering:material:2>")},new FluidStack[0],new ItemStack[]{Utils.itemStackFromCTId("<immersiveintelligence:material_spring:2>")},new FluidStack[0],0,1));
+        add(new SimplifiedMultiblockRecipe(new ItemStack[]{Utils.itemStackFromCTId("<tiagthings:crucible_steel_rod>")},new FluidStack[0],new ItemStack[]{Utils.itemStackFromCTId("<immersiveintelligence:material_spring:2>")},new FluidStack[0],0,1));
         for (int i = 0;i < plates.length;i++) {
             add(new SimplifiedMultiblockRecipe(new ItemStack[]{Utils.itemStackFromCTId(doubles[i])},new FluidStack[0],new ItemStack[]{Utils.itemStackFromCTId(plates[i])},new FluidStack[0],0,1));
         }

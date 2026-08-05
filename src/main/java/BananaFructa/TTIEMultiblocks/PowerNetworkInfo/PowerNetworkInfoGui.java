@@ -189,7 +189,7 @@ public class PowerNetworkInfoGui extends GuiScreen {
         float totalPower = 0;
         for (NetworkDeviceHistory h : histories) {
             if (!h.emptyFor(GraphScale.FIVE_SECONDS) && h.deviceCount > 0) {
-                totalPower += h.getValue(0, GraphScale.FIVE_SECONDS);
+                totalPower += h.getValue(0, scale/*GraphScale.FIVE_SECONDS*/);
             }
         }
 
@@ -209,8 +209,8 @@ public class PowerNetworkInfoGui extends GuiScreen {
                 GlStateManager.color(1, 1, 1);
 
                 GlStateManager.popMatrix();
-                setColor(colorPalette[i]);
-                float val = history.getValue(0, GraphScale.FIVE_SECONDS) / totalPower;
+                setColor(colorPalette[i%colorPalette.length]);
+                float val = history.getValue(0, scale/*GraphScale.FIVE_SECONDS*/) / totalPower;
                 drawTexturedModalRect512(xLeft + posX + 27 - 1, y + 11 - 1, 202, 430, (int) (103 * val), 4);
                 GlStateManager.pushMatrix();
 
@@ -249,7 +249,7 @@ public class PowerNetworkInfoGui extends GuiScreen {
             int y = yTop + 136 + 24 * i - scroll;
             if (y < yTop + 267 && y > yTop - 40) {
                 NetworkDeviceHistory history = histories.get(i);
-                String t = Utils.formatPower(history.getValue(0, GraphScale.FIVE_SECONDS));
+                String t = Utils.formatPower(history.getValue(0, scale));
                 int x = xLeft + posX + 200 - 4 - mc.fontRenderer.getStringWidth(t);
                 mc.fontRenderer.drawStringWithShadow(t, x, y + 7, 0xffffffff);
 
@@ -275,7 +275,7 @@ public class PowerNetworkInfoGui extends GuiScreen {
         GL11.glColor4f(1, 1, 1, 1);
         for (int i = 0; i < histories.size(); i++) {
             NetworkDeviceHistory history = histories.get(i);
-            renderGraph(history, colorPalette[i], xLeft + posX, yTop + 129, maxRF);
+            renderGraph(history, colorPalette[i%colorPalette.length], xLeft + posX, yTop + 129, maxRF);
         }
         GlStateManager.enableDepth();
         GlStateManager.popMatrix();

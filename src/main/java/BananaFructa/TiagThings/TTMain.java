@@ -4,6 +4,7 @@ package BananaFructa.TiagThings;
 import BananaFructa.ImmersiveEngineering.ModifiedTileEntityMetalPress;
 import BananaFructa.ImmersiveIntelligence.*;
 import BananaFructa.NCCraft.SelectiveArrayListNC;
+import BananaFructa.OpenComputers.luaj.TiagLuaJLuaArchitecture;
 import BananaFructa.RailcraftModifications.RFTileBlockCrusher;
 import BananaFructa.TFC.TEInductionCrucibleCAP;
 import BananaFructa.TTIEMultiblocks.Commands.GetTEPos;
@@ -25,6 +26,7 @@ import com.lumintorious.ambiental.api.IBlockTemperatureProvider;
 import com.lumintorious.ambiental.api.TemperatureRegistry;
 import com.lumintorious.ambiental.capability.TemperatureCapability;
 import com.lumintorious.ambiental.modifiers.*;
+import li.cil.oc.api.Machine;
 import mezz.jei.JustEnoughItems;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.venus.VenusBlocks;
@@ -67,14 +69,14 @@ import java.util.List;
 
 import net.minecraft.item.*;
 
-@Mod(modid = TTMain.modId,version = TTMain.version,name = TTMain.name,dependencies = "after:railcraft;after:buildcraftbuilders;after:firmalife;before:immersiveintelligence;before:nuclearcraft;after:immersivetech;after:galacticraftcore;after:immersiveengineering;before:tfcflorae")
+@Mod(modid = TTMain.modId,version = TTMain.version,name = TTMain.name,dependencies = "after:railcraft;after:buildcraftbuilders;after:firmalife;before:immersiveintelligence;before:nuclearcraft;after:immersivetech;after:galacticraftcore;after:immersiveengineering;before:tfcflorae;after:opencomputers")
 public class TTMain {
 
     // There are no recipes present for the items as they are handled by craft twaker in the modpack
 
     public static final String modId = "tiagthings";
     public static final String name = "Tiag Things";
-    public static final String version = "1.4.2";
+    public static final String version = "1.5.2";
 
     public static TTMain INSTANCE;
 
@@ -160,6 +162,7 @@ public class TTMain {
         // -1.5
         // Loweres the effect of snow on temperature
         TemperatureRegistry.BLOCKS.register((IBlockTemperatureProvider)(state, pos, player) -> state.getBlock() == Blocks.SNOW_LAYER && player.world.getLightFor(EnumSkyBlock.SKY, pos) == 15 ? new BlockModifier("snow_counter", 1.3F, 0.2F, false) : null);
+
     }
 
     static public TileEntityModifier tempHeater(Class<?extends SimplifiedTileEntityMultiblockMetal> teClass, IBlockState state, BlockPos pos, EntityPlayer player,String registryName,float temp,float potency) {

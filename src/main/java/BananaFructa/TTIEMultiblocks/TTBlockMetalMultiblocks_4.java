@@ -11,7 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -72,6 +72,9 @@ public class TTBlockMetalMultiblocks_4 extends BlockTTMultiblock<TTBlockTypes_Me
             case COKER_UNIT:
             case COKER_UNIT_CHILD:
                 return new TileEntityCokerUnit();
+            case PLC:
+            case PLC_CHILD:
+                return new TileEntityPLC();
         }
         return null;
     }
@@ -101,5 +104,24 @@ public class TTBlockMetalMultiblocks_4 extends BlockTTMultiblock<TTBlockTypes_Me
         }
 
         return false;
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if(tileEntity instanceof TileEntityPLC && world.getGameRules().getBoolean("doTileDrops"))
+        {
+            TileEntityPLC tile = (TileEntityPLC) tileEntity;
+
+            if(tile.formed) {
+                TileEntityPLC master = tile.master();
+                if(master!=null) {
+                    for (ItemStack s : master.boards) {
+                        world.spawnEntity(new EntityItem(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, s.copy()));
+                    }
+                }
+            }
+        }
+        super.breakBlock(world, pos, state);
     }
 }

@@ -3,7 +3,7 @@ package BananaFructa.ImmersiveIntelligence;
 import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
 import mctmods.immersivetechnology.api.client.MechanicalEnergyAnimation;
 import mctmods.immersivetechnology.common.Config;
-import mctmods.immersivetechnology.common.blocks.ITBlockInterfaces;
+import mctmods.immersivetechnology.common.shared.interfaces.ITBlockInterfaces;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -100,7 +100,7 @@ public class ModifiedWheelTileEntitySteel extends TileEntityWheelSteel implement
 
     @Override
     public int getSpeed() {
-        return (int)(Math.pow((this.energy.getOutputRotationSpeed() * this.energy.getOutputTorque()/(60)*2*Math.PI)/ Config.ITConfig.Machines.Alternator.alternator_energy_perTick,1.0f/Config.ITConfig.Machines.Alternator.alternator_exponent)*Config.ITConfig.MechanicalEnergy.mechanicalEnergy_speed_max);
+        return (int)(Math.pow((this.energy.getOutputRotationSpeed() * this.energy.getOutputTorque()/(60)*2*Math.PI)/ Config.ITConfig.Multiblocks.alternator.alternator_energy_perTick,1.0f/Config.ITConfig.Multiblocks.alternator.alternator_exponent)*Config.ITConfig.Multiblocks.mechanicalEnergy.mechanicalEnergy_speed_max);
     }
 
     @Override

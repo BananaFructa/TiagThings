@@ -1,0 +1,424 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": "forge:default-block",
+    "custom": {
+      "flip-v": true
+    },
+    "textures": {
+      "particle": "immersiveengineering:blocks/storage_steel"
+    }
+  },
+  "variants": {
+    "inventory,type=coal_boiler_child": [
+      {
+        "model": "tiagthings:coal_boiler.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=electric_heater_child": [{
+      "model": "tiagthings:electric_heater.obj",
+      "transform": {
+        "scale": 0.45,
+        "rotation": [{
+          "x": 20
+        },
+          {
+            "y": -225
+          }
+        ]
+      }
+    }],
+    "inventory,type=flare_stack_child": [
+      {
+        "model": "tiagthings:flare_stack.obj",
+        "transform": {
+          "scale": 0.06,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=clarifier_child": [{
+      "model": "tiagthings:clarifier.obj",
+      "transform": {
+        "scale": 0.06,
+        "rotation": [{
+          "x": 20
+        },
+          {
+            "y": -45
+          }
+        ],
+        "translation": [ 0.21, 0, 0 ]
+      }
+    }],
+    "inventory,type=water_filter_child": [
+      {
+        "model": "tiagthings:water_filter.obj",
+        "transform": {
+          "scale": 0.2,
+          "rotation": [{
+            "x": 20
+          },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [ 0.25, -0.3, 0 ]
+        }
+      }
+    ],
+    "inventory,type=oil_boiler_child": [
+      {
+        "model": "tiagthings:coal_boiler.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=um_photolithography_machine_child": [
+      {
+        "model": "tiagthings:um_photolithography_machine.obj",
+        "transform": {
+          "scale": 0.25,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.03,
+            -0.2,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=nmplm_child": [
+      {
+        "model": "tiagthings:nmplm.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=euvplm_child": [
+      {
+        "model": "tiagthings:euvplm.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=gas_centrifuge_child": [
+      {
+        "model": "tiagthings:gas_centrifuge.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=steam_radiator_child": [
+      {
+        "model": "tiagthings:steam_radiator.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=indoor_ac_unit_child": [
+      {
+        "model": "tiagthings:indoor_ac_unit.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=outdoor_ac_unit_child": [
+      {
+        "model": "tiagthings:outdoor_ac_unit.obj",
+        "transform": {
+          "scale": 0.3,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -225
+            }
+          ],
+          "translation": [
+            0,
+            -0.15,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=tresher_child": [
+      {
+        "model": "tiagthings:tresher.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=electric_oven_child": [
+      {
+        "model": "tiagthings:electric_oven.obj",
+        "transform": {
+          "scale": 0.05,
+          "rotation": [
+            {
+              "x": 20
+            },
+            {
+              "y": -45
+            }
+          ],
+          "translation": [
+            0.1,
+            -0.51,
+            0
+          ]
+        }
+      }
+    ],
+    "inventory,type=computer_cluster_unit_child": [{
+      "model": "tiagthings:computer_cluster_unit.obj",
+      "transform": {
+        "scale": 0.24,
+        "rotation": [
+          {
+            "x": 20
+          },
+          {
+            "y": -225
+          }
+        ],
+        "translation": [
+          -0.1,
+          -0.35,
+          0
+        ]
+      }
+    }],
+    "type": {
+      "coal_boiler_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "electric_heater_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "flare_stack_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "clarifier_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "water_filter_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "oil_boiler_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "um_photolithography_machine_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "nmplm_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "euvplm_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "gas_centrifuge_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "steam_radiator_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "indoor_ac_unit_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "outdoor_ac_unit_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "tresher_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "electric_oven_child": {
+        "model": "immersiveengineering:ie_empty"
+      },
+      "computer_cluster_unit_child": {
+        "model": "immersiveengineering:ie_empty"
+      }
+    },
+    "facing": {
+      "north": {
+        "transform": {
+          "rotation": {
+            "y": 0
+          }
+        }
+      },
+      "south": {
+        "transform": {
+          "rotation": {
+            "y": 180
+          }
+        }
+      },
+      "west": {
+        "transform": {
+          "rotation": {
+            "y": 90
+          }
+        }
+      },
+      "east": {
+        "transform": {
+          "rotation": {
+            "y": -90
+          }
+        }
+      }
+    },
+    "_0multiblockslave": {
+      "false": {},
+      "true": {}
+    },
+    "_1dynamicrender": {
+      "false": {},
+      "true": {}
+    },
+    "boolean0": {
+      "false": {},
+      "true": {}
+    },
+    "anim_id": {
+      "0": {},
+      "1": {"model":"tiagthings:metal_press_ports.obj"}
+    }
+  }
+}

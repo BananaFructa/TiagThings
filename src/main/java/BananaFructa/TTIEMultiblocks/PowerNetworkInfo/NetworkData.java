@@ -1,14 +1,16 @@
 package BananaFructa.TTIEMultiblocks.PowerNetworkInfo;
 
+import BananaFructa.TiagThings.Utils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import li.cil.oc.common.block.Item;
-import mctmods.immersivetechnology.common.blocks.metal.tileentities.TileEntityAlternatorMaster;
+import mctmods.immersivetechnology.common.multiblocks.metal.tileentities.TileEntityAlternatorMaster;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class NetworkData {
@@ -23,11 +25,17 @@ public class NetworkData {
 
     boolean anyNetworkInWorld = false;
 
+    private static final Method energyGenerated = Utils.getDeclaredMethod(TileEntityAlternatorMaster.class,"energyGenerated");
+
     private int currentLoss = 0;
     private boolean isProducerRepeated(TileEntity interactor, int delta) {
         if (interactor instanceof TileEntityAlternatorMaster) {
-            if (producerTrack.containsKey(interactor) && producerTrack.get(interactor) + delta > ((TileEntityAlternatorMaster) interactor).energyGenerated()) {
-                return true;
+            try {
+                if (producerTrack.containsKey(interactor) && producerTrack.get(interactor) + delta > (Integer) energyGenerated.invoke((TileEntityAlternatorMaster) interactor)) {
+                    return true;
+                }
+            } catch (Exception err) {
+                throw new RuntimeException(err);
             }
         }
         producerTrack.put(interactor,delta + (producerTrack.getOrDefault(interactor, 0)));

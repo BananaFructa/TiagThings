@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "normal": [
+      { "model": "tiagthings:rocket_controller_block" }
+    ]
+  }
+}

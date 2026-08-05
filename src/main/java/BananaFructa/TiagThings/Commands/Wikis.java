@@ -30,5 +30,6 @@ public class Wikis extends CommandBase {
         player.sendMessage(ForgeHooks.newChatWithLinks("\u00A7eRailcraft\u00A7r - https://ftb.fandom.com/wiki/Railcraft"));
         player.sendMessage(ForgeHooks.newChatWithLinks("\u00A7eNuclearCraft\u00A7r - https://ftb.fandom.com/wiki/NuclearCraft or https://www.youtube.com/@NuclearCraftMod"));
         player.sendMessage(ForgeHooks.newChatWithLinks("\u00A7eTFC Farming\u00A7r - https://github.com/BananaFructa/TFC-Farming/blob/main/README.md"));
+        player.sendMessage(ForgeHooks.newChatWithLinks("\u00a7eProgrammable Logic Controller Video\u00a7r - https://www.youtube.com/watch?v=q4uJpnaWk2o"));
     }
 }

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "normal": [
+      { "model": "tiagthings:magnetized_nickel_sm" }
+    ]
+  }
+}

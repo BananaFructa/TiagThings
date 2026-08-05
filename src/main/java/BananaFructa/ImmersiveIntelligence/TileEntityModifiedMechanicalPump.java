@@ -135,7 +135,7 @@ public class TileEntityModifiedMechanicalPump extends TileEntityMechanicalPump {
     }
 
     private boolean hasEnoughPower() {
-        return this.rotation.getRotationSpeed() >= (float) IIConfigHandler.IIConfig.Machines.MechanicalPump.rpmMin && this.rotation.getTorque() >= (float) IIConfigHandler.IIConfig.Machines.MechanicalPump.torqueMin;
+        return this.rotation.getRotationSpeed() >= (float) IIConfigHandler.IIConfig.Machines.MechanicalPump.speedMin && this.rotation.getTorque() >= (float) IIConfigHandler.IIConfig.Machines.MechanicalPump.torqueMin;
     }
 
     public void prepareAreaCheck() {

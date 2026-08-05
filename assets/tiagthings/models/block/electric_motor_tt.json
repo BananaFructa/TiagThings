@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube_all",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "tiagthings:blocks/electric_motor_front",
+    "down": "tiagthings:blocks/electric_motor_bottom",
+    "up": "tiagthings:blocks/electric_motor_top",
+    "north": "tiagthings:blocks/electric_motor_front",
+    "east": "tiagthings:blocks/electric_motor_side",
+    "south": "tiagthings:blocks/electric_motor_side",
+    "west": "tiagthings:blocks/electric_motor_side"
+  }
+}

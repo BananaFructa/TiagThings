@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "tiagthings:items/launch_software_memory_card"
-  }
-}

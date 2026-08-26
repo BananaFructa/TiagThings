@@ -23,7 +23,7 @@ repositories {
     //maven { url = 'https://maven.cleanroommc.com' }
 }
 
-version = '1.5.2'
+version = '1.5.3'
 group = 'BananaFructa.TiagThings' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'tiagthings'
 

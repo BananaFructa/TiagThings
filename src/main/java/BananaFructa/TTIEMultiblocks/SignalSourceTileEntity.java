@@ -129,22 +129,11 @@ public class SignalSourceTileEntity extends TileEntityIEBase implements IEnergyS
         if (energy >= 1) {
             energy -= 1;
             markDirty();
-
-            boolean update = !good;
-
             good = true;
-
-            if (update) {
-                IEUtils.notifyClientUpdate(world, pos);
-                world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
-            }
         } else {
-            boolean update = good;
             good = false;
-            if (update) {
-                IEUtils.notifyClientUpdate(world, pos);
-                world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
-            }
         }
+        IEUtils.notifyClientUpdate(world, pos);
+        world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
     }
 }

@@ -105,6 +105,7 @@ public class IEUtils {
                             if (teMP instanceof SimplifiedTileEntityMultiblockMetal) {
                                 if (!dummy) {
                                     ((SimplifiedTileEntityMultiblockMetal) teMP).initPorts();
+                                    ((SimplifiedTileEntityMultiblockMetal<?, ?>) teMP).loadedIn = true;
                                     ((SimplifiedTileEntityMultiblockMetal) teMP).setFace(sideHit);
                                 }
                             }

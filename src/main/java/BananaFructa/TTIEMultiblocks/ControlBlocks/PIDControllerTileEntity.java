@@ -190,7 +190,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
         if (world.isRemote) return;
         BlockPos posIn = pos.offset(IEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST));
         IBlockState stateIn = world.getBlockState(posIn);
-        int sens = stateIn.getBlock().getStrongPower(stateIn,world,posIn,IEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST).getOpposite());
+        int sens = stateIn.getBlock().getStrongPower(stateIn,world,posIn,IEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST));
         int error = reference - sens;
         if (i != 0) {
             integral += (1.0f / 20) * error * i;

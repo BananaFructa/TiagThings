@@ -1,18 +1,15 @@
 package BananaFructa.TTIEMultiblocks.Utils;
 
 //import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityAE2CompatMultiblock;
-import BananaFructa.TTIEMultiblocks.IECopy.BlockTTMultiblock;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.common.blocks.TileEntityMultiblockPart;
+import blusunrize.immersiveengineering.common.blocks.metal.TileEntityFluidPipe;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.Utils;
-import com.sun.jna.platform.win32.WinUser;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -27,7 +24,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.lwjgl.Sys;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
@@ -56,7 +52,13 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     int itemCounter = 0; // used when a recipes finishes to cycle through the different output ports
     int fluidCounter = 0;
 
+    Queue<Runnable> updateScheduler = new LinkedList<>(); // for when the server one is not available
+
     public int slotCounter = 0;
+
+    public boolean loadedIn = false;
+
+    public List<BlockPos> pipesToUpdate = new ArrayList<>();
 
     //EnumFacing face = EnumFacing.NORTH;//
 
@@ -321,6 +323,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     public void update() {
         super.func_73660_a();
         if (world.isRemote) return;
+        while (!updateScheduler.isEmpty()) updateScheduler.poll().run();
         if (world.getTotalWorldTime() % 20 == 0) {
             IEUtils.notifyClientUpdate(world,pos);
             markDirty();
@@ -857,6 +860,19 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             List<PortInfo> infos = new ArrayList<>();
             for (int j = 0;j < count;j++) infos.add(PortInfo.fromNBT((NBTTagCompound) nbt.getTag("fluidPort-"+code+"-"+j)));
             fluidPorts.put(code,infos);
+            if (!loadedIn) {
+                loadedIn = true;
+                updateScheduler.add(()->{
+                    for (PortInfo info : infos) {
+                        BlockPos pos = getBlockPosForPos(info.pos);
+                        TileEntity te = world.getTileEntity(pos.offset(info.face));
+                        if (te instanceof TileEntityFluidPipe) {
+                            System.out.println("DONE");
+                            ((TileEntityFluidPipe) te).onNeighborBlockChange(pos);
+                        }
+                    }
+                });
+            }
         }
 
         int rotaryPortsCount = nbt.getInteger("rotaryPortsCount");
@@ -893,7 +909,6 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             handler.setFluidOnly(fluidOnly);
             inventoryHandlers.add(handler);
         }
-
     }
 
     /*@Nullable

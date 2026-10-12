@@ -200,7 +200,7 @@ public class ModifiedTileEntityCrusher extends TileEntityCrusher {
     @Override
     public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket) {
         super.writeCustomNBT(nbt, descPacket);
-        nbt.setTag("rotary",rotaryStorage.toNBT());
+        nbt.setTag("rotary",rotaryStorage.serializeNBT());
         int size = nbtQueue.size();
         nbt.setInteger("nbtQ_size",size);
         int index = 0;
@@ -213,7 +213,7 @@ public class ModifiedTileEntityCrusher extends TileEntityCrusher {
     @Override
     public void readCustomNBT(NBTTagCompound nbt, boolean descPacket) {
         super.readCustomNBT(nbt, descPacket);
-        rotaryStorage.fromNBT(nbt.getCompoundTag("rotary"));
+        rotaryStorage.deserializeNBT(nbt.getCompoundTag("rotary"));
         nbtQueue.clear();
         int size = nbt.getInteger("nbtQ_size");
         for (int i = 0;i < size;i++) {

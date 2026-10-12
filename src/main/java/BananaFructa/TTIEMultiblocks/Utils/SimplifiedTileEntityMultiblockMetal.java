@@ -749,7 +749,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
 
         nbt.setInteger("rotStorageCount", rotaryEnergies.size());
         for (int i = 0; i < rotaryEnergies.size(); i++) {
-            nbt.setTag("rotStorage-" + i, rotaryEnergies.get(i).toNBT());
+            nbt.setTag("rotStorage-" + i, rotaryEnergies.get(i).serializeNBT());
         }
 
         nbt.setInteger("tanksCount", tanks.size());
@@ -835,7 +835,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         int rotCount = nbt.getInteger("rotStorageCount");
         for (int i = 0; i < rotCount; i++) {
             RotaryStorage rs = new RotaryStorage();
-            rs.fromNBT(nbt.getCompoundTag("rotStorage-" + i));
+            rs.deserializeNBT(nbt.getCompoundTag("rotStorage-" + i));
             rotaryEnergies.add(rs);
         }
 

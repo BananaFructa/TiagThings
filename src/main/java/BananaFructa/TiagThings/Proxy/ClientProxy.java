@@ -14,13 +14,10 @@ import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.PowerNetworkInfoGui;
 import BananaFructa.TTIEMultiblocks.Renderers.*;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
+import BananaFructa.TiagThings.*;
 import BananaFructa.TiagThings.MainMenu.TTMainMenuGui;
 import BananaFructa.TiagThings.Netowrk.MessagePowerNetworkAskInfo;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
-import BananaFructa.TiagThings.RockTraces;
-import BananaFructa.TiagThings.TTMain;
-import BananaFructa.TiagThings.Utils;
-import BananaFructa.TiagThings.JEIContainerTogglable;
 import BananaFructa.thah.gui.ChooseClimateGui;
 import blusunrize.immersiveengineering.api.energy.wires.redstone.RedstoneWireNetwork;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
@@ -34,6 +31,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.tutorial.TutorialSteps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -80,6 +78,9 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.registerKeyBinding(irHeadset);
         ClientRegistry.registerKeyBinding(exoSkeleton);
         ClientCommandHandler.instance.registerCommand(new AdjustOBJAnimatedPivot());
+        Minecraft.getMinecraft().gameSettings.tutorialStep = TutorialSteps.NONE;
+        ChatMessageSuppressor.registerPattern("BlockPenetration is already defined in that package");
+        ChatMessageSuppressor.registerPattern("BlockPenetration is not a package");
     }
 
     @Override

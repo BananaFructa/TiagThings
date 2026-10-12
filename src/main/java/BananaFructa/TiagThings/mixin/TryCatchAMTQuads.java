@@ -83,7 +83,9 @@ public class TryCatchAMTQuads {
                 GL11.glEndList();
             }
         } catch (Exception e) {
-            buf.finishDrawing();
+            try { // I will never be forgiven, the hubris of man known no bounds
+                buf.finishDrawing();
+            } catch (Exception ee) {}
         }
         ci.cancel();
     }

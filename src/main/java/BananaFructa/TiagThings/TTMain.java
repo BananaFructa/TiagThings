@@ -26,6 +26,7 @@ import com.lumintorious.ambiental.api.IBlockTemperatureProvider;
 import com.lumintorious.ambiental.api.TemperatureRegistry;
 import com.lumintorious.ambiental.capability.TemperatureCapability;
 import com.lumintorious.ambiental.modifiers.*;
+import crafttweaker.mc1120.CraftTweaker;
 import li.cil.oc.api.Machine;
 import mezz.jei.JustEnoughItems;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
@@ -76,7 +77,7 @@ public class TTMain {
 
     public static final String modId = "tiagthings";
     public static final String name = "Tiag Things";
-    public static final String version = "1.5.3";
+    public static final String version = "1.5.4";
 
     public static TTMain INSTANCE;
 
@@ -303,7 +304,7 @@ public class TTMain {
         //            ITContent.registeredITBlocks.remove(i);
         //            break;
         //        }
-        //    }
+        //    }s
         //}
         proxy.preInit();
     }

@@ -48,13 +48,13 @@ public class ModifiedTileEntityMetalPress extends TileEntityMetalPress {
     @Override
     public void writeCustomNBT(NBTTagCompound nbt, boolean descPacket) {
         super.writeCustomNBT(nbt, descPacket);
-        nbt.setTag("rotary",rotaryStorage.toNBT());
+        nbt.setTag("rotary",rotaryStorage.serializeNBT());
     }
 
     @Override
     public void readCustomNBT(NBTTagCompound nbt, boolean descPacket) {
         super.readCustomNBT(nbt, descPacket);
-        rotaryStorage.fromNBT(nbt.getCompoundTag("rotary"));
+        rotaryStorage.deserializeNBT(nbt.getCompoundTag("rotary"));
     }
 
     @Override

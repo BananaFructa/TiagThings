@@ -13,6 +13,7 @@
     "Test"
   ],
   "client": [
+    "ChatMessageSupress",
     "JEIHide",
     "SplashScreen",
     "TryCatchAMTQuads"

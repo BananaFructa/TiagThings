@@ -1,21 +1,15 @@
 package BananaFructa.TTIEMultiblocks;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
-import BananaFructa.TiagThings.Utils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 
 import javax.annotation.Nullable;
 
@@ -34,7 +28,7 @@ public class SignalSourceTileEntity extends TileEntityIEBase implements IEnergyS
     @Override
     public void onLoad() {
         super.onLoad();
-        IEUtils.notifyClientUpdate(world,pos);
+        TTEUtils.notifyClientUpdate(world,pos);
     }
 
     @Override
@@ -72,7 +66,7 @@ public class SignalSourceTileEntity extends TileEntityIEBase implements IEnergyS
 
         int energyReceived = Math.min(maxEnergy - energy, maxReceive);
         if (!simulate) {
-            IEUtils.notifyClientUpdate(world,pos);
+            TTEUtils.notifyClientUpdate(world,pos);
             energy += energyReceived;
         }
         return energyReceived;
@@ -85,7 +79,7 @@ public class SignalSourceTileEntity extends TileEntityIEBase implements IEnergyS
 
         int energyExtracted = Math.min(energy, maxExtract);
         if (!simulate) {
-            IEUtils.notifyClientUpdate(world,pos);
+            TTEUtils.notifyClientUpdate(world,pos);
             energy -= energyExtracted;
         }
         return energyExtracted;
@@ -133,7 +127,7 @@ public class SignalSourceTileEntity extends TileEntityIEBase implements IEnergyS
         } else {
             good = false;
         }
-        IEUtils.notifyClientUpdate(world, pos);
+        TTEUtils.notifyClientUpdate(world, pos);
         world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
     }
 }

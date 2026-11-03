@@ -180,7 +180,7 @@ public class TileEntityOilBoiler extends SimplifiedTileEntityMultiblockMetal<Til
         return false;
     }
 
-    @Override // TODO: redstone inversion for boilers
+    @Override
     public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ) {
         return false;
     }

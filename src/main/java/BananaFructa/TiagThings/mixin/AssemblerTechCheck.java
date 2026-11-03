@@ -1,7 +1,7 @@
 package BananaFructa.TiagThings.mixin;
 
 import BananaFructa.StgDel.StgDel;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityAssembler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,7 +36,7 @@ public class AssemblerTechCheck {
                 for (int i = 0;i < 10;i++) {
                     this.inv.set(i, ItemStack.EMPTY);
                     tile.markDirty();
-                    IEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
+                    TTEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
                 }
             }
         }

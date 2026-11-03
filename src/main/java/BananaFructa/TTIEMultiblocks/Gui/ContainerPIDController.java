@@ -1,8 +1,7 @@
 package BananaFructa.TTIEMultiblocks.Gui;
 
-import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
 import BananaFructa.TTIEMultiblocks.ControlBlocks.PIDControllerTileEntity;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.Netowrk.IGuiEventListener;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -87,6 +86,6 @@ public class ContainerPIDController extends ContainerIEBase<PIDControllerTileEnt
         tile.scalingI = scalingI;
         tile.scalingD = scalingD;
         tile.markDirty();
-        IEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
+        TTEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
     }
 }

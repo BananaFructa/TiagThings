@@ -1,6 +1,6 @@
 package BananaFructa.ImmersivePetroleum;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.Utils;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
@@ -33,7 +33,7 @@ public class ModifiedTileEntityPumpjackParent extends TileEntityPumpjack.TileEnt
     @Override
     public void update() {
         super.func_73660_a();
-        IEUtils.inputRotaryPower(this,getPosInput(),rotaryStorage);
+        TTEUtils.inputRotaryPower(this,getPosInput(),getMinTorque(),rotaryStorage);
     }
 
     @Override

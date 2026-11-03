@@ -2,24 +2,16 @@ package BananaFructa.TTIEMultiblocks.TileEntities;
 
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_3;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
-import BananaFructa.TTIEMultiblocks.Utils.MultiblockAnimation.AnimationGroup;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.PortType;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
-import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
-import BananaFructa.TiagThings.TTMain;
 import BananaFructa.TiagThings.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 
-import javax.annotation.Nullable;
-import javax.vecmath.Vector3f;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,11 +51,11 @@ public class TileEntitySteamEngine extends AnimatedOBJTileEntity<TileEntitySteam
         if (rotaryEnergies.size() > 0) {
             IRotaryEnergy r = rotaryEnergies.get(0);
             r.setRotationSpeed(10*speed);
-            r.setTorque(90*speed/6);
-            if (needsUpdate) IEUtils.notifyClientUpdate(world,pos);
+            //r.setTorque(90*speed/6);
+            if (needsUpdate) TTEUtils.notifyClientUpdate(world,pos);
         }
         setAnimation("running_mirrored");
-        setAnimationSpeed(speed);
+        setAnimationSpeed((mirrored && (facing == EnumFacing.NORTH || facing == EnumFacing.WEST)) || (!mirrored && (facing == EnumFacing.SOUTH || facing == EnumFacing.EAST)) ? -speed : speed);
     }
 
     @Override

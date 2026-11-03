@@ -58,6 +58,9 @@ public class AnimatedOBJTileRenderer<T extends AnimatedOBJTileEntity<?,?>> exten
             if (te.time > table.animationLength) {
                 te.time -= table.animationLength;
             }
+            if (te.time < 0) {
+                te.time += table.animationLength;
+            }
             int face = te.facing.ordinal()-2;
             int res = (int)((te.time/table.animationLength)*table.resolution)%table.resolution;
             TranslationRotation[][][] arrTable = table.translationRotation;

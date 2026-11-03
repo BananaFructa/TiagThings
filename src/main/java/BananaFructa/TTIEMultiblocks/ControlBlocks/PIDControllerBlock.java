@@ -1,7 +1,6 @@
 package BananaFructa.TTIEMultiblocks.ControlBlocks;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
-import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.TTMain;
 import blusunrize.immersiveengineering.api.IEProperties;
 import net.minecraft.block.Block;
@@ -58,13 +57,13 @@ public class PIDControllerBlock extends Block {
     }
 
     public int getWeakPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing f) {
-        if (IEUtils.shiftRelativeToNorth(state.getValue(IEProperties.FACING_HORIZONTAL),true,EnumFacing.EAST) == f) {
+        if (TTEUtils.shiftRelativeToNorth(state.getValue(IEProperties.FACING_HORIZONTAL),true,EnumFacing.EAST) == f) {
             return ((PIDControllerTileEntity) access.getTileEntity(pos)).redstoneStrenght;
         } else return 0;
     }
 
     public int getStrongPower(IBlockState state, IBlockAccess access, BlockPos pos, EnumFacing f) {
-        if (IEUtils.shiftRelativeToNorth(state.getValue(IEProperties.FACING_HORIZONTAL),true,EnumFacing.EAST) == f) {
+        if (TTEUtils.shiftRelativeToNorth(state.getValue(IEProperties.FACING_HORIZONTAL),true,EnumFacing.EAST) == f) {
             return ((PIDControllerTileEntity) access.getTileEntity(pos)).redstoneStrenght;
         } else return 0;
     }

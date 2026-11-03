@@ -12,7 +12,7 @@ import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
 import BananaFructa.TTIEMultiblocks.SignalSourceTileEntity;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
 //import BananaFructa.TTIEMultiblocks.Utils.STEMM_ClusterClient;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.Uem.DrainFluidPlacer;
@@ -336,11 +336,13 @@ public class TTWailaProvider implements IWailaDataProvider {
             }
         }
 
+        // TODO: calling inputRotaryPower like this doesnt seem safe !!!
+
         if (accessor.getTileEntity() instanceof TileEntityMetalPress) {
             removeFE(accessor, tooltip);
             TileEntityMetalPress te = ((TileEntityMetalPress) accessor.getTileEntity()).master();
             RotaryStorage rs = new RotaryStorage();
-            IEUtils.inputRotaryPower(te,ModifiedTileEntityMetalPress.getPosInput(),rs);
+            TTEUtils.inputRotaryPower(te,ModifiedTileEntityMetalPress.getPosInput(),ModifiedTileEntityMetalPress.getMinTorque(),rs);
             tooltip.add("Rotary Input");
             float torque = rs.getOutputTorque();
             float speed = rs.getOutputRotationSpeed();
@@ -355,7 +357,7 @@ public class TTWailaProvider implements IWailaDataProvider {
             removeFE(accessor, tooltip);
             TileEntityPumpjack.TileEntityPumpjackParent te = (TileEntityPumpjack.TileEntityPumpjackParent)((TileEntityPumpjack) accessor.getTileEntity()).master();
             RotaryStorage rs = new RotaryStorage();
-            IEUtils.inputRotaryPower(te,ModifiedTileEntityPumpjackParent.getPosInput(),rs);
+            TTEUtils.inputRotaryPower(te,ModifiedTileEntityPumpjackParent.getPosInput(),ModifiedTileEntityPumpjackParent.getMinTorque(),rs);
             tooltip.add("Rotary Input");
             float torque = rs.getOutputTorque();
             float speed = rs.getOutputRotationSpeed();
@@ -370,7 +372,7 @@ public class TTWailaProvider implements IWailaDataProvider {
             removeFE(accessor, tooltip);
             TileEntityCrusher te = ((TileEntityCrusher) accessor.getTileEntity()).master();
             RotaryStorage rs = new RotaryStorage();
-            IEUtils.inputRotaryPower(te,ModifiedTileEntityCrusher.getPosInput(),rs);
+            TTEUtils.inputRotaryPower(te,ModifiedTileEntityCrusher.getPosInput(),ModifiedTileEntityCrusher.getMinTorque(),rs);
             tooltip.add("Rotary Input");
             float torque = rs.getOutputTorque();
             float speed = rs.getOutputRotationSpeed();
@@ -385,7 +387,7 @@ public class TTWailaProvider implements IWailaDataProvider {
             removeFE(accessor, tooltip);
             TileEntityPowerLoom.TileEntityPowerLoomParent te = (TileEntityPowerLoom.TileEntityPowerLoomParent)((TileEntityPowerLoom) accessor.getTileEntity()).master();
             RotaryStorage rs = new RotaryStorage();
-            IEUtils.inputRotaryPower(te, ModifiedTileEntityPowerLoomParent.getPosInput(),rs);
+            TTEUtils.inputRotaryPower(te, ModifiedTileEntityPowerLoomParent.getPosInput(),ModifiedTileEntityPowerLoomParent.getMinTorque(),rs);
             tooltip.add("Rotary Input");
             float torque = rs.getOutputTorque();
             float speed = rs.getOutputRotationSpeed();

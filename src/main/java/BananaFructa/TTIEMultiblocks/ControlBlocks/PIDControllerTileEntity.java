@@ -1,26 +1,13 @@
 package BananaFructa.TTIEMultiblocks.ControlBlocks;
 
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.ModularList;
-import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkData;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.Netowrk.CMessageUpdatePowerInfo;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
-import antibluequirk.alternatingflux.block.TileEntityRelayAF;
-import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.IEProperties;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxReceiver;
-import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
-import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorLV;
-import blusunrize.immersiveengineering.common.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +19,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergyStorage, ITickable {
@@ -84,7 +70,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
     @Override
     public void onLoad() {
         super.onLoad();
-        IEUtils.notifyClientUpdate(world,pos);
+        TTEUtils.notifyClientUpdate(world,pos);
     }
 
     @Override
@@ -145,7 +131,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
 
         int energyReceived = Math.min(maxEnergy - energy, maxReceive);
         if (!simulate) {
-            IEUtils.notifyClientUpdate(world,pos);
+            TTEUtils.notifyClientUpdate(world,pos);
             energy += energyReceived;
         }
         return energyReceived;
@@ -158,7 +144,7 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
 
         int energyExtracted = Math.min(energy, maxExtract);
         if (!simulate) {
-            IEUtils.notifyClientUpdate(world,pos);
+            TTEUtils.notifyClientUpdate(world,pos);
             energy -= energyExtracted;
         }
         return energyExtracted;
@@ -188,9 +174,9 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
     @Override
     public void update() {
         if (world.isRemote) return;
-        BlockPos posIn = pos.offset(IEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST));
+        BlockPos posIn = pos.offset(TTEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST));
         IBlockState stateIn = world.getBlockState(posIn);
-        int sens = stateIn.getBlock().getStrongPower(stateIn,world,posIn,IEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST));
+        int sens = stateIn.getBlock().getStrongPower(stateIn,world,posIn, TTEUtils.shiftRelativeToNorth(facing,true,EnumFacing.EAST));
         int error = reference - sens;
         if (i != 0) {
             integral += (1.0f / 20) * error * i;
@@ -217,6 +203,6 @@ public class PIDControllerTileEntity extends TileEntityIEBase implements IEnergy
         redstoneStrenght = (int)(out);
         world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
         markDirty();
-        IEUtils.notifyClientUpdate(world, pos);
+        TTEUtils.notifyClientUpdate(world, pos);
     }
 }

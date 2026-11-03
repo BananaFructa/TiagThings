@@ -1,8 +1,7 @@
 package BananaFructa.TTIEMultiblocks.Gui;
 
 import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
-import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityMetalRoller;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.Netowrk.IGuiEventListener;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,9 +9,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentString;
-
-import java.util.Random;
 
 public class ContainerElectricMotor extends ContainerIEBase<ElectricMotorTileEntity> implements IGuiEventListener {
 
@@ -93,6 +89,6 @@ public class ContainerElectricMotor extends ContainerIEBase<ElectricMotorTileEnt
         tile.targetSpeed = targetSpeed;
         tile.targetTorque = targetTorque;
         tile.markDirty();
-        IEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
+        TTEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
     }
 }

@@ -11,29 +11,24 @@ import blusunrize.immersiveengineering.api.MultiblockHandler;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.mcft.copy.backpacks.client.RendererBackpack;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraft.item.*;
 
 import java.io.*;
-import java.util.HashMap;
 
 public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock {
     public ItemStack[][][] structure;
@@ -54,7 +49,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         this.wSource = wSource;
         this.state = state;
         this.stateChild = stateChild;
-        this.materials = IEUtils.getMaterialsForStructure(structure);
+        this.materials = TTEUtils.getMaterialsForStructure(structure);
         this.size = new int[]{this.structure.length,this.structure[0].length,this.structure[0][0].length};
         this.teOverload = teOverload;
     }
@@ -88,7 +83,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         this.name = name;
         this.state = state;
         this.stateChild = stateChild;
-        this.materials = IEUtils.getMaterialsForStructure(structure);
+        this.materials = TTEUtils.getMaterialsForStructure(structure);
         this.teOverload = teOverload;
     }
 
@@ -108,7 +103,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
         if (enumFacing == EnumFacing.UP || enumFacing == EnumFacing.DOWN) {
             enumFacing = entityPlayer.getHorizontalFacing().getOpposite();
         }
-        Tuple<Boolean, Boolean> result = IEUtils.checkStructure(
+        Tuple<Boolean, Boolean> result = TTEUtils.checkStructure(
                 world,
                 blockPos,
                 enumFacing,
@@ -124,7 +119,7 @@ public class SimplifiedMultiblockClass implements MultiblockHandler.IMultiblock 
 
         if (!mirrored && !allowNonMirrored()) return false;
 
-        IEUtils.populateMultiblock(
+        TTEUtils.populateMultiblock(
                 world,
                 blockPos,
                 enumFacing,

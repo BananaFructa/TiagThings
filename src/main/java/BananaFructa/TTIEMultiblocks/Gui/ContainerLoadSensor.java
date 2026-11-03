@@ -1,8 +1,7 @@
 package BananaFructa.TTIEMultiblocks.Gui;
 
 import BananaFructa.TTIEMultiblocks.ControlBlocks.LoadSensorTileEntity;
-import BananaFructa.TTIEMultiblocks.ElectricMotorTileEntity;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.Netowrk.IGuiEventListener;
 import blusunrize.immersiveengineering.common.gui.ContainerIEBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -79,6 +78,6 @@ public class ContainerLoadSensor extends ContainerIEBase<LoadSensorTileEntity> i
         tile.magnitude = (int)((mag * LoadSensorTileEntity.maxRF) * Math.pow(10, scale)) + 1;
         tile.scale = scale;
         tile.markDirty();
-        IEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
+        TTEUtils.notifyClientUpdate(tile.getWorld(),tile.getPos());
     }
 }

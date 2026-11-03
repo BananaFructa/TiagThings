@@ -1,17 +1,13 @@
 package BananaFructa.TTIEMultiblocks.TileEntities;
 
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_2;
-import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_3;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.PortType;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TiagThings.Utils;
-import micdoodle8.mods.galacticraft.core.GCFluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
-import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 
 import java.util.ArrayList;
 import java.util.List;

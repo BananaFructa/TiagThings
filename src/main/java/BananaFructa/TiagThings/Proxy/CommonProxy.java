@@ -37,7 +37,7 @@ import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
 import BananaFructa.TTIEMultiblocks.SignalSourceTileEntity;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
 import BananaFructa.TTIEMultiblocks.TileEntities.*;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TerraFirmaCraft.TECropBaseHydroponic;
 import BananaFructa.TiagThings.Items.ItemLoaderHandler;
@@ -106,7 +106,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -143,7 +142,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import pl.pabilo8.immersiveintelligence.api.crafting.BathingRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.ElectrolyzerRecipe;
 import pl.pabilo8.immersiveintelligence.api.crafting.recipe.IIMultiblockRecipe;
-import pl.pabilo8.immersiveintelligence.common.IIConfigHandler;
 import pl.pabilo8.immersiveintelligence.common.IIContent;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.BlockIIMetalDevice;
 import pl.pabilo8.immersiveintelligence.common.block.metal_device.tileentity.TileEntityCO2Filter;
@@ -1045,7 +1043,7 @@ public class CommonProxy implements IGuiHandler {
                     if (m instanceof TileEntityPowerLoom) ((TileEntityPowerLoom)m).setPos(lastPos);
                     m.setFacing(lastFacing);
                     m.markDirty();
-                    IEUtils.notifyClientUpdate(world, pos);
+                    TTEUtils.notifyClientUpdate(world, pos);
                 }
             }
         }

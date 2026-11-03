@@ -1,13 +1,10 @@
 package BananaFructa.TTIEMultiblocks.Gui;
 
 import BananaFructa.TTIEMultiblocks.TileEntities.TileEntityLathe;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
 import BananaFructa.TiagThings.Netowrk.MessageGuiEvent;
 import BananaFructa.TiagThings.Netowrk.TTPacketHandler;
 import blusunrize.immersiveengineering.client.ClientUtils;
 import blusunrize.immersiveengineering.client.gui.GuiIEContainerBase;
-import blusunrize.immersiveengineering.common.util.Utils;
-import net.dries007.tfc.client.button.GuiButtonAnvilPlanIcon;
 import net.dries007.tfc.client.button.GuiButtonPage;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
@@ -15,11 +12,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

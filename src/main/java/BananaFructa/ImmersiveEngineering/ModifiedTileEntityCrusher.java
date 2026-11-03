@@ -1,22 +1,18 @@
 package BananaFructa.ImmersiveEngineering;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.RockUtils;
 import BananaFructa.TiagThings.Utils;
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
-import blusunrize.immersiveengineering.api.crafting.MetalPressRecipe;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.EventHandler;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityCrusher;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import blusunrize.immersiveengineering.common.util.IEDamageSources;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,12 +21,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class ModifiedTileEntityCrusher extends TileEntityCrusher {
 
@@ -226,7 +220,7 @@ public class ModifiedTileEntityCrusher extends TileEntityCrusher {
     public void update() {
         super.func_73660_a();
         if (isDummy()) return;
-        IEUtils.inputRotaryPower(this,getPosInput(),rotaryStorage);
+        TTEUtils.inputRotaryPower(this,getPosInput(),getMinTorque(),rotaryStorage);
     }
 
     @Override
@@ -236,7 +230,7 @@ public class ModifiedTileEntityCrusher extends TileEntityCrusher {
         this.energyStorage.setEnergy(good ? 32000 : 0);
         if (lastEnergy != energyStorage.getEnergyStored()) {
             markDirty();
-            IEUtils.notifyClientUpdate(world,pos);
+            TTEUtils.notifyClientUpdate(world,pos);
         }
         return good;
     }

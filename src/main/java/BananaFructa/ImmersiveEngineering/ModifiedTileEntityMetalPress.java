@@ -1,25 +1,14 @@
 package BananaFructa.ImmersiveEngineering;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
-import BananaFructa.TTIEMultiblocks.Utils.IRotaryConverted;
-import BananaFructa.TTIEMultiblocks.Utils.PortInfo;
-import BananaFructa.TTIEMultiblocks.Utils.PortType;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.Utils;
 import blusunrize.immersiveengineering.api.crafting.MetalPressRecipe;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
 import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
-import net.dries007.tfc.api.types.Metal;
-import net.dries007.tfc.util.block.Multiblock;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import org.lwjgl.Sys;
-import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 
 import javax.annotation.Nullable;
@@ -61,7 +50,7 @@ public class ModifiedTileEntityMetalPress extends TileEntityMetalPress {
     public void update() {
         super.func_73660_a();
         if (isDummy()) return;
-        IEUtils.inputRotaryPower(this,getPosInput(),rotaryStorage);
+        TTEUtils.inputRotaryPower(this,getPosInput(),getMinTorque(),rotaryStorage);
     }
 
     @Override

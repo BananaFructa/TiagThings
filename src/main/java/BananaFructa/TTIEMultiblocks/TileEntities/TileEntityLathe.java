@@ -4,9 +4,8 @@ import BananaFructa.TTIEMultiblocks.Gui.LatheAction;
 import BananaFructa.TTIEMultiblocks.Gui.LatheActionFlag;
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_3;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.PortType;
-import BananaFructa.TTIEMultiblocks.Utils.STEMMInventoryHandler;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TiagThings.Utils;
 import net.minecraft.item.ItemStack;
@@ -16,7 +15,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class TileEntityLathe extends AnimatedOBJTileEntity<TileEntityLathe, Tile
         if (rotaryEnergies.size() > 0) {
             IRotaryEnergy re = rotaryEnergies.get(0);
             if (re != null) {
-                if (re.getRotationSpeed() / 60.0f != speed || inTorque != re.getOutputTorque()) IEUtils.notifyClientUpdate(world, pos);
+                if (re.getRotationSpeed() / 60.0f != speed || inTorque != re.getOutputTorque()) TTEUtils.notifyClientUpdate(world, pos);
                 if (re.getRotationSpeed() > 0) {
                     speed = re.getRotationSpeed()/60.0f;
                     inTorque = re.getOutputTorque();
@@ -84,7 +82,7 @@ public class TileEntityLathe extends AnimatedOBJTileEntity<TileEntityLathe, Tile
                 inSpeed = re.getRotationSpeed();
             } else {
                 setAnimationSpeed(0);
-                IEUtils.notifyClientUpdate(world, pos);
+                TTEUtils.notifyClientUpdate(world, pos);
                 inSpeed = 0;
                 inTorque = 0;
             }

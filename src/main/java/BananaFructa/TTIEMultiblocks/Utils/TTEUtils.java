@@ -11,7 +11,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -24,7 +23,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.Sys;
 import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
@@ -32,7 +30,7 @@ import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 import java.util.*;
 
 @Mod.EventBusSubscriber
-public class IEUtils {
+public class TTEUtils {
 
     private static final Queue<Tuple<BlockPos,Integer>> updateQueue = new LinkedList<>();
     private static int ticksLeft = 0;
@@ -330,7 +328,7 @@ public class IEUtils {
         world.notifyBlockUpdate(pos,world.getBlockState(pos),world.getBlockState(pos),2);
     }
 
-    public static void inputRotaryPower(TileEntityMultiblockMetal<?,?> teMM, int rotaryPort, RotaryStorage rotaryStorage) {
+    public static void inputRotaryPower(TileEntityMultiblockMetal<?,?> teMM, int rotaryPort,float torque, RotaryStorage rotaryStorage) {
         for (int i = 0; i < 6;i++) {
             EnumFacing face = EnumFacing.values()[i];
             BlockPos bpos = teMM.getBlockPosForPos(rotaryPort).offset(face);
@@ -340,7 +338,8 @@ public class IEUtils {
                     IRotaryEnergy re = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY, face.getOpposite());
                     if (re != null) {
                         IRotaryEnergy thisRe = rotaryStorage;
-                        thisRe.setTorque(re.getOutputTorque());
+                        //thisRe.setTorque(re.getOutputTorque());
+                        re.setTorque(torque);
                         thisRe.setRotationSpeed(re.getOutputRotationSpeed());
                         return;
                     }

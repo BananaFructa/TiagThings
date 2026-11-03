@@ -4,7 +4,7 @@ import BananaFructa.ImmersiveEngineering.ModifiedRedstoneConnector;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
 import BananaFructa.TTIEMultiblocks.TileEntities.plc.OutputPLCModule;
 import BananaFructa.TTIEMultiblocks.TileEntities.plc.PLCModule;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
 import BananaFructa.TiagThings.Utils;
@@ -167,7 +167,7 @@ public class TileEntityPLC extends SimplifiedTileEntityMultiblockMetal<TileEntit
         }
         setOutputs();
 
-        IEUtils.notifyClientUpdate(world, pos);
+        TTEUtils.notifyClientUpdate(world, pos);
     }
 
     public boolean useEnergy() {

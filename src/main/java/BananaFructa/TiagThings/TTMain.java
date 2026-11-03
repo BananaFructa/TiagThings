@@ -77,7 +77,7 @@ public class TTMain {
 
     public static final String modId = "tiagthings";
     public static final String name = "Tiag Things";
-    public static final String version = "1.5.4";
+    public static final String version = "1.6.0";
 
     public static TTMain INSTANCE;
 

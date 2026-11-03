@@ -12,7 +12,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryEnergy;
 
 import javax.annotation.Nullable;
@@ -84,7 +83,7 @@ public class TileEntityMagneticSeparator extends AnimatedOBJTileEntity<TileEntit
         if (rotaryEnergies.size() > 0) {
             IRotaryEnergy re = rotaryEnergies.get(0);
             if (re != null) {
-                if (re.getRotationSpeed() != inSpeed || inTorque != re.getOutputTorque()) IEUtils.notifyClientUpdate(world, pos);
+                if (re.getRotationSpeed() != inSpeed || inTorque != re.getOutputTorque()) TTEUtils.notifyClientUpdate(world, pos);
                 if (re.getRotationSpeed() > 0) {
                     inTorque = re.getOutputTorque();
                 }
@@ -94,7 +93,7 @@ public class TileEntityMagneticSeparator extends AnimatedOBJTileEntity<TileEntit
                 inSpeed = re.getRotationSpeed();
                 setAnimationSpeed(inSpeed/40.0f);
             } else {
-                IEUtils.notifyClientUpdate(world, pos);
+                TTEUtils.notifyClientUpdate(world, pos);
                 inSpeed = 0;
                 inTorque = 0;
             }

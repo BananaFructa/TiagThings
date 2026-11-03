@@ -1,19 +1,12 @@
 package BananaFructa.AdvancedTFCTech;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TiagThings.Utils;
-import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import blusunrize.immersiveengineering.api.crafting.IMultiblockRecipe;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.FluxStorageAdvanced;
-import blusunrize.immersiveengineering.common.IEContent;
-import blusunrize.immersiveengineering.common.blocks.metal.TileEntityMultiblockMetal;
 import com.pyraliron.advancedtfctech.crafting.PowerLoomRecipe;
-import com.pyraliron.advancedtfctech.init.ModItems;
 import com.pyraliron.advancedtfctech.te.TileEntityPowerLoom;
 import com.pyraliron.advancedtfctech.util.inventory.ATTInventoryHandler;
-import net.dries007.tfc.objects.items.ItemsTFC;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -184,7 +177,7 @@ public class ModifiedTileEntityPowerLoomParent extends TileEntityPowerLoom.TileE
         super.func_73660_a();
         if (isDummy()) return;
         this.energyStorage.setEnergy(16000);
-        IEUtils.inputRotaryPower(this,getPosInput(),rotaryStorage);
+        TTEUtils.inputRotaryPower(this,getPosInput(),getMinTorque(),rotaryStorage);
     }
 
     @Override

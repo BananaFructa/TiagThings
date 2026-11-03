@@ -1,7 +1,7 @@
 package BananaFructa.TTIEMultiblocks.TileEntities;
 
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.PortType;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
@@ -9,9 +9,7 @@ import BananaFructa.TiagThings.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,7 +251,7 @@ public class TileEntityCCM extends SimplifiedTileEntityMultiblockMetal<TileEntit
         }
         this.processQueue.clear();
         markDirty();
-        IEUtils.notifyClientUpdate(world,getPos());
+        TTEUtils.notifyClientUpdate(world,getPos());
     }
 
     public static class CCMRecipe extends SimplifiedMultiblockRecipe {

@@ -234,7 +234,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
     }
 
     EnumFacing shiftRelativeToNorth(EnumFacing face) {
-        return IEUtils.shiftRelativeToNorth(this.facing,mirrored,face);
+        return TTEUtils.shiftRelativeToNorth(this.facing,mirrored,face);
         /*if (face == EnumFacing.UP || face == EnumFacing.DOWN) return face;
         switch (this.facing) {
             case NORTH:
@@ -325,7 +325,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
         if (world.isRemote) return;
         while (!updateScheduler.isEmpty()) updateScheduler.poll().run();
         if (world.getTotalWorldTime() % 20 == 0) {
-            IEUtils.notifyClientUpdate(world,pos);
+            TTEUtils.notifyClientUpdate(world,pos);
             markDirty();
         }
         if (isDummy()) return;
@@ -348,7 +348,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             R recipe;
 
             do {
-                recipe = IEUtils.findRecipe(recipes,fluidsAndIndexes.getFirst(),itemsAndSlots.getFirst(),blackList);
+                recipe = TTEUtils.findRecipe(recipes,fluidsAndIndexes.getFirst(),itemsAndSlots.getFirst(),blackList);
                 blackList.add(recipe);
             } while(recipe != null && !canDoRecipe(recipe));
 
@@ -380,7 +380,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
                         ihi.setStackInSlot(0,ItemStack.EMPTY);
                         ohi.setStackInSlot(0,fh.getContainer());
                         markDirty();
-                        IEUtils.notifyClientUpdate(world,getPos()); // why ??
+                        TTEUtils.notifyClientUpdate(world,getPos()); // why ??
                     }
                 }
             }
@@ -485,7 +485,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
                             IRotaryEnergy re = te.getCapability(CapabilityRotaryEnergy.ROTARY_ENERGY,info.face.getOpposite());
                             if (re != null) {
                                 IRotaryEnergy thisRe = rotaryEnergies.get(info.index);
-                                thisRe.setTorque(re.getOutputTorque());
+                                //thisRe.setTorque(re.getOutputTorque());
                                 thisRe.setRotationSpeed(re.getOutputRotationSpeed());
                                 set = true;
                             }
@@ -493,7 +493,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
                     }
                     if (!set) {
                         IRotaryEnergy thisRe = rotaryEnergies.get(info.index);
-                        thisRe.setTorque(0);
+                        //thisRe.setTorque(0);
                         thisRe.setRotationSpeed(0);
                     }
                 }
@@ -583,7 +583,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             if (tag.hasKey("isNull")) fluids[i] = null;
             else fluids[i] = FluidStack.loadFluidStackFromNBT(nbtTagCompound.getCompoundTag("inputFluid-"+i));
         }
-        R recipe = IEUtils.findRecipe(recipes,fluids,items,new ArrayList<>());
+        R recipe = TTEUtils.findRecipe(recipes,fluids,items,new ArrayList<>());
         return recipe;
     }
 
@@ -608,7 +608,7 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
 
     @Override
     public R findRecipeForInsertion(ItemStack itemStack) {
-        return (R)IEUtils.findRecipeForItem(itemStack,recipes);
+        return (R) TTEUtils.findRecipeForItem(itemStack,recipes);
     }
 
     @Override
@@ -806,8 +806,8 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             handlerNBT.setBoolean("fluidOnly",inventoryHandlers.get(i).getFluidOnly());
             handlerNBT.setInteger("slots",inventoryHandlers.get(i).getSlots());
             handlerNBT.setInteger("offsetih",inventoryHandlers.get(i).getOffset());
-            handlerNBT.setIntArray("canInsert",IEUtils.booleanToInt(inventoryHandlers.get(i).getCanInsert()));
-            handlerNBT.setIntArray("canExtract",IEUtils.booleanToInt(inventoryHandlers.get(i).getCanExtract()));
+            handlerNBT.setIntArray("canInsert", TTEUtils.booleanToInt(inventoryHandlers.get(i).getCanInsert()));
+            handlerNBT.setIntArray("canExtract", TTEUtils.booleanToInt(inventoryHandlers.get(i).getCanExtract()));
             handlerNBT.setInteger("inputs",inventoryHandlers.get(i).recipeInputCorelation.size());
             for (int j = 0;j <  inventoryHandlers.get(i).recipeInputCorelation.size();j++) {
                 handlerNBT.setInteger("crl-"+j,inventoryHandlers.get(i).recipeInputCorelation.get(j));
@@ -899,8 +899,8 @@ public abstract class SimplifiedTileEntityMultiblockMetal<M extends SimplifiedTi
             boolean fluidOnly = ihNBT.getBoolean("fluidOnly");
             int slots = ihNBT.getInteger("slots");
             int offset = ihNBT.getInteger("offsetih");
-            boolean[] canInsert = IEUtils.intToBoolean(ihNBT.getIntArray("canInsert"));
-            boolean[] canExtract = IEUtils.intToBoolean(ihNBT.getIntArray("canExtract"));
+            boolean[] canInsert = TTEUtils.intToBoolean(ihNBT.getIntArray("canInsert"));
+            boolean[] canExtract = TTEUtils.intToBoolean(ihNBT.getIntArray("canExtract"));
             STEMMInventoryHandler handler = new STEMMInventoryHandler(slots,this,offset,canInsert,canExtract);
             int size = ihNBT.getInteger("inputs");
             for (int j = 0;j <  size;j++) {

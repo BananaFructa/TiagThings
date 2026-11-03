@@ -2,7 +2,7 @@ package BananaFructa.TTIEMultiblocks.TileEntities;
 
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_3;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.PortType;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TiagThings.Utils;
@@ -142,7 +142,7 @@ public class TileEntityMetalRoller extends AnimatedOBJTileEntity<TileEntityMetal
         if (rotaryEnergies.size() > 0) {
             IRotaryEnergy re = rotaryEnergies.get(0);
             if (re != null) {
-                if (re.getRotationSpeed() / 60.0f != speed || inTorque != re.getOutputTorque()) IEUtils.notifyClientUpdate(world, pos);
+                if (re.getRotationSpeed() / 60.0f != speed || inTorque != re.getOutputTorque()) TTEUtils.notifyClientUpdate(world, pos);
                 if (re.getRotationSpeed() > 0) {
                     speed = re.getRotationSpeed()/60.0f;
                     inTorque = re.getOutputTorque();
@@ -156,7 +156,7 @@ public class TileEntityMetalRoller extends AnimatedOBJTileEntity<TileEntityMetal
                 inSpeed = re.getRotationSpeed();
             } else {
                 setAnimationSpeed(0);
-                IEUtils.notifyClientUpdate(world, pos);
+                TTEUtils.notifyClientUpdate(world, pos);
                 inSpeed = 0;
                 inTorque = 0;
             }

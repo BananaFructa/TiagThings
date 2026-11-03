@@ -2,36 +2,23 @@ package BananaFructa.TTIEMultiblocks.ControlBlocks;
 
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.ModularList;
 import BananaFructa.TTIEMultiblocks.PowerNetworkInfo.NetworkElement;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorHV;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorLV;
-import BananaFructa.TTIEMultiblocks.PowerRework.TransactionalTEConnectorMV;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
-import antibluequirk.alternatingflux.block.TileEntityRelayAF;
-import antibluequirk.alternatingflux.wire.AFWireType;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.energy.immersiveflux.IFluxReceiver;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.energy.wires.ImmersiveNetHandler;
-import blusunrize.immersiveengineering.api.energy.wires.WireType;
 import blusunrize.immersiveengineering.common.blocks.TileEntityIEBase;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorHV;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorLV;
 import blusunrize.immersiveengineering.common.blocks.metal.TileEntityConnectorMV;
-import blusunrize.immersiveengineering.common.util.EnergyHelper;
 import blusunrize.immersiveengineering.common.util.Utils;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import pl.pabilo8.immersiveintelligence.api.rotary.CapabilityRotaryEnergy;
-import pl.pabilo8.immersiveintelligence.api.rotary.RotaryStorage;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -67,12 +54,12 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
     @Override
     public void onLoad() {
         super.onLoad();
-        IEUtils.notifyClientUpdate(world,pos);
+        TTEUtils.notifyClientUpdate(world,pos);
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY && (facing == IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST) || facing == null)) {
+        if (capability == CapabilityEnergy.ENERGY && (facing == TTEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST) || facing == null)) {
             return true;
         }
         return super.hasCapability(capability, facing);
@@ -81,7 +68,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY && (facing == IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST) || facing == null)) {
+        if (capability == CapabilityEnergy.ENERGY && (facing == TTEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST) || facing == null)) {
             return (T)this;
         }
         return super.getCapability(capability, facing);
@@ -126,7 +113,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
 
         int energyReceived = Math.min(maxEnergy - energy, maxReceive);
         if (!simulate) {
-            IEUtils.notifyClientUpdate(world,pos);
+            TTEUtils.notifyClientUpdate(world,pos);
             energy += energyReceived;
         }
         return energyReceived;
@@ -163,7 +150,7 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
         selectFirstFlag = true;
         firstSim = true;
 
-        BlockPos out = getPos().offset(IEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST));
+        BlockPos out = getPos().offset(TTEUtils.shiftRelativeToNorth(this.facing,true,EnumFacing.EAST));
         TileEntity teOut = getWorld().getTileEntity(out);
         wrongPower = false;
         int avalabile = 0;
@@ -189,6 +176,6 @@ public class LoadSensorTileEntity extends TileEntityIEBase implements IEnergySto
         world.notifyNeighborsOfStateChange(getPos(),world.getBlockState(getPos()).getBlock(),true);
 
         markDirty();
-        IEUtils.notifyClientUpdate(world, pos);
+        TTEUtils.notifyClientUpdate(world, pos);
     }
 }

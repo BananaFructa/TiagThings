@@ -1,21 +1,14 @@
 package BananaFructa.TTIEMultiblocks.TileEntities;
 
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
-import BananaFructa.TTIEMultiblocks.Utils.PortType;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
-import BananaFructa.TiagThings.TTMain;
 import BananaFructa.TiagThings.Utils;
-import journeymap.client.render.map.Tile;
 import net.dries007.tfc.objects.blocks.devices.BlockFirePit;
 import net.dries007.tfc.objects.blocks.property.ILightableBlock;
-import net.dries007.tfc.objects.fluids.FluidsTFC;
-import net.dries007.tfc.objects.te.TEFirePit;
 import net.dries007.tfc.objects.te.TEInventory;
 import net.dries007.tfc.objects.te.TEPlacedItem;
-import net.minecraft.block.BlockFire;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,9 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.ItemStackHandler;
-import scala.Int;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -179,7 +170,7 @@ public class TileEntityClayOven extends SimplifiedTileEntityMultiblockMetal<Tile
                         }
                     } else {
                         // no black list as every recipe will consist of an item stack of size 1 since you can only place 1 item in each slot
-                        SimplifiedMultiblockRecipe recipe = IEUtils.findRecipe(recipes, new FluidStack[0], new ItemStack[]{is}, new ArrayList<>());
+                        SimplifiedMultiblockRecipe recipe = TTEUtils.findRecipe(recipes, new FluidStack[0], new ItemStack[]{is}, new ArrayList<>());
                         if (recipe != null) {
                             this.processQueue.add(new MultiblockProcessInMachine<>(recipe));
                             slotToProcess.put(i, this.processQueue.size() - 1);
@@ -225,7 +216,7 @@ public class TileEntityClayOven extends SimplifiedTileEntityMultiblockMetal<Tile
             if (ItemStack.areItemsEqual(this.processQueue.get(slotToProcess.get(i)).recipe.getItemOutputs().get(0),itemStack)) {
 
                 handler.setStackInSlot(i,itemStack);
-                IEUtils.notifyClientUpdate(world,getBlockPosForPos(16).offset(EnumFacing.DOWN));
+                TTEUtils.notifyClientUpdate(world,getBlockPosForPos(16).offset(EnumFacing.DOWN));
 
                 int p = slotToProcess.get(i);
                 slotToProcess.remove(i);

@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import pl.pabilo8.immersiveintelligence.api.rotary.IRotaryConnector;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -73,6 +74,10 @@ public class GetTEPos extends CommandBase {
 
         if (te instanceof NetworkElement) {
             sender.sendMessage(new TextComponentString("Net ID: " + ((NetworkElement) te).getId()));
+        }
+
+        if (te instanceof IRotaryConnector) {
+            sender.sendMessage(new TextComponentString("Rotary storage Speed: " + ((IRotaryConnector) te).getRotaryStorage().getOutputRotationSpeed() + " Torque:" + ((IRotaryConnector) te).getRotaryStorage().getOutputTorque()));
         }
     }
 

@@ -1,6 +1,6 @@
 package BananaFructa.TTIEMultiblocks.Commands;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.MultiblockDimension;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandBase;
@@ -42,9 +42,9 @@ public class StructureGeneratorCommand extends CommandBase {
         EnumFacing face = faceFromName(facen);
         if (face == EnumFacing.UP || face == EnumFacing.DOWN) return;
 
-        BlockPos unitH = IEUtils.getUnitVectorForSide(face, MultiblockDimension.HEIGHT);
-        BlockPos unitL = IEUtils.getUnitVectorForSide(face, MultiblockDimension.LENGTH);
-        BlockPos unitW = IEUtils.getUnitVectorForSide(face, MultiblockDimension.WIDTH);
+        BlockPos unitH = TTEUtils.getUnitVectorForSide(face, MultiblockDimension.HEIGHT);
+        BlockPos unitL = TTEUtils.getUnitVectorForSide(face, MultiblockDimension.LENGTH);
+        BlockPos unitW = TTEUtils.getUnitVectorForSide(face, MultiblockDimension.WIDTH);
 
         int sizeH = distance(hadamard(pos1,unitH),hadamard(pos2,unitH)) + 1;
         int sizeL = distance(hadamard(pos1,unitL),hadamard(pos2,unitL)) + 1;

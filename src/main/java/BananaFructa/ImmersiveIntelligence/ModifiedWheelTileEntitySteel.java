@@ -1,16 +1,15 @@
 package BananaFructa.ImmersiveIntelligence;
 
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import mctmods.immersivetechnology.api.client.MechanicalEnergyAnimation;
 import mctmods.immersivetechnology.common.Config;
 import mctmods.immersivetechnology.common.shared.interfaces.ITBlockInterfaces;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelIron;
 import pl.pabilo8.immersiveintelligence.common.block.rotary_device.tileentity.TileEntityWheelSteel;
 
-public class ModifiedWheelTileEntitySteel extends TileEntityWheelSteel implements ITBlockInterfaces.IMechanicalEnergy {
+public class ModifiedWheelTileEntitySteel extends TileEntityWheelSteel implements ITBlockInterfaces.IMechanicalEnergy, IRotaryLoadConnector {
     //boolean isFeeding = false;
     BlockPos feedingTo = new BlockPos(0,0,0);
 
@@ -20,6 +19,7 @@ public class ModifiedWheelTileEntitySteel extends TileEntityWheelSteel implement
 
     public ModifiedWheelTileEntitySteel(EnumFacing facing) {
         this.facing = facing;
+        //this.beltNetwork = (new MotorBeltTorqueFeedbackNetwork()).add(this);
     }
 
     @Override
@@ -28,59 +28,7 @@ public class ModifiedWheelTileEntitySteel extends TileEntityWheelSteel implement
         if (world.isRemote) return;
         BlockPos connectedTo = pos.offset(this.facing);
         TileEntity te = world.getTileEntity(connectedTo);
-        if (world.getWorldTime() % 20 == 0) IEUtils.notifyClientUpdate(world,getPos());
-
-        /*isFeeding = false;
-        if (te != null && te instanceof TileEntityMultiblockMetal<?,?> && TTIEContent.rotaryConvertedMultiblocks.containsKey(te.getClass())) {
-            if (TTIEContent.rotaryConvertedMultiblocks.get(te.getClass()).fulfilsRequirement(this.energy.getOutputTorque(), this.energy.getOutputRotationSpeed())) {
-                TileEntityMultiblockMetal<?,?> teMM = (TileEntityMultiblockMetal<?, ?>) te;
-                EnergyHelper.IEForgeEnergyWrapper wrapper = teMM.getCapabilityWrapper(this.facing.getOpposite());
-                if (wrapper != null) {
-                    isFeeding = true;
-                    feedingTo = te.getPos();
-                    wrapper.receiveEnergy(1000 - wrapper.getEnergyStored(),false);
-                }
-            }
-        }*/
-
-        /*if (te instanceof TileEntityMetalPress) {
-            TileEntityMetalPress metalPress = (TileEntityMetalPress) te;
-            if (metalPress.isEnergyPos()) {
-                if (this.energy.getOutputTorque() > 10 && this.energy.getOutputRotationSpeed() > 30 && this.energy.getOutputRotationSpeed() < 60) {
-                    EnergyHelper.IEForgeEnergyWrapper wrapper = metalPress.getCapabilityWrapper(this.facing.getOpposite());
-                    if (wrapper != null) wrapper.receiveEnergy(1000 - wrapper.getEnergyStored(),false);
-                }
-            }
-        }
-        if (te instanceof TileEntityPumpjack) {
-            TileEntityPumpjack metalPress = (TileEntityPumpjack) te;
-            if (metalPress.isEnergyPos()) {
-                if (this.energy.getOutputTorque() > 50 && this.energy.getOutputRotationSpeed() > 60 && this.energy.getOutputRotationSpeed() < 80) {
-                    EnergyHelper.IEForgeEnergyWrapper wrapper = metalPress.getCapabilityWrapper(this.facing.getOpposite());
-                    if (wrapper != null) wrapper.receiveEnergy(1500 - wrapper.getEnergyStored(),false);
-                }
-            }
-        }
-
-        if (te instanceof TileEntityCrusher) {
-            TileEntityCrusher metalPress = (TileEntityCrusher) te;
-            if (metalPress.isEnergyPos()) {
-                if (this.energy.getOutputTorque() > 20 && this.energy.getOutputRotationSpeed() > 30 && this.energy.getOutputRotationSpeed() < 60) {
-                    EnergyHelper.IEForgeEnergyWrapper wrapper = metalPress.getCapabilityWrapper(this.facing.getOpposite());
-                    if (wrapper != null) wrapper.receiveEnergy(1500 - wrapper.getEnergyStored(),false);
-                }
-            }
-        }
-
-        if (te instanceof TileEntityPowerLoom) {
-            TileEntityPowerLoom metalPress = (TileEntityPowerLoom) te;
-            if (metalPress.isEnergyPos()) {
-                if (this.energy.getOutputTorque() > 10 && this.energy.getOutputRotationSpeed() > 150 && this.energy.getOutputRotationSpeed() < 200) {
-                    EnergyHelper.IEForgeEnergyWrapper wrapper = metalPress.getCapabilityWrapper(this.facing.getOpposite());
-                    if (wrapper != null) wrapper.receiveEnergy(1500 - wrapper.getEnergyStored(),false);
-                }
-            }
-        }*/
+        if (world.getWorldTime() % 20 == 0) TTEUtils.notifyClientUpdate(world,getPos());
     }
 
     @Override
@@ -113,4 +61,8 @@ public class ModifiedWheelTileEntitySteel extends TileEntityWheelSteel implement
         return null;
     }
 
+    @Override
+    public float getLoadTorque() {
+        return 0;
+    }
 }

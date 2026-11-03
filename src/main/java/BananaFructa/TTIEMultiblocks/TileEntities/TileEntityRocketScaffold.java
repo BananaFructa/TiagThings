@@ -2,26 +2,20 @@ package BananaFructa.TTIEMultiblocks.TileEntities;
 
 import BananaFructa.TTIEMultiblocks.TTBlockTypes_MetalMultiblock_2;
 import BananaFructa.TTIEMultiblocks.TTIEContent;
-import BananaFructa.TTIEMultiblocks.Utils.IEUtils;
+import BananaFructa.TTIEMultiblocks.Utils.TTEUtils;
 import BananaFructa.TTIEMultiblocks.Utils.PortType;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedMultiblockRecipe;
 import BananaFructa.TTIEMultiblocks.Utils.SimplifiedTileEntityMultiblockMetal;
-import BananaFructa.TiagThings.TTMain;
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import mctmods.immersivetechnology.common.ITContent;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,13 +72,13 @@ public class TileEntityRocketScaffold extends SimplifiedTileEntityMultiblockMeta
     public void incrementRkt1() {
         rkt1++;
         markDirty();
-        IEUtils.notifyClientUpdate(world,getPos());
+        TTEUtils.notifyClientUpdate(world,getPos());
     }
 
     public void incrementRkt2() {
         rkt2++;
         markDirty();
-        IEUtils.notifyClientUpdate(world,getPos());
+        TTEUtils.notifyClientUpdate(world,getPos());
     }
 
     @Override

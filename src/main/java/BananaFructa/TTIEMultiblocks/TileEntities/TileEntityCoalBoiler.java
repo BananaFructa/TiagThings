@@ -224,7 +224,7 @@ public class TileEntityCoalBoiler extends SimplifiedTileEntityMultiblockMetal<Ti
         return false;
     }
 
-    @Override // TODO: redstone inversion for boilers
+    @Override
     public boolean hammerUseSide(EnumFacing side, EntityPlayer player, float hitX, float hitY, float hitZ) {
         return false;
     }
